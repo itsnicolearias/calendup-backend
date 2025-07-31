@@ -1,8 +1,8 @@
-import boom from '@hapi/boom';
+import Boom from '@hapi/boom';
 import { NextFunction, Response, Request } from 'express';
 
 export function errorHandler(req: Request, res: Response, error: any) {
-  const err = boom.internal(error);
+  const err = Boom.internal(error);
   const { output } = err;
   res.status(output.statusCode).json(output.payload);
 }
@@ -21,5 +21,5 @@ export function boomErrorHandler(
   }
   const { output } = error;
 
-  res.status(output.statusCode).json(output.payload);
+  res.status(output?.statusCode).json(output.payload);
 }
