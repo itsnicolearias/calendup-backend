@@ -1,8 +1,10 @@
 import {
-  Table, Column, Model, DataType, HasMany, PrimaryKey, Default, AllowNull
+  Table, Column, Model, DataType, HasMany,
+  HasOne
 } from "sequelize-typescript"
 import { Appointment } from "./appointment"
 import { Profile } from "./profile"
+import { UserRole } from "../modules/auth/auth.interface"
 
 @Table({ tableName: "users", underscored: true })
 export class User extends Model {
@@ -26,7 +28,7 @@ export class User extends Model {
   @Column({
     type: DataType.STRING
   })
-  role!: string
+  role!: UserRole
 
 
   @Column({
@@ -42,15 +44,15 @@ export class User extends Model {
 
   @Column({
     type: DataType.DATE,
-    field: "password_reset_expires"
+    field: "reset_token_expires"
   })
-  passwordResetExpires?: Date
+  resetTokenExpires?: Date
 
   @HasMany(() => Appointment)
   appointments!: Appointment[]
 
-  @HasMany(() => Profile)
-  profiles!: Profile[]
+  @HasOne(() => Profile)
+  profile!: Profile
 
   @Column({
     allowNull: false,

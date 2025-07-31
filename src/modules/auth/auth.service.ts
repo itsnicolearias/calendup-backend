@@ -28,7 +28,7 @@ export const RegisterService = async ( body: RegisterUserParams) => {
             lastName: body.lastName,
         })
 
-        const token = generateVerificationToken({ userId: user.id })
+        const token = generateVerificationToken(user.userId)
         const  link = `${config.urlFront}/verify-account?token=${token}`;
 
         await sendEmail({ to: user.email, subject: 'Verify your email', text: `<p> Bienvenido a CalendUp haz, <a href="${link}"> click aqui </a> para activar tu cuenta. </p>`})
@@ -63,7 +63,7 @@ export const LoginService = async (body: LoginUserParams) => {
 export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
     try {
         const payload = verifyToken(token)
-        
+
         const user = await User.findByPk(payload.userId)
         if (!user) throw Boom.notFound("User not found")
 
