@@ -1,0 +1,86 @@
+import { compare, hash } from "bcryptjs"
+import { User } from "../../models/user"
+import { LoginUserParams, RegisterUserParams, UserRole, VerifyEmailParams } from "./auth.interface"
+import { generateLoginToken, generateVerificationToken, verifyToken } from "../../utils/jwt"
+import  Boom from "@hapi/boom"
+import { Profile } from "../../models/profile"
+import { sendEmail } from "../../libs/nodemailer"
+import { config } from "../../config/environments"
+
+export const RegisterService = async ( body: RegisterUserParams) => {
+    try {
+        const existingUser = await User.findOne({ where: { email: body.email } })
+
+        if (existingUser) throw Boom.forbidden("Email is already registered")
+
+        const hashedPassword = await hash(body.password, 10)
+
+        const user: User = await User.create({
+            email: body.email,
+            password: hashedPassword,
+            verified: false,
+            role: UserRole.PROFESSIONAL,
+        })
+
+        await Profile.create({
+            userId: user.userId,
+            name: body.firstName,
+            lastName: body.lastName,
+        })
+
+        const token = generateVerificationToken({ userId: user.id })
+        const  link = `${config.urlFront}/verify-account?token=${token}`;
+
+        await sendEmail({ to: user.email, subject: 'Verify your email', text: `<p> Bienvenido a CalendUp haz, <a href="${link}"> click aqui </a> para activar tu cuenta. </p>`})
+
+        return { user, token }
+    } catch (error) {
+        throw Boom.badRequest(error);
+    }
+  
+}
+
+export const LoginService = async (body: LoginUserParams) => {
+  try {
+    const user = await User.findOne({ where: { email: body.email } })
+
+    if (!user) throw Boom.unauthorized("User does not exist")
+
+    const passwordMatch = await compare(body.password, user.password)
+
+    if (!passwordMatch) throw Boom.unauthorized("Invalid email or password")
+
+    if (!user.verified) throw Boom.unauthorized("You must verify your email before logging in")
+
+    const token = generateLoginToken({ userId: user.userId, role: user.role })
+
+    return { token, user }
+  } catch (error) {
+    throw Boom.badRequest(error)
+  }
+}
+
+export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
+    try {
+        const payload = verifyToken(token)
+        
+        const user = await User.findByPk(payload.userId)
+        if (!user) throw Boom.notFound("User not found")
+
+        if (user.verified) throw Boom.badRequest("Already verified")
+       
+        user.verified = true
+        await user.save()
+
+        await sendEmail({
+            to: user.email, 
+            subject: 'Cuenta activada', 
+            text: `<p> Tu cuenta ha sido activada exitosamente. </p>`
+        })
+
+        return { message: "User verified successfully" }
+    } catch (error) {
+        throw Boom.badRequest(error);
+        
+    }
+}
