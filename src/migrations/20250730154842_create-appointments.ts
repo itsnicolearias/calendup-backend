@@ -7,7 +7,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
-    professionalId: {
+    professional_id: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {

@@ -15,7 +15,11 @@ export const generateVerificationToken = (userId: string) => {
 
 export const decodeToken = (token: string, secret: string) => {
     try {
-        const decoded = jwt.verify(token, secret) as { userId: string }
+        const decoded = jwt.verify(token, secret)
+
+        if (typeof decoded === 'string') {
+            throw boom.unauthorized("Invalid token")
+        }
         return decoded;
     } catch (error) {
         throw boom.badRequest("Error verifying token", error)
@@ -29,4 +33,10 @@ export const generateLoginToken = (payload: { userId: string, role: string }) =>
     } catch (error) {
         throw boom.badRequest("Error generating login token", error)
     }
+}
+
+export interface JwtPayload extends jwt.JwtPayload {
+    userId?: string,
+    email?: string,
+    role?: string,
 }

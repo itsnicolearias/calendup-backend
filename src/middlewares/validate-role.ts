@@ -12,7 +12,7 @@ export const validateRole = (roles: string[]) => {
       if (!Authorization) {
         throw boom.unauthorized('Authorization header is missing');
       }
-      
+
       const token: string = Authorization.split(' ')[1];
       const user = decodeToken(String(token), String(config.jwtSecret));
 

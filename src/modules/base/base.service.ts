@@ -2,7 +2,6 @@ import boom from '@hapi/boom';
 import moment from 'moment';
 import { IBaseService } from '../base/base.interface';
 
-
 class BaseService implements IBaseService {
   model: any;
 
@@ -98,10 +97,7 @@ class BaseService implements IBaseService {
         body.professionalId = professionalId;
       }
 
-      const record = await this.model.create({
-        data: body,
-        include,
-      });
+      const record = await this.model.create(body, include);
 
       return record;
     } catch (e) {
@@ -128,12 +124,9 @@ class BaseService implements IBaseService {
 
       body.updatedAt = moment().toISOString();
 
-      const updatedRecord = await this.model.update({
-        where,
-        data: body,
-      });
+      const updatedRecord = await this.model.update(body, {where});
 
-      return updatedRecord;
+      return { message: "Record updated successfully", record: updatedRecord };
     } catch (e) {
       throw boom.badRequest(e);
     }
@@ -165,10 +158,10 @@ class BaseService implements IBaseService {
         return { message: 'Record deleted successfully' };
       }
 
-      const updatedRecord = await this.model.update({
-        where,
-        data: { deleted: true, updatedAt: moment().toISOString() },
-      });
+      const updatedRecord = await this.model.update(
+        { deleted: true, updatedAt: moment().toISOString() },
+        { where },
+      );
       return { message: 'Record deleted successfully', record: updatedRecord };
     } catch (e) {
       throw boom.badRequest(e);

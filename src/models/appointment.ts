@@ -6,7 +6,7 @@ import { User } from "./user"
 @Table({ tableName: "appointments", underscored: true })
 export class Appointment extends Model {
   
-  @Column({type: DataType.UUID, field: "appointment_id", allowNull: false, primaryKey: true,  defaultValue: DataType.UUIDV4})
+  @Column({type: DataType.UUID, field: "appoinment_id", allowNull: false, primaryKey: true,  defaultValue: DataType.UUIDV4})
   //@Default(DataType.UUIDV4)
   appointmentId: string
 
@@ -14,8 +14,8 @@ export class Appointment extends Model {
   @Column({ type: DataType.UUID, field: "professional_id" })
   professionalId!: string
 
-  @Column({type: DataType.STRING, field: "first_name"})
-  firstName?: string
+  @Column({type: DataType.STRING, field: "name"})
+  name?: string
 
   @Column({type: DataType.STRING, field: "last_name"})
   lastName?: string
