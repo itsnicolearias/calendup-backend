@@ -6,7 +6,6 @@ const SECRET = config.jwtSecret;
 
 export const generateVerificationToken = (userId: string) => {
     try {
-        console.log(userId)
         return jwt.sign({userId: userId}, String(SECRET), { expiresIn: "1d" })
     } catch (error) {
         throw boom.badRequest("Error generating verification token", error)
@@ -14,9 +13,10 @@ export const generateVerificationToken = (userId: string) => {
   
 }
 
-export const verifyToken = (token: string) => {
+export const decodeToken = (token: string, secret: string) => {
     try {
-        return jwt.verify(token, String(SECRET)) as { userId: string }
+        const decoded = jwt.verify(token, secret) as { userId: string }
+        return decoded;
     } catch (error) {
         throw boom.badRequest("Error verifying token", error)
     }
@@ -25,7 +25,7 @@ export const verifyToken = (token: string) => {
 
 export const generateLoginToken = (payload: { userId: string, role: string }) => {
     try {
-        return jwt.sign(payload, String(SECRET), { expiresIn: "1h" })
+        return jwt.sign(payload, String(SECRET), { expiresIn: "7d" })
     } catch (error) {
         throw boom.badRequest("Error generating login token", error)
     }
