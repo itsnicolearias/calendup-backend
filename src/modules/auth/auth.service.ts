@@ -1,7 +1,7 @@
 import { compare, hash } from "bcryptjs"
 import { User } from "../../models/user"
 import { LoginUserParams, RegisterUserParams, UserRole, VerifyEmailParams } from "./auth.interface"
-import { generateLoginToken, generateVerificationToken, verifyToken } from "../../utils/jwt"
+import { decodeToken, generateLoginToken, generateVerificationToken } from "../../utils/jwt"
 import  Boom from "@hapi/boom"
 import { Profile } from "../../models/profile"
 import { sendEmail } from "../../libs/nodemailer"
@@ -62,7 +62,7 @@ export const LoginService = async (body: LoginUserParams) => {
 
 export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
     try {
-        const payload = verifyToken(token)
+        const payload = decodeToken(token, String(config.jwtSecret))
 
         const user = await User.findByPk(payload.userId)
         if (!user) throw Boom.notFound("User not found")
