@@ -2,13 +2,11 @@ import {
   Table, Column, Model, DataType, ForeignKey, BelongsTo, Default
 } from "sequelize-typescript"
 import { User } from "./user"
-import { Json } from "sequelize/types/utils"
+import { Availability } from "../modules/settings/profile.interface"
 
 @Table({ tableName: "profiles", underscored: true })
 export class Profile extends Model {
-  
   @Column({ type: DataType.UUID, field: "profile_id", primaryKey: true, allowNull: false,  defaultValue: DataType.UUIDV4, })
-  //@Default(DataType.UUIDV4)
   profileId!: string
 
   @ForeignKey(() => User)
@@ -52,7 +50,7 @@ export class Profile extends Model {
   @Column({
     type: DataType.JSONB
   })
-  availability?: Json
+  availability?: Availability
   
 
   @Column({ type: DataType.INTEGER, field: "appointment_duration" })

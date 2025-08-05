@@ -20,12 +20,12 @@ class BaseService implements IBaseService {
    * @returns {HttpResponse.getSuccessful | boom.badRequest}
    */
   public async getAll(
-    professionalId?: string,
+    professionalId?: string | null,
     includeModel?: object,
     page?: number,
     size?: number,
-    where?: Record<string, unknown>,
     all?: boolean,
+    where?: Record<string, unknown>,
   ) {
     try {
       let whereCondition = { ...where };
@@ -33,8 +33,9 @@ class BaseService implements IBaseService {
         whereCondition.professionalId = professionalId;
       }
 
-      const limit = size || 10;
-      const offset = page ? (page - 1) * limit : 0;
+      const { limit, offset } = all
+        ? { limit: null, offset: null }
+        : { limit: size || 10, offset: page ? (page - 1) * (size || 10) : 0 };
 
       const records = await this.model.findAndCountAll({
           where: whereCondition,
@@ -45,8 +46,10 @@ class BaseService implements IBaseService {
           distinct: true,
         });
 
-        const pages = Math.ceil(records.count / limit);
+        if (!all) {
+        const pages = Math.ceil(records.count / Number(limit));
         records.pagesQuantity = pages;
+        }
 
         return records;
     } catch (e) {

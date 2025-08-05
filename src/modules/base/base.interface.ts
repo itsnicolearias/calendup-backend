@@ -6,6 +6,7 @@ export interface IBaseService {
     includeModel?: object,
     page?: number,
     size?: number,
+    all?: boolean,
     where?: object,
   ): Promise<any>;
 
