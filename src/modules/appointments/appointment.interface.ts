@@ -1,3 +1,5 @@
+import { Appointment } from "../../models/appointment";
+
 export interface CreateAppointmentParams {
   professionalId: string;
   name?: string;
@@ -7,4 +9,10 @@ export interface CreateAppointmentParams {
   date: Date;
   time: Date;
   reason?: string;
+}
+
+export interface AppointmentsResponse {
+  rows: Appointment[];
+  count: number;
+  pagesQuantity: number;
 }
