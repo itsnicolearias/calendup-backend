@@ -1,0 +1,59 @@
+import {
+  Table, Column, Model, DataType, ForeignKey, BelongsTo, PrimaryKey, Default
+} from "sequelize-typescript"
+import { User } from "./user"
+
+@Table({ tableName: "appointments", underscored: true })
+export class Appointment extends Model {
+  
+  @Column({type: DataType.UUID, field: "appoinment_id", allowNull: false, primaryKey: true,  defaultValue: DataType.UUIDV4})
+  //@Default(DataType.UUIDV4)
+  appointmentId: string
+
+  @ForeignKey(() => User)
+  @Column({ type: DataType.UUID, field: "professional_id" })
+  professionalId!: string
+
+  @Column({type: DataType.STRING, field: "name"})
+  name?: string
+
+  @Column({type: DataType.STRING, field: "last_name"})
+  lastName?: string
+
+  @Column(DataType.STRING)
+  phone?: string
+
+  @Column(DataType.STRING)
+  email?: string
+
+  @Column(DataType.DATE)
+  date?: Date
+
+  @Column(DataType.STRING)
+  time?: string
+
+  @Column(DataType.STRING)
+  status?: "pending" | "confirmed" | "rejected"
+
+  @Column(DataType.STRING)
+  reason?: string
+
+  @BelongsTo(() => User)
+  professional!: User
+
+  @Column({
+    allowNull: false,
+    type: DataType.DATE,
+    field: 'created_at',
+    defaultValue: DataType.NOW,
+  })
+  createdAt: Date;
+
+  @Column({
+    allowNull: false,
+    type: DataType.DATE,
+    field: 'updated_at',
+    defaultValue: DataType.NOW,
+  })
+  updatedAt: Date;
+}
