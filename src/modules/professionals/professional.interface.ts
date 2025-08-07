@@ -1,13 +1,15 @@
 import { WeekDay } from "../settings/profile.interface";
 
 export interface IProfessionalService {
-    getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlot[]>;
+    getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>;
 }
 
 export interface AvailableSlot {
   date: string // '2025-08-21'
   time: string // '14:00'
 }
+
+export type AvailableSlotResponse = Record<string, string[]>
 
 export type AvailableSlotBody = {
   professionalId: string,

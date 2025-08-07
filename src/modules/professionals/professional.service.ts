@@ -2,7 +2,7 @@ import { User } from "../../models/user";
 import BaseService from "../base/base.service";
 import { startOfMonth, endOfMonth, addMinutes, isBefore, format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { AvailableSlot, AvailableSlotBody, dayMap, IProfessionalService } from "./professional.interface";
+import { AvailableSlot, AvailableSlotBody, AvailableSlotResponse, dayMap, IProfessionalService } from "./professional.interface";
 import { Profile } from "../../models/profile";
 import Boom from "@hapi/boom";
 import AppointmentService from "../appointments/appointment.service";
@@ -10,13 +10,14 @@ import { Op } from "sequelize";
 import { Appointment } from "../../models/appointment";
 import { AppointmentsResponse } from "../appointments/appointment.interface";
 import { WeekDay } from "../settings/profile.interface";
+import { groupByDate } from "../../utils/date-agrupator";
 
 class ProfessionalService extends BaseService implements IProfessionalService {
     constructor() {
         super(User);
       }
 
-async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlot[]> {
+async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse> {
     try {
   const { professionalId, month, year } = body
   const startDate = startOfMonth(new Date(year, month - 1))
@@ -88,7 +89,8 @@ async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlot[]> {
       }
     }
   }
-  return availableSlots
+  const response = groupByDate(availableSlots)
+  return response
     } catch (error) {
       throw Boom.badRequest(error);
     }
