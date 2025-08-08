@@ -2,9 +2,9 @@ import Boom from "@hapi/boom";
 import { Profile } from "../../models/profile";
 import BaseService from "../base/base.service";
 import { User } from "../../models/user";
-import { UserWithProfile } from "./profile.interface";
+import { IProfileService, UserWithProfile } from "./profile.interface";
 
-class ProfileService extends BaseService {
+class ProfileService extends BaseService implements IProfileService {
   constructor() {
     super(Profile);
   }
