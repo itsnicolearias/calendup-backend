@@ -61,7 +61,6 @@ async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>
     if (!slotsForDay || slotsForDay.length === 0) continue
 
     for (const block of slotsForDay) {
-        console.log(block)
       const [startHour, startMinute] = block.start.split(':').map(Number)
       const [endHour, endMinute] = block.end.split(':').map(Number)
 

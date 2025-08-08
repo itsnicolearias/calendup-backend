@@ -1,4 +1,5 @@
-import { WeekDay } from "../settings/profile.interface";
+import { Appointment } from "../../models/appointment";
+import { Availability, WeekDay } from "../settings/profile.interface";
 
 export interface IProfessionalService {
     getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>;
@@ -25,4 +26,11 @@ export const dayMap: Record<string, WeekDay> = {
   viernes: 'friday',
   sábado: 'saturday',
   domingo: 'sunday'
+}
+
+export type CheckAvailabilityBody = {
+  date: string,
+  time: string,
+  appointments: Appointment[],
+  availability: Availability
 }

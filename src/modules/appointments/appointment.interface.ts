@@ -6,8 +6,8 @@ export interface CreateAppointmentParams {
   lastName?: string;
   email?: string;
   phone?: string;
-  date: Date;
-  time: Date;
+  date: string;
+  time: string;
   reason?: string;
 }
 
