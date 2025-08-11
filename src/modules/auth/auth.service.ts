@@ -29,9 +29,12 @@ export const RegisterService = async ( body: RegisterUserParams) => {
         })
 
         const token = generateVerificationToken(user.userId)
-        const  link = `${config.urlFront}/verify-account?token=${token}`;
+        const  link = `${config.url}/auth/verify-account?token=${token}`;
 
-        await sendEmail({ to: user.email, subject: 'Verify your email', text: `<p> Bienvenido a CalendUp haz, <a href="${link}"> click aqui </a> para activar tu cuenta. </p>`})
+        await sendEmail({ 
+            to: user.email, 
+            subject: 'CalendUp - Verifica tu cuenta', 
+            html: `<p> Bienvenido a CalendUp haz, <a href="${link}"> click aqui </a> para activar tu cuenta. </p>`})
 
         return { user, token }
     } catch (error) {

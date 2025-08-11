@@ -9,6 +9,6 @@ router.post("/login",validate(loginSchema, "body"), LoginController)
 
 router.post("/register", validate(registerSchema, "body"), RegisterUserController)
 
-router.get("/verify", VerifyEmailController)
+router.get("/verify-account", VerifyEmailController)
 
 export default router

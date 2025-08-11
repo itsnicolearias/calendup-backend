@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import * as AuthService from "./auth.service"
+import { config } from "../../config/environments"
 
 export const RegisterUserController = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -31,8 +32,8 @@ export const VerifyEmailController = async (req: Request, res: Response, next: N
     if (typeof token !== "string") {
       return res.status(400).json({ message: "Token is required" })
     }
-    const result = await AuthService.VerifyEmailService({ token })
-    return res.status(200).json(result)
+    await AuthService.VerifyEmailService({ token })
+    return res.redirect(`${config.urlFront}/activate-account`)
   } catch (error) {
     next(error)
   }
