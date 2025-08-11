@@ -1,4 +1,10 @@
+import { String } from "aws-sdk/clients/cloudwatchevents";
+import { User } from "../../models/user"
 import { UserRole } from "../auth/auth.interface"
+export interface IProfileService{
+  getOneProfile(userId: string): Promise<User>;
+  updateProfile(body: UserWithProfile, userId: String): Promise<User>
+}
 
 export interface UserWithProfile {
   userId: string
@@ -36,8 +42,8 @@ export type WeekDay =
   | "sunday"
 
 export interface TimeSlot {
-  from: string // "09:00"
-  to: string   // "13:00"
+  start: string // "09:00"
+  end: string   // "13:00"
 }
 
 export type Availability = {

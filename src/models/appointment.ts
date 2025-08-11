@@ -27,10 +27,10 @@ export class Appointment extends Model {
   email?: string
 
   @Column(DataType.DATE)
-  date?: Date
+  date: Date
 
   @Column(DataType.STRING)
-  time?: string
+  time: string
 
   @Column(DataType.STRING)
   status?: "pending" | "confirmed" | "rejected"
