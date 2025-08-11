@@ -1,8 +1,9 @@
 import {
-  Table, Column, Model, DataType, ForeignKey, BelongsTo, Default
+  Table, Column, Model, DataType, ForeignKey, BelongsTo
 } from "sequelize-typescript"
 import { User } from "./user"
 import { Availability } from "../modules/settings/profile.interface"
+import { Json } from "sequelize/types/utils"
 
 @Table({ tableName: "profiles", underscored: true })
 export class Profile extends Model {
@@ -55,6 +56,31 @@ export class Profile extends Model {
 
   @Column({ type: DataType.INTEGER, field: "appointment_duration" })
   appointmentDuration?: number // en minutos
+
+  @Column({
+    type: DataType.JSONB,
+    field: "insurance_providers"
+  })
+  insuranceProviders?: Json
+
+  @Column({
+    type: DataType.TEXT,
+    field: "profile_picture"
+  })
+  profilePicture?: string
+
+  @Column({
+    type: DataType.BOOLEAN,
+    field: "default_app_confirmation",
+    defaultValue: true
+  })
+  defaultAppConfirmation?: Boolean
+
+  @Column({
+    type: DataType.STRING,
+    field: "license_number"
+  })
+  licenseNumber?: String
 
   @BelongsTo(() => User)
   user!: User

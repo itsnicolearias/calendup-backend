@@ -16,3 +16,7 @@ export interface AppointmentsResponse {
   count: number;
   pagesQuantity: number;
 }
+
+export const  AppointmentStatus = ["pending",  "confirmed", "cancelled"] as const;
+
+export const AppointmentType = ["in_person", "online"] as const ;

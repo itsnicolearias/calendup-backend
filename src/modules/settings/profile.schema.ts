@@ -25,6 +25,11 @@ const availabilitySchema = z.object({
   sunday: z.array(timeRangeSchema).optional(),
 })
 
+const insuranceProviders = z.object({
+  name: z.string().optional(),
+  plan: z.string().optional(),
+  notes: z.string().optional()
+})
 
 export const createProfileSchema = z.object({
     name: z.string().optional(),
@@ -35,6 +40,9 @@ export const createProfileSchema = z.object({
     jobTitle: z.string().optional(),
     availability: availabilitySchema.optional(),
     appointmentDuration: z.number().optional(),
+    insuranceProviders: z.array(insuranceProviders).optional(),
+    defaultAppConfirmation: z.boolean().optional(),
+    licenseNumber: z.string().optional(),
 })
 
 export const updateProfileSchema = createProfileSchema
