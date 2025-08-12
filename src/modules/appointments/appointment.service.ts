@@ -7,10 +7,9 @@ import { Profile } from '../../models/profile';
 import { checkAvailability } from '../../utils/check-professional-availability';
 import { sendEmail } from '../../libs/nodemailer';
 import { config } from '../../config/environments';
+import { Appointment } from '../../models/appointment';
 
-const { Appointment } = Database.models;
-
-class AppointmentService extends BaseService {
+class AppointmentService extends BaseService<Appointment> {
   constructor() {
     super(Appointment);
   }

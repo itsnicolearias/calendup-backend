@@ -78,7 +78,7 @@ export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
         await sendEmail({
             to: user.email, 
             subject: 'Cuenta activada', 
-            text: `<p> Tu cuenta ha sido activada exitosamente. </p>`
+            text: `Tu cuenta ha sido activada exitosamente.`
         })
 
         return { message: "User verified successfully" }

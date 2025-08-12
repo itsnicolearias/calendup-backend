@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-export interface IBaseService {
+export interface IBaseService<T> {
   getAll(
     professionalId?: string,
     includeModel?: object,
@@ -8,29 +8,29 @@ export interface IBaseService {
     size?: number,
     all?: boolean,
     where?: object,
-  ): Promise<any>;
+  ): Promise<GetAllResponse<T>>;
 
   getOne(
     where: object,
     includeModel?: any,
     professionalId?: string,
-  ): Promise<any>;
+  ): Promise<T>;
 
   create(
-    body: object,
+    body: Partial<T>,
     professionalId?: string,
-  ): Promise<any>;
+  ): Promise<T>;
 
   update(
-    body: object,
+    body: Partial<T>,
     where: object,
     professionalId?: string,
-  ): Promise<any>;
+  ): Promise<{ message: string; record: any }>;
 
   delete(
     where: object,
     professionalId?: string,
-  ): Promise<any>;
+  ): Promise<{ message: string; record?: any }>;
 }
 
 
@@ -41,4 +41,10 @@ export interface IBaseController {
   create(req: Request, res: Response, next: NextFunction): Promise<void>;
   update(req: Request, res: Response, next: NextFunction): Promise<void>;
   delete(req: Request, res: Response, next: NextFunction): Promise<void>;
+}
+
+export interface GetAllResponse<T> {
+  count: number,
+  rows: T[],
+  pagesQuantity: number
 }

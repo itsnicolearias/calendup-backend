@@ -7,12 +7,10 @@ import { Profile } from "../../models/profile";
 import Boom from "@hapi/boom";
 import AppointmentService from "../appointments/appointment.service";
 import { Op } from "sequelize";
-import { Appointment } from "../../models/appointment";
-import { AppointmentsResponse } from "../appointments/appointment.interface";
 import { WeekDay } from "../settings/profile.interface";
 import { groupByDate } from "../../utils/date-agrupator";
 
-class ProfessionalService extends BaseService implements IProfessionalService {
+class ProfessionalService extends BaseService<User> implements IProfessionalService {
     constructor() {
         super(User);
       }
@@ -41,8 +39,8 @@ async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>
        [Op.lt]: endDate.toISOString().split('T')[0]
     }
   }
-  const appointmentsResponse: AppointmentsResponse = await AppointmentService.getAll(professionalId, undefined, undefined, undefined, true, whereClause)
-  const appointments: Appointment[] = appointmentsResponse.rows
+  const appointmentsResponse = await AppointmentService.getAll(professionalId, undefined, undefined, undefined, true, whereClause)
+  const appointments = appointmentsResponse.rows
 
   // Estructura de turnos agendados para búsqueda rápida
   const bookedSet = new Set(appointments.map((appt) => `${appt.date}-${appt.time}`))
@@ -94,6 +92,23 @@ async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>
       throw Boom.badRequest(error);
     }
   
+}
+public async getAll(professionalId?: string | null, includeModel?: object, page?: number, size?: number, all?: boolean) {
+  try {
+    const professionals = await super.getAll(null, [Profile], page, size, all)
+    return professionals;
+  } catch (error) {
+    throw Boom.badRequest(error);
+  }
+}
+
+async getOne(where: Record<string, unknown>, includeModel?: object, professionalId?: string) {
+  try {
+    const professional = await super.getOne(where, [Profile])
+    return professional;
+  } catch (error) {
+    throw Boom.badRequest(error);
+  }
 }
 
 }
