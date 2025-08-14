@@ -32,20 +32,19 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
   
   async updateAppointment(body: Partial<CreateAppointmentParams>, token: string): Promise<Appointment> {
     try {
-      console.log(body)
       const verifyToken = decodeToken(token, config.jwtUserSecret!)
 
       const appointmentId = verifyToken.appointmentId
 
       const updatedAppointment = await this.update(body, {appointmentId: appointmentId})
 
-      return updatedAppointment.record;
+      return updatedAppointment;
     } catch (error) {
       throw Boom.badRequest(error);
     }
   }
 
-  async create(body: CreateAppointmentParams, professionalId?: string, include?: any[]): Promise<any> {
+  async create(body: CreateAppointmentParams, professionalId?: string, include?: any[]): Promise<Appointment> {
       try {
         const professional = await User.findOne({
           where: { userId: body.professionalId },
@@ -96,7 +95,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
       }
   }
 
-  async update(body: Partial<CreateAppointmentParams>, where: Record<string, unknown>, professionalId?: string): Promise<{ message: string; record: any; }> {
+  async update(body: Partial<CreateAppointmentParams>, where: Record<string, unknown>, professionalId?: string): Promise<Appointment> {
     try {
       const app = await Appointment.findOne({
         where,

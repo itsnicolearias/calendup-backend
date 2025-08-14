@@ -25,7 +25,7 @@ export interface IBaseService<T> {
     body: Partial<T>,
     where: object,
     professionalId?: string,
-  ): Promise<{ message: string; record: any }>;
+  ): Promise<T>;
 
   delete(
     where: object,

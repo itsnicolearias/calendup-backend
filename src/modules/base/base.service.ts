@@ -115,7 +115,7 @@ class BaseService<T> implements IBaseService<T> {
    * @param where
    * @returns {HttpResponse.postSuccessful | boom.badRequest}
    */
-  async update(body: any, where: Record<string, unknown>, professionalId?: string): Promise<{ message: string; record: any }> {
+  async update(body: any, where: Record<string, unknown>, professionalId?: string): Promise<T> {
     try {
       const record = await this.model.findOne({ where });
 
@@ -126,10 +126,11 @@ class BaseService<T> implements IBaseService<T> {
       }
 
       body.updatedAt = moment().toISOString();
+      
+      await this.model.update(body, {where});
+      const updatedRecord = await record.reload();
 
-      const updatedRecord = await this.model.update(body, {where});
-
-      return { message: "Record updated successfully", record: updatedRecord };
+      return updatedRecord;
     } catch (e) {
       throw boom.badRequest(e);
     }
