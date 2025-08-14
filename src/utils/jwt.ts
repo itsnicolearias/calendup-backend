@@ -13,6 +13,15 @@ export const generateVerificationToken = (userId: string) => {
   
 }
 
+export const generateGenericToken = (data: any, secret: string) => {
+    try {
+        return jwt.sign(data, secret)
+    } catch (error) {
+        throw boom.badRequest("Error generatingtoken", error)
+    }
+  
+}
+
 export const decodeToken = (token: string, secret: string) => {
     try {
         const decoded = jwt.verify(token, secret)

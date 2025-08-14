@@ -21,3 +21,8 @@ export interface AppointmentsResponse {
 export const  AppointmentStatus = ["pending",  "confirmed", "cancelled"] as const;
 
 export const AppointmentType = ["in_person", "online"] as const ;
+
+export interface IAppointmentService{
+  getOneAppointment(token: string): Promise<Appointment>;
+  updateAppointment(body: Partial<CreateAppointmentParams>, token: string): Promise<Appointment>
+}

@@ -62,3 +62,26 @@ export const deleteAppointment = async (req: Request, res: Response, next: NextF
     next(err);
   }
 };
+
+
+export const getAppFromUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+     const { token } = req.query;
+
+    const data = await AppointmentService.getOneAppointment(String(token))
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const UpdateAppFromUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+     const { token } = req.query;
+
+    const data = await AppointmentService.updateAppointment(req.body, String(token))
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};

@@ -25,7 +25,7 @@ export class Appointment extends Model {
   phone?: string
 
   @Column(DataType.STRING)
-  email?: string
+  email: string
 
   @Column(DataType.DATE)
   date: Date

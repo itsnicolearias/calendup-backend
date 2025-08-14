@@ -13,6 +13,7 @@ export const config = {
   url: process.env.URL,
   emailFrom: process.env.EMAIL_FROM,
   jwtSecret: process.env.JWT_SECRET,
+  jwtUserSecret: process.env.JWT_USER_SECRET,
   jwtRecoverySecret: process.env.JWT_RECOVERY_SECRET,
   jwtVerificationExpiration: process.env.JWT_VERIFICATION_EXPIRATION_MINUTES,
   domainFront: process.env.DOMAIN_FRONT,
