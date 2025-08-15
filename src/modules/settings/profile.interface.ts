@@ -25,6 +25,7 @@ export interface UserWithProfile {
     phone: string
     jobTitle: string
     bio: string
+    profilePicture: string
     appointmentDuration: number
     createdAt: Date
     updatedAt: Date
