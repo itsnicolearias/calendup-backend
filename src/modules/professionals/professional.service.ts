@@ -37,6 +37,9 @@ async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>
     date: {
        [Op.gt]: startDate.toISOString().split('T')[0], 
        [Op.lt]: endDate.toISOString().split('T')[0]
+    },
+    status: {
+      [Op.ne]: "cancelled"
     }
   }
   const appointmentsResponse = await AppointmentService.getAll(professionalId, undefined, undefined, undefined, true, whereClause)

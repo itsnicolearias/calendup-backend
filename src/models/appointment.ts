@@ -34,7 +34,7 @@ export class Appointment extends Model {
   time: string
 
   @Column(DataType.STRING)
-  status?: typeof AppointmentStatus
+  status: AppointmentStatus
 
   @Column(DataType.STRING)
   reason?: string

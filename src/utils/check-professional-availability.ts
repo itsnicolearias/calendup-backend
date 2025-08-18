@@ -42,7 +42,7 @@ export const checkAvailability = (body: CheckAvailabilityBody): void => {
     try {
         const appointments = body.appointments
         const checkApp = appointments.find((app) => 
-            (app.date.toString() === body.date ) && (app.time ===  body.time) 
+            (app.date.toString() === body.date ) && (app.time ===  body.time) && (app.status !== "cancelled")
          )
 
          const isAvailable = isDateTimeAvailable(body.availability, body.date, body.time)

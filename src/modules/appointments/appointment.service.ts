@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import BaseService from '../base/base.service';
-import { AppointmentStatus, CreateAppointmentParams, IAppointmentService } from './appointment.interface';
+import { CreateAppointmentParams, IAppointmentService } from './appointment.interface';
 import { User } from '../../models/user';
 import { Profile } from '../../models/profile';
 import { checkAvailability } from '../../utils/check-professional-availability';
@@ -60,7 +60,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
         checkAvailability({date: body.date, time: body.time, appointments: professional.appointments, availability: professional.profile.availability})
 
-        body.status = AppointmentStatus[1]
+        body.status = "confirmed";
         const appointment = await super.create(body, professionalId, include);
 
         const token = generateGenericToken({appointmentId: appointment.appointmentId}, config.jwtUserSecret!)
