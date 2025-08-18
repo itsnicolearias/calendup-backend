@@ -33,7 +33,7 @@ export const VerifyEmailController = async (req: Request, res: Response, next: N
       return res.status(400).json({ message: "Token is required" })
     }
     await AuthService.VerifyEmailService({ token })
-    return res.redirect(`${config.urlFront}/activate-account`)
+    return res.redirect(`${config.urlFront}/auth/activate-account`)
   } catch (error) {
     next(error)
   }
