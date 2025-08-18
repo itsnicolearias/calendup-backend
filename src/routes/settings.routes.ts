@@ -1,6 +1,5 @@
 import { Router } from "express"
 import {
-  getAllProfiles,
   getProfile,
   updateProfile,
 } from "../modules/settings/profile.controllers"
