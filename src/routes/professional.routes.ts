@@ -1,9 +1,12 @@
 import { Router } from "express"
-import { getAvailableDates } from "../modules/professionals/professional.controller";
+import { getAvailableDates, getOneProfessional, getProfessionals } from "../modules/professionals/professional.controller";
 
 
 const router = Router()
 
 router.get("/:id/available-dates", getAvailableDates)
+
+router.get("/", getProfessionals)
+router.get("/:id", getOneProfessional)
 
 export default router;

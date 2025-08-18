@@ -1,4 +1,4 @@
-import { QueryInterface, DataTypes } from "sequelize";
+import { QueryInterface } from "sequelize";
 import { User } from "../models/user";
 import { Profile } from "../models/profile";
 

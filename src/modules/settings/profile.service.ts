@@ -4,17 +4,9 @@ import BaseService from "../base/base.service";
 import { User } from "../../models/user";
 import { IProfileService, UserWithProfile } from "./profile.interface";
 
-class ProfileService extends BaseService implements IProfileService {
+class ProfileService extends BaseService<Profile> implements IProfileService {
   constructor() {
     super(Profile);
-  }
-
-  async getAll(professionalId?: string | null, includeModel?: object, page?: number, size?: number, all?: boolean, where?: Record<string, unknown>, ): Promise<any> {
-      try {
-        return await super.getAll(professionalId, includeModel, page, size, all, where)
-      } catch (error) {
-        throw Boom.badRequest(error)
-      }
   }
 
   async getOneProfile(userId :string): Promise<User> {

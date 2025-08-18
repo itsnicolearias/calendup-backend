@@ -5,6 +5,8 @@ import { createAppointmentSchema, updateAppointmentSchema } from '../modules/app
 import { auth } from '../middlewares/auth';
 
 const router = Router();
+router.get('/from-user', controller.getAppFromUser);
+router.put('/from-user', validate(updateAppointmentSchema, "body"), controller.UpdateAppFromUser);
 
 router.get('/', auth, controller.getAppointments);
 router.get('/:id', auth, controller.getAppointment);

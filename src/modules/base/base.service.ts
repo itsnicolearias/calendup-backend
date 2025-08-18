@@ -1,8 +1,8 @@
 import boom from '@hapi/boom';
 import moment from 'moment';
-import { IBaseService } from '../base/base.interface';
+import { GetAllResponse, IBaseService } from '../base/base.interface';
 
-class BaseService implements IBaseService {
+class BaseService<T> implements IBaseService<T> {
   model: any;
 
   constructor(model: any) {
@@ -26,7 +26,7 @@ class BaseService implements IBaseService {
     size?: number,
     all?: boolean,
     where?: Record<string, unknown>,
-  ) {
+  ): Promise<GetAllResponse<T>> {
     try {
       let whereCondition = { ...where };
       if (professionalId) {
@@ -68,7 +68,7 @@ class BaseService implements IBaseService {
     where: Record<string, unknown>,
     includeModel?: object,
     professionalId?: string,
-  ) {
+  ): Promise<T> {
     try {
       if (professionalId) {
         where.professionalId = professionalId;
@@ -94,7 +94,7 @@ class BaseService implements IBaseService {
    * @param include
    * @returns {HttpResponse.postSuccessful | boom.badRequest}
    */
-  async create(body: any, professionalId?: string, include?: any[]) {
+  async create(body: any, professionalId?: string, include?: any[]): Promise<T> {
     try {
       if (professionalId) {
         body.professionalId = professionalId;
@@ -115,7 +115,7 @@ class BaseService implements IBaseService {
    * @param where
    * @returns {HttpResponse.postSuccessful | boom.badRequest}
    */
-  async update(body: any, where: Record<string, unknown>, professionalId?: string) {
+  async update(body: any, where: Record<string, unknown>, professionalId?: string): Promise<T> {
     try {
       const record = await this.model.findOne({ where });
 
@@ -126,10 +126,11 @@ class BaseService implements IBaseService {
       }
 
       body.updatedAt = moment().toISOString();
+      
+      await this.model.update(body, {where});
+      const updatedRecord = await record.reload();
 
-      const updatedRecord = await this.model.update(body, {where});
-
-      return { message: "Record updated successfully", record: updatedRecord };
+      return updatedRecord;
     } catch (e) {
       throw boom.badRequest(e);
     }
@@ -146,7 +147,7 @@ class BaseService implements IBaseService {
     where: Record<string, unknown>,
     professionalId?: string,
     physicalDestroy?: boolean,
-  ) {
+  ): Promise<{ message: string; record?: any }> {
     try {
       const record = await this.model.findOne({ where });
 

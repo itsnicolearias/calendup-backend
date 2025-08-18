@@ -25,6 +25,7 @@ export interface UserWithProfile {
     phone: string
     jobTitle: string
     bio: string
+    profilePicture: string
     appointmentDuration: number
     createdAt: Date
     updatedAt: Date
@@ -50,6 +51,21 @@ export type Availability = {
   [key in WeekDay]: TimeSlot[]
 }
 
+export type InsuranceProviders = [ InsuranceProvidersBody]
+
+export interface InsuranceProvidersBody {
+    name: string
+    plan: string
+    notes: string
+}
+
+/* Ejemplo
+{
+    "name": "OSDE",
+    "plan": "210",
+    "notes": "Requires referral letter"
+  }
+*/
 
 /*
 ejemplo de valor

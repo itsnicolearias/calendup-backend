@@ -13,9 +13,14 @@ export const config = {
   url: process.env.URL,
   emailFrom: process.env.EMAIL_FROM,
   jwtSecret: process.env.JWT_SECRET,
+  jwtUserSecret: process.env.JWT_USER_SECRET,
   jwtRecoverySecret: process.env.JWT_RECOVERY_SECRET,
   jwtVerificationExpiration: process.env.JWT_VERIFICATION_EXPIRATION_MINUTES,
   domainFront: process.env.DOMAIN_FRONT,
+  awsAccessKey: process.env.AWS_ACCESS_KEY_ID,
+  awsSecretAccess: process.env.AWS_SECRET_ACCESS,
+  awsRegion: process.env.AWS_REGION,
+  awsBucketName: process.env.AWS_BUCKET_NAME
 
 };
 

@@ -10,7 +10,6 @@ import { auth } from "../middlewares/auth"
 
 const router = Router()
 
-router.get("/profiles", getAllProfiles)
 router.get("/profile", auth, getProfile)
 router.put("/profile", auth, validate(updateProfileSchema, "body"), updateProfile)
 

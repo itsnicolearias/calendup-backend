@@ -2,6 +2,7 @@ import {
   Table, Column, Model, DataType, ForeignKey, BelongsTo, PrimaryKey, Default
 } from "sequelize-typescript"
 import { User } from "./user"
+import { AppointmentStatus, AppointmentType } from "../modules/appointments/appointment.interface"
 
 @Table({ tableName: "appointments", underscored: true })
 export class Appointment extends Model {
@@ -24,7 +25,7 @@ export class Appointment extends Model {
   phone?: string
 
   @Column(DataType.STRING)
-  email?: string
+  email: string
 
   @Column(DataType.DATE)
   date: Date
@@ -33,10 +34,13 @@ export class Appointment extends Model {
   time: string
 
   @Column(DataType.STRING)
-  status?: "pending" | "confirmed" | "rejected"
+  status?: typeof AppointmentStatus
 
   @Column(DataType.STRING)
   reason?: string
+
+  @Column({type: DataType.STRING, field: "appointment_type"})
+  appointmentType?: typeof AppointmentType
 
   @BelongsTo(() => User)
   professional!: User
