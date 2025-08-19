@@ -1,8 +1,9 @@
 import {
-  Table, Column, Model, DataType, ForeignKey, BelongsTo, PrimaryKey, Default
+  Table, Column, Model, DataType, ForeignKey, BelongsTo
 } from "sequelize-typescript"
 import { User } from "./user"
-import { AppointmentStatus, AppointmentType } from "../modules/appointments/appointment.interface"
+import { AppointmentStatus } from "../modules/appointments/appointment.interface"
+import { AppointmentType } from "./appointment_type"
 
 @Table({ tableName: "appointments", underscored: true })
 export class Appointment extends Model {
@@ -39,11 +40,21 @@ export class Appointment extends Model {
   @Column(DataType.STRING)
   reason?: string
 
-  @Column({type: DataType.STRING, field: "appointment_type"})
-  appointmentType?: typeof AppointmentType
+  @ForeignKey(() => AppointmentType)
+  @Column({ type: DataType.UUID, field: "appointment_type_id" })
+  appointmentTypeId?: string
 
   @BelongsTo(() => User)
   professional!: User
+
+  @BelongsTo(() => AppointmentType)
+  AppointmentType?: User
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  deleted: boolean;
 
   @Column({
     allowNull: false,
