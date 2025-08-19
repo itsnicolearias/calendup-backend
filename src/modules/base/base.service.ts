@@ -158,7 +158,7 @@ class BaseService<T> implements IBaseService<T> {
       }
 
       if (physicalDestroy) {
-        await this.model.delete({ where });
+        await this.model.destroy({ where });
         return { message: 'Record deleted successfully' };
       }
 
