@@ -22,7 +22,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
       const appointmentId = verifyToken.appointmentId
 
-      const appointment = await super.getOne({appointmentId: appointmentId})
+      const appointment = await super.getOne({appointmentId: appointmentId}, [{model: User, include: Profile}])
 
       return appointment;
     } catch (error) {
