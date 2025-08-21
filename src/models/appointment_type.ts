@@ -1,6 +1,7 @@
 import {
   Table, Column, Model, DataType,
-  ForeignKey
+  ForeignKey,
+  BelongsTo
 } from "sequelize-typescript"
 import { User } from "./user"
 
@@ -32,6 +33,9 @@ export class AppointmentType extends Model {
     defaultValue: false,
   })
   deleted: boolean;
+
+  @BelongsTo(() => User)
+  professional!: User
 
   @Column({
     allowNull: false,
