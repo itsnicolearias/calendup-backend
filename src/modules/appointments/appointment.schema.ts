@@ -23,5 +23,5 @@ export const updateAppointmentSchema: ZodType = z.object({
   time: z.string().regex(/^\d{2}:\d{2}$/).optional(),
   reason: z.string().optional(),
   status: z.enum(AppointmentStatusConst).optional(),
-  appointmentTypeId: z.uuidv4().optional(),
+  appointmentTypeId: z.uuidv4().optional().nullable(),
 });

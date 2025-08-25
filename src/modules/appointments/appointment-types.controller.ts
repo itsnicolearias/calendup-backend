@@ -19,7 +19,7 @@ export const getAppointmentTypes = async (req: Request, res: Response, next: Nex
   try {
      const { page, size } = req.query;
     const professionalId = req['user']?.userId ;
-console.log(AppointmentType.tableName, Profile.tableName, User.tableName, Appointment.tableName)
+
     const data = await AppointmentTypeService.getAll(professionalId, [], Number(page), Number(size));
     res.json(data);
   } catch (err) {
@@ -40,7 +40,7 @@ export const getAppointmentType = async (req: Request, res: Response, next: Next
 export const createAppointmentType = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const professionalId = req.user?.userId;
-    console.log(professionalId)
+
     const data = await AppointmentTypeService.create(req.body, professionalId);
     res.status(201).json(data);
   } catch (err) {
