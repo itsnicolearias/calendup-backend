@@ -24,7 +24,7 @@ export class User extends Model {
     type: DataType.STRING,
     field: "password"
   })
-  password!: string
+  password: string
 
   @Column({
     type: DataType.STRING
@@ -57,6 +57,18 @@ export class User extends Model {
 
   @HasOne(() => Profile)
   profile!: Profile
+
+    @Column({
+    type: DataType.STRING,
+    field: "google_id"
+  })
+  googleId: UserRole
+
+    @Column({
+    type: DataType.STRING,
+    field: "facebook_id"
+  })
+  facebookId: UserRole
 
   @Column({
     type: DataType.BOOLEAN,
