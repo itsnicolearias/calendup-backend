@@ -9,6 +9,7 @@ import AppointmentService from "../appointments/appointment.service";
 import { Op } from "sequelize";
 import { WeekDay } from "../settings/profile.interface";
 import { groupByDate } from "../../utils/date-agrupator";
+import { AppointmentType } from "../../models/appointment_type";
 
 class ProfessionalService extends BaseService<User> implements IProfessionalService {
     constructor() {
@@ -37,6 +38,9 @@ async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>
     date: {
        [Op.gt]: startDate.toISOString().split('T')[0], 
        [Op.lt]: endDate.toISOString().split('T')[0]
+    },
+    status: {
+      [Op.ne]: "cancelled"
     }
   }
   const appointmentsResponse = await AppointmentService.getAll(professionalId, undefined, undefined, undefined, true, whereClause)
@@ -104,7 +108,7 @@ public async getAll(professionalId?: string | null, includeModel?: object, page?
 
 async getOne(where: Record<string, unknown>, includeModel?: object, professionalId?: string) {
   try {
-    const professional = await super.getOne(where, [Profile])
+    const professional = await super.getOne(where, [Profile, AppointmentType])
     return professional;
   } catch (error) {
     throw Boom.badRequest(error);

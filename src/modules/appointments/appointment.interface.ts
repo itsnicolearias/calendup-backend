@@ -9,7 +9,7 @@ export interface CreateAppointmentParams {
   date: string;
   time: string;
   reason?: string;
-  status: "pending" |  "confirmed" | "cancelled";
+  status: AppointmentStatus
 }
 
 export interface AppointmentsResponse {
@@ -18,7 +18,9 @@ export interface AppointmentsResponse {
   pagesQuantity: number;
 }
 
-export const  AppointmentStatus = ["pending",  "confirmed", "cancelled"] as const;
+export const  AppointmentStatusConst = ["pending",  "confirmed", "cancelled"] as const;
+
+export type  AppointmentStatus =  "pending" | "confirmed" | "cancelled"
 
 export const AppointmentType = ["in_person", "online"] as const ;
 

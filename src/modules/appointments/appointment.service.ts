@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import BaseService from '../base/base.service';
-import { AppointmentStatus, CreateAppointmentParams, IAppointmentService } from './appointment.interface';
+import { CreateAppointmentParams, IAppointmentService } from './appointment.interface';
 import { User } from '../../models/user';
 import { Profile } from '../../models/profile';
 import { checkAvailability } from '../../utils/check-professional-availability';
@@ -22,7 +22,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
       const appointmentId = verifyToken.appointmentId
 
-      const appointment = await super.getOne({appointmentId: appointmentId})
+      const appointment = await super.getOne({appointmentId: appointmentId}, [{model: User, include: Profile}])
 
       return appointment;
     } catch (error) {
@@ -59,13 +59,19 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         }
 
         checkAvailability({date: body.date, time: body.time, appointments: professional.appointments, availability: professional.profile.availability})
-
-        body.status = AppointmentStatus[1]
+        
+        if (professional.profile.defaultAppConfirmation) {
+          body.status = "confirmed";
+        } else {
+          body.status = "pending"
+        }
+        
         const appointment = await super.create(body, professionalId, include);
 
         const token = generateGenericToken({appointmentId: appointment.appointmentId}, config.jwtUserSecret!)
 
-        //notify user
+        if (body.status === "confirmed"){
+          //notify user
         await sendEmail({
           to: body.email,
           subject: "Turno agendado correctamente",
@@ -89,6 +95,33 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
            nombre del paciente: ${body.name} ${body.lastName}
            Puedes consultar todos los detalles del turno aqui ${config.urlFront}/appointments/${appointment.appointmentId}`
         })
+        } else {
+           //notify user
+        await sendEmail({
+          to: body.email,
+          subject: "Turno agendado correctamente",
+          text: 
+          `Has agendado un turno en CalendUp, el turno esta pendiente de confimacion, te avisaremos cuando el profesional confirme el turno.
+           fecha: ${body.date}
+           hora: ${body.time}
+           profesional: ${professional.profile.name} ${professional.profile.lastName} - ${professional.profile.jobTitle}
+
+          Puedes consultar o modificar tu turno desde aqui ${config.urlFront}/appointments/user-view/${appointment.appointmentId}?authorization=${token} `
+        })
+
+        //notify professional
+        await sendEmail({
+          to: professional.email,
+          subject: "Nuevo turno pendiente de confirmacion",
+          text:  
+          `Se ha agendado un nuevo turno en tu cuenta,
+           fecha: ${body.date}
+           hora: ${body.time}
+           nombre del paciente: ${body.name} ${body.lastName}
+           Puedes consultar todos los detalles del turno aqui ${config.urlFront}/appointments/${appointment.appointmentId}`
+        })
+        }
+        
         return appointment;
       } catch (error) {
         throw Boom.badRequest(error);
@@ -112,8 +145,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         throw Boom.forbidden("Professional must configure profile")
       }
 
-      const token = generateGenericToken({appointmentId: app.appointmentId}, config.jwtUserSecret!)
-
+      // chequear disponibilidad antes de actualizar
       if (body?.date || body?.time){
         const availabilityBody: CheckAvailabilityBody = {
           date: body.date!,
@@ -123,7 +155,14 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
           
         }
         checkAvailability(availabilityBody)
+      }
 
+      // actualizar
+      const updatedApp = await super.update(body, where)
+      
+      // notificar a los usuarios
+      const token = generateGenericToken({appointmentId: app.appointmentId}, config.jwtUserSecret!)
+      if (body?.date || body?.time){
         //notify user
         await sendEmail({
           to: app.email,
@@ -147,6 +186,33 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         })
       }
 
+      if (body.status === "confirmed"){
+         //notify user
+        await sendEmail({
+          to: app.email,
+          subject: "Su turno ha sido confirmado",
+          text: 
+          `Su turno turno agendado en CalendUp ha sido confirmado:
+           fecha: ${app.date}
+           hora: ${app.time}
+           profesional: ${app.professional.profile.name} ${app.professional.profile.lastName} - ${app.professional.profile.jobTitle}
+
+          Puedes consultar o modificar tu turno desde aqui ${config.urlFront}/appointments/user-view/${app.appointmentId}?authorization=${token} `
+        })
+
+        //notify professional
+        await sendEmail({
+          to: app.professional.email,
+          subject: "Turno confirmado correctamente",
+          text:  
+          `Has confirmado el turno correctamente
+           fecha: ${app.date}
+           hora: ${app.time}
+           nombre del paciente: ${app.name} ${app.lastName}
+           Puedes consultar todos los detalles del turno aqui ${config.urlFront}/appointments/${app.appointmentId}`
+        })
+      }
+
       if (body.status === "cancelled"){
         //notify user
         await sendEmail({
@@ -165,7 +231,6 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
           `Su turno agendado en CalendUp ha sido cancelado, consulte los detalles aqui ${config.urlFront}/appointments/${app.appointmentId}`
         })
       }
-      const updatedApp = await super.update(body, where)
 
       return updatedApp;      
     } catch (error) {

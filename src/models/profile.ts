@@ -86,6 +86,12 @@ export class Profile extends Model {
   user!: User
 
   @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  deleted: boolean;
+
+  @Column({
     allowNull: false,
     type: DataType.DATE,
     field: 'created_at',

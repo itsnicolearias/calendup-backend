@@ -47,6 +47,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
   try {
     const userId = req?.user?.userId;
     const data = req.body
+
     const updated = await ProfileService.updateProfile(data, userId)
     res.json(updated)
   } catch (error) {

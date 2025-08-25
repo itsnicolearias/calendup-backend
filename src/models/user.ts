@@ -5,6 +5,7 @@ import {
 import { Appointment } from "./appointment"
 import { Profile } from "./profile"
 import { UserRole } from "../modules/auth/auth.interface"
+import { AppointmentType } from "./appointment_type"
 
 @Table({ tableName: "users", underscored: true })
 export class User extends Model {
@@ -51,8 +52,17 @@ export class User extends Model {
   @HasMany(() => Appointment)
   appointments!: Appointment[]
 
+  @HasMany(() => AppointmentType)
+  AppointmentTypes!: AppointmentType[]
+
   @HasOne(() => Profile)
   profile!: Profile
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  deleted: boolean;
 
   @Column({
     allowNull: false,
