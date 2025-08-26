@@ -23,7 +23,10 @@ export const config = {
   awsBucketName: process.env.AWS_BUCKET_NAME,
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL
+  googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL,
+  facebookClientId: process.env.FACEBOOK_CLIENT_ID,
+  facebookClientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+  facebookCallbackUrl: process.env.FACEBOOK_CALLBACK_URL
 
 };
 

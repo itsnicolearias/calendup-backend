@@ -56,3 +56,21 @@ export const CallbackGoogle = async (req: Request, res: Response, next: NextFunc
     next(error)
   }
 }
+
+export const CallbackFacebook = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = req.user;
+      const resp = await AuthService.FacebookService(user);
+       res.send(`
+      <script>
+        window.opener.postMessage(
+          { token: "${resp}" },
+          "${config.urlFront}" // dominio de tu frontend
+        );
+        window.close();
+      </script>
+    `);
+  } catch (error) {
+    next(error)
+  }
+}

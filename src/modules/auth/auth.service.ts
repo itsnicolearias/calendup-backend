@@ -97,3 +97,13 @@ export const GoogleService = async (user: any) => {
         throw Boom.badRequest(error)
     }
 }
+
+export const FacebookService = async (user: any) => {
+    try {
+        const token = generateLoginToken({ userId: user.userId!, role: user.role! })
+
+      return token;
+    } catch (error) {
+        throw Boom.badRequest(error)
+    }
+}
