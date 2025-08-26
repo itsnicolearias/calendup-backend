@@ -3,7 +3,7 @@ import {
   HasOne
 } from "sequelize-typescript"
 import { User } from "./user"
-import { AppointmentStatus } from "../modules/appointments/appointment.interface"
+import { AppointmentStatus } from "../modules/appointments/interfaces/appointment.interface"
 import { AppointmentType } from "./appointment_type"
 import { Review } from "./review"
 

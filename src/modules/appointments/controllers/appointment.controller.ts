@@ -1,9 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
-import AppointmentService from './appointment.service';
-
+import AppointmentService from './../services/appointment.service';
+import { JwtPayload } from 'jsonwebtoken';
 
 // Extend Express Request interface to include 'user'
-
+declare global {
+  namespace Express {
+    interface Request {
+      myUser?: JwtPayload;
+    }
+  }
+}
 
 export const getAppointments = async (req: Request, res: Response, next: NextFunction) => {
   try {

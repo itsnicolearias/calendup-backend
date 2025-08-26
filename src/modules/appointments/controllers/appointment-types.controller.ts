@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import AppointmentTypeService from './appointment-types.service';
-
+import AppointmentTypeService from '../../appointments/services/appointment-types.service';
 
 
 export const getAppointmentTypes = async (req: Request, res: Response, next: NextFunction) => {

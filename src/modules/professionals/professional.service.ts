@@ -5,7 +5,7 @@ import { es } from 'date-fns/locale'
 import { AvailableSlot, AvailableSlotBody, AvailableSlotResponse, dayMap, IProfessionalService } from "./professional.interface";
 import { Profile } from "../../models/profile";
 import Boom from "@hapi/boom";
-import AppointmentService from "../appointments/appointment.service";
+import AppointmentService from "../appointments/services/appointment.service";
 import { Op } from "sequelize";
 import { WeekDay } from "../settings/profile.interface";
 import { groupByDate } from "../../utils/date-agrupator";

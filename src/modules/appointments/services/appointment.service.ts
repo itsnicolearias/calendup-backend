@@ -1,14 +1,14 @@
 import Boom from '@hapi/boom';
-import BaseService from '../base/base.service';
-import { CreateAppointmentParams, IAppointmentService } from './appointment.interface';
-import { User } from '../../models/user';
-import { Profile } from '../../models/profile';
-import { checkAvailability } from '../../utils/check-professional-availability';
-import { sendEmail } from '../../libs/nodemailer';
-import { config } from '../../config/environments';
-import { Appointment } from '../../models/appointment';
-import { decodeToken, generateGenericToken } from '../../utils/jwt';
-import { CheckAvailabilityBody } from '../professionals/professional.interface';
+import BaseService from '../../base/base.service';
+import { CreateAppointmentParams, IAppointmentService } from '../interfaces/appointment.interface';
+import { User } from '../../../models/user';
+import { Profile } from '../../../models/profile';
+import { checkAvailability } from '../../../utils/check-professional-availability';
+import { sendEmail } from '../../../libs/nodemailer';
+import { config } from '../../../config/environments';
+import { Appointment } from '../../../models/appointment';
+import { decodeToken, generateGenericToken } from '../../../utils/jwt';
+import { CheckAvailabilityBody } from '../../professionals/professional.interface';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
