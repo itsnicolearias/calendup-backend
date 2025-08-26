@@ -1,9 +1,11 @@
 import {
-  Table, Column, Model, DataType, ForeignKey, BelongsTo
+  Table, Column, Model, DataType, ForeignKey, BelongsTo,
+  HasOne
 } from "sequelize-typescript"
 import { User } from "./user"
 import { AppointmentStatus } from "../modules/appointments/appointment.interface"
 import { AppointmentType } from "./appointment_type"
+import { Review } from "./review"
 
 @Table({ tableName: "appointments", underscored: true })
 export class Appointment extends Model {
@@ -49,6 +51,9 @@ export class Appointment extends Model {
 
   @BelongsTo(() => AppointmentType)
   AppointmentType?: User
+
+  @HasOne(() => Review)
+  Review: Review[]
 
   @Column({
     type: DataType.BOOLEAN,
