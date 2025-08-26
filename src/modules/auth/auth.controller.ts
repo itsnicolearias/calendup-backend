@@ -43,7 +43,15 @@ export const CallbackGoogle = async (req: Request, res: Response, next: NextFunc
   try {
     const user = req.user;
       const resp = await AuthService.GoogleService(user);
-      res.redirect(resp);
+       res.send(`
+      <script>
+        window.opener.postMessage(
+          { token: "${resp}" },
+          "${config.urlFront}" // dominio de tu frontend
+        );
+        window.close();
+      </script>
+    `);
   } catch (error) {
     next(error)
   }
