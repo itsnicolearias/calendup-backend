@@ -38,3 +38,13 @@ export const VerifyEmailController = async (req: Request, res: Response, next: N
     next(error)
   }
 }
+
+export const CallbackGoogle = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = req.user;
+      const resp = await AuthService.GoogleService(user);
+      res.redirect(resp);
+  } catch (error) {
+    next(error)
+  }
+}

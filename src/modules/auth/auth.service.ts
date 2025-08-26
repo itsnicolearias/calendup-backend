@@ -87,3 +87,15 @@ export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
         
     }
 }
+
+export const GoogleService = async (user: any) => {
+    try {
+        const token = generateLoginToken({ userId: user.userId!, role: user.role! })
+
+        const url = `${config.urlFront}/auth/login?social-token=${token}`;
+
+      return url;
+    } catch (error) {
+        throw Boom.badRequest(error)
+    }
+}

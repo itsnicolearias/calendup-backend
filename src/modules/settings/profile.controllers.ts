@@ -6,10 +6,11 @@ import { JwtPayload } from "jsonwebtoken";
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtPayload;
+      myUser?: JwtPayload;
     }
   }
 }
+
 
 export const getAllProfiles = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -25,7 +26,7 @@ export const getAllProfiles = async (req: Request, res: Response, next: NextFunc
 
 export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req?.user?.userId;
+    const userId = req?.myUser?.userId;
     const profile = await ProfileService.getOneProfile(userId)
     res.json(profile)
   } catch (error) {
@@ -45,7 +46,7 @@ export const createProfile = async (req: Request, res: Response, next: NextFunct
 
 export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req?.user?.userId;
+    const userId = req?.myUser?.userId;
     const data = req.body
 
     const updated = await ProfileService.updateProfile(data, userId)
@@ -57,7 +58,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
 
 export const deleteProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.user?.userId;
+    const { id } = req.myUser?.userId;
     await ProfileService.delete({ profileId: id})
     res.status(204).send()
   } catch (error) {

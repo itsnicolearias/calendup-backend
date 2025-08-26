@@ -1,12 +1,21 @@
-import { Response, NextFunction } from 'express';
+import { Response, NextFunction, Request } from 'express';
 import boom from '@hapi/boom';
 import moment from 'moment';
 import 'dotenv/config';
 import { config } from '../config/environments';
 import { decodeToken } from '../utils/jwt';
+import { JwtPayload } from 'jsonwebtoken';
+
+declare global {
+  namespace Express {
+    interface Request {
+      myUser?: JwtPayload;
+    }
+  }
+}
 
 
-export const auth = async (req: any, res: Response, next: NextFunction) => {
+export const auth = async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.headers.authorization) {
         throw boom.unauthorized('Authorization header is missing');
@@ -23,7 +32,7 @@ export const auth = async (req: any, res: Response, next: NextFunction) => {
         if (payload.exp <= moment().unix()) {
           throw boom.unauthorized('Token has been expired');
         }
-        req.user = payload;
+        req.myUser = payload;
 
         next();
     } catch (e) {
