@@ -12,10 +12,11 @@ declare global {
 
 export const getReviews = async (req: Request, res: Response, next: NextFunction) => {
   try {
-     const { page, size } = req.query;
-    const professionalId = req.myUser?.userId ;
+     const { page, size, all } = req.query;
+     const allRecords: boolean = all === 'true';
+     const professionalId = req.myUser?.userId ;
 
-    const data = await ReviewsService.getAll(professionalId, [], Number(page), Number(size));
+    const data = await ReviewsService.getAll(professionalId, [], Number(page), Number(size), allRecords);
     res.json(data);
   } catch (err) {
     next(err);
@@ -34,8 +35,9 @@ export const getReview = async (req: Request, res: Response, next: NextFunction)
 
 export const createReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
+     const { token } = req.query;
 
-    const data = await ReviewsService.create(req.body);
+    const data = await ReviewsService.createReview(req.body, String(token));
     res.status(201).json(data);
   } catch (err) {
     next(err);

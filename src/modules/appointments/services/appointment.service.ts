@@ -238,7 +238,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
           to: app.email,
           subject: "Califica tu experiencia",
           text: 
-          `Su turno agendado en CalendUp ha sido completado puedes calificar tu experiencia con el profesional aqui: ${config.urlFront}/appointments/reviews/create-review?authorization=${token}&appointmentId=${app.appointmentId}&professionalId=${app.professionalId} `
+          `Su turno agendado en CalendUp ha sido completado puedes calificar tu experiencia con el profesional aqui: ${config.urlFront}/appointments/reviews/create?authorization=${token}&professionalId=${app.professionalId} `
         })
       }
 
