@@ -232,6 +232,16 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         })
       }
 
+      if (body.status === "completed"){
+        //notify user
+        await sendEmail({
+          to: app.email,
+          subject: "Califica tu experiencia",
+          text: 
+          `Su turno agendado en CalendUp ha sido completado puedes calificar tu experiencia con el profesional aqui: ${config.urlFront}/appointments/reviews/create-review?authorization=${token}&appointmentId=${app.appointmentId}&professionalId=${app.professionalId} `
+        })
+      }
+
       return updatedApp;      
     } catch (error) {
       throw Boom.badRequest(error);
