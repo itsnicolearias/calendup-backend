@@ -77,6 +77,13 @@ export class Profile extends Model {
   defaultAppConfirmation?: Boolean
 
   @Column({
+    type: DataType.BOOLEAN,
+    field: "mark_app_as_completed",
+    defaultValue: true
+  })
+  markAppAsCompleted?: Boolean
+
+  @Column({
     type: DataType.STRING,
     field: "license_number"
   })

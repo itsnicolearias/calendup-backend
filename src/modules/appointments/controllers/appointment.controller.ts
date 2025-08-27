@@ -13,10 +13,11 @@ declare global {
 
 export const getAppointments = async (req: Request, res: Response, next: NextFunction) => {
   try {
-     const { page, size } = req.query;
+     const { page, size, all } = req.query;
+     const allRecords: boolean = all === 'true';
     const professionalId = req['myUser']?.userId
 
-    const data = await AppointmentService.getAll(professionalId, [], Number(page), Number(size));
+    const data = await AppointmentService.getAll(professionalId, [], Number(page), Number(size), allRecords);
     res.json(data);
   } catch (err) {
     next(err);
