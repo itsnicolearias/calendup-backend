@@ -7,7 +7,7 @@ import { User } from "./user"
 import { Appointment } from "./appointment"
 
 
-@Table({ tableName: "appointment_types", underscored: true })
+@Table({ tableName: "reviews", underscored: true })
 export class Review extends Model {
   
   @Column({type: DataType.UUID, field: "review_id", allowNull: false, primaryKey: true,  defaultValue: DataType.UUIDV4})

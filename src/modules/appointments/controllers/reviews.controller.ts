@@ -25,7 +25,7 @@ export const getReviews = async (req: Request, res: Response, next: NextFunction
 export const getReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const professionalId = req?.myUser?.userId;
-    const data = await ReviewsService.getOne({ appointmentTypeId: req.params.id }, undefined, professionalId);
+    const data = await ReviewsService.getOne({ reviewId: req.params.id }, undefined, professionalId);
     res.json(data);
   } catch (err) {
     next(err);
@@ -34,9 +34,8 @@ export const getReview = async (req: Request, res: Response, next: NextFunction)
 
 export const createReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const professionalId = req.myUser?.userId;
 
-    const data = await ReviewsService.create(req.body, professionalId);
+    const data = await ReviewsService.create(req.body);
     res.status(201).json(data);
   } catch (err) {
     next(err);
@@ -56,7 +55,7 @@ export const updateReview = async (req: Request, res: Response, next: NextFuncti
 export const deleteReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const professionalId = req.myUser?.userId;
-    const data = await ReviewsService.delete({ appointmentTypeId: req.params.id }, professionalId, false);
+    const data = await ReviewsService.delete({ reviewId: req.params.id }, professionalId, false);
     res.json(data);
   } catch (err) {
     next(err);
