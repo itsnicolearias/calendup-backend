@@ -9,6 +9,7 @@ import { config } from '../../../config/environments';
 import { Appointment } from '../../../models/appointment';
 import { decodeToken, generateGenericToken } from '../../../utils/jwt';
 import { CheckAvailabilityBody } from '../../professionals/professional.interface';
+import { Op } from 'sequelize';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
@@ -248,5 +249,51 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
     }
   }
 }
+
+export async function autoCompleteAppointments() {
+  try {
+    const now = new Date();
+
+  // 1️⃣ Buscar los IDs de los turnos que cumplen las condiciones
+  const appointments = await Appointment.findAll({
+    where: {
+      status: "confirmed",
+      date: { [Op.lt]: now },
+    },
+    include: [
+      {
+        model: User,
+        include: [
+          {
+        model: Profile,
+        as: "profile",
+        where: { markAppAsCompleted: true },
+        attributes: [], // no necesitamos datos del profile
+
+      },
+        ]
+      }
+      
+    ],
+    attributes: ["appointmentId"],
+    raw: true,
+  });
+
+  const idsToUpdate = appointments.map((a) => a.appointmentId);
+  if (idsToUpdate.length === 0) return;
+
+  // 2️⃣ Actualizar solo esos IDs
+  await Appointment.update(
+    { status: "completed" },
+    {
+      where: { appointmentId: { [Op.in]: idsToUpdate } },
+    }
+  );
+  } catch (error) {
+    throw Boom.badRequest(error);
+  }
+  
+}
+
 
 export default new AppointmentService();
