@@ -10,6 +10,7 @@ import { Appointment } from '../../../models/appointment';
 import { decodeToken, generateGenericToken } from '../../../utils/jwt';
 import { CheckAvailabilityBody } from '../../professionals/professional.interface';
 import { Op } from 'sequelize';
+import { GenerateAppCode } from '../../../utils/generate-app-code';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
@@ -66,6 +67,8 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         } else {
           body.status = "pending"
         }
+
+        body.appointmentCode = GenerateAppCode(professional.profile.lastName);
         
         const appointment = await super.create(body, professionalId, include);
 
@@ -269,7 +272,6 @@ export async function autoCompleteAppointments() {
         as: "profile",
         where: { markAppAsCompleted: true },
         attributes: [], // no necesitamos datos del profile
-
       },
         ]
       }

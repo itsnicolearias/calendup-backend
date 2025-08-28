@@ -9,7 +9,8 @@ export interface CreateAppointmentParams {
   date: string;
   time: string;
   reason?: string;
-  status: AppointmentStatus
+  status: AppointmentStatus;
+  appointmentCode: string;
 }
 
 export interface AppointmentsResponse {

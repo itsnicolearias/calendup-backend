@@ -42,6 +42,9 @@ export class Appointment extends Model {
   @Column(DataType.STRING)
   reason?: string
 
+  @Column({type: DataType.STRING, field: "appointment_code", allowNull: true})
+  appointmentCode: string
+
   @ForeignKey(() => AppointmentType)
   @Column({ type: DataType.UUID, field: "appointment_type_id" })
   appointmentTypeId?: string

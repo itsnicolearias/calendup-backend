@@ -36,7 +36,7 @@ export const decodeToken = (token: string, secret: string) => {
   
 }
 
-export const generateLoginToken = (payload: { userId: string, role: string }) => {
+export const generateLoginToken = (payload: { userId: string, role: string, lastName: string }) => {
     try {
         return jwt.sign(payload, String(SECRET), { expiresIn: "7d" })
     } catch (error) {
