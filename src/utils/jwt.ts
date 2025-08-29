@@ -17,7 +17,22 @@ export const generateGenericToken = (data: any, secret: string) => {
     try {
         return jwt.sign(data, secret)
     } catch (error) {
-        throw boom.badRequest("Error generatingtoken", error)
+        throw boom.badRequest("Error generating token", error)
+    }
+  
+}
+
+export const generateAppModificationToken = (data: any, secret: string, appointmentDate: string) => {
+    try {
+        const date = new Date(`${appointmentDate}T23:59:59Z`); 
+
+        const expiresInSeconds = Math.floor(date.getTime() / 1000) + 24 * 60 * 60;
+
+        const expiration = expiresInSeconds - Math.floor(Date.now() / 1000);
+
+        return jwt.sign(data, secret, { expiresIn: expiration })
+    } catch (error) {
+        throw boom.badRequest("Error generating token", error)
     }
   
 }

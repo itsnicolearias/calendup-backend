@@ -31,7 +31,7 @@ export class Appointment extends Model {
   email: string
 
   @Column(DataType.DATE)
-  date: Date
+  date: string
 
   @Column(DataType.STRING)
   time: string

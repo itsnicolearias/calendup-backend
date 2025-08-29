@@ -7,7 +7,7 @@ import { checkAvailability } from '../../../utils/check-professional-availabilit
 import { sendEmail } from '../../../libs/nodemailer';
 import { config } from '../../../config/environments';
 import { Appointment } from '../../../models/appointment';
-import { decodeToken, generateGenericToken } from '../../../utils/jwt';
+import { decodeToken, generateAppModificationToken, generateGenericToken } from '../../../utils/jwt';
 import { CheckAvailabilityBody } from '../../professionals/professional.interface';
 import { Op } from 'sequelize';
 import { GenerateAppCode } from '../../../utils/generate-app-code';
@@ -72,7 +72,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         
         const appointment = await super.create(body, professionalId, include);
 
-        const token = generateGenericToken({appointmentId: appointment.appointmentId}, config.jwtUserSecret!)
+        const token = generateAppModificationToken({appointmentId: appointment.appointmentId}, config.jwtUserSecret!, appointment.date)
 
         if (body.status === "confirmed"){
           //notify user
@@ -165,7 +165,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
       const updatedApp = await super.update(body, where)
       
       // notificar a los usuarios
-      const token = generateGenericToken({appointmentId: app.appointmentId}, config.jwtUserSecret!)
+      const token = generateAppModificationToken({appointmentId: app.appointmentId}, config.jwtUserSecret!, updatedApp.date)
       if (body?.date || body?.time){
         //notify user
         await sendEmail({
@@ -237,12 +237,14 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
       }
 
       if (body.status === "completed"){
+
+        const completedToken = generateGenericToken({appointmentId: app.appointmentId}, config.jwtUserSecret!)
         //notify user
         await sendEmail({
           to: app.email,
           subject: "Califica tu experiencia",
           text: 
-          `Su turno agendado en CalendUp ha sido completado puedes calificar tu experiencia con el profesional aqui: ${config.urlFront}/appointments/reviews/create?authorization=${token}&professionalId=${app.professionalId} `
+          `Su turno agendado en CalendUp ha sido completado puedes calificar tu experiencia con el profesional aqui: ${config.urlFront}/appointments/reviews/create?authorization=${completedToken}&professionalId=${app.professionalId} `
         })
       }
 
@@ -291,6 +293,16 @@ export async function autoCompleteAppointments() {
       where: { appointmentId: { [Op.in]: idsToUpdate } },
     }
   );
+
+  appointments.forEach(async (app) => {
+    const completedToken = generateGenericToken({ appointmentId: app.appointmentId }, config.jwtUserSecret!);
+    // Notify user
+    await sendEmail({
+      to: app.email,
+      subject: "Califica tu experiencia",
+      text: `Su turno agendado en CalendUp ha sido completado puede calificar su experiencia con el profesional aqui: ${config.urlFront}/appointments/reviews/create?authorization=${completedToken}&professionalId=${app.professionalId}`
+    });
+  });
   } catch (error) {
     throw Boom.badRequest(error);
   }
