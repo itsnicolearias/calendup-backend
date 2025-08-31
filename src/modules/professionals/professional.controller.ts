@@ -31,7 +31,7 @@ export const getOneProfessional = async (req: Request, res: Response, next: Next
   try {
     const professionalId = req.params.id;
 
-    const data = await ProfessionalService.getOne({userId: professionalId});
+    const data = await ProfessionalService.getOneProfessional({userId: professionalId});
     res.json(data);
   } catch (error) {
     next(error);

@@ -24,7 +24,7 @@ export class Profile extends Model {
     type: DataType.STRING, 
     field: "last_name"
   })
-  lastName?: string
+  lastName: string
 
   @Column({
     type: DataType.STRING
@@ -75,6 +75,13 @@ export class Profile extends Model {
     defaultValue: true
   })
   defaultAppConfirmation?: Boolean
+
+  @Column({
+    type: DataType.BOOLEAN,
+    field: "mark_app_as_completed",
+    defaultValue: true
+  })
+  markAppAsCompleted?: Boolean
 
   @Column({
     type: DataType.STRING,

@@ -1,9 +1,11 @@
 import {
-  Table, Column, Model, DataType, ForeignKey, BelongsTo
+  Table, Column, Model, DataType, ForeignKey, BelongsTo,
+  HasOne
 } from "sequelize-typescript"
 import { User } from "./user"
-import { AppointmentStatus } from "../modules/appointments/appointment.interface"
+import { AppointmentStatus } from "../modules/appointments/interfaces/appointment.interface"
 import { AppointmentType } from "./appointment_type"
+import { Review } from "./review"
 
 @Table({ tableName: "appointments", underscored: true })
 export class Appointment extends Model {
@@ -29,7 +31,7 @@ export class Appointment extends Model {
   email: string
 
   @Column(DataType.DATE)
-  date: Date
+  date: string
 
   @Column(DataType.STRING)
   time: string
@@ -40,6 +42,9 @@ export class Appointment extends Model {
   @Column(DataType.STRING)
   reason?: string
 
+  @Column({type: DataType.STRING, field: "appointment_code", allowNull: true})
+  appointmentCode: string
+
   @ForeignKey(() => AppointmentType)
   @Column({ type: DataType.UUID, field: "appointment_type_id" })
   appointmentTypeId?: string
@@ -49,6 +54,9 @@ export class Appointment extends Model {
 
   @BelongsTo(() => AppointmentType)
   AppointmentType?: User
+
+  @HasOne(() => Review)
+  Review: Review[]
 
   @Column({
     type: DataType.BOOLEAN,

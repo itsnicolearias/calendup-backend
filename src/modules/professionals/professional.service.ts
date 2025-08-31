@@ -5,11 +5,12 @@ import { es } from 'date-fns/locale'
 import { AvailableSlot, AvailableSlotBody, AvailableSlotResponse, dayMap, IProfessionalService } from "./professional.interface";
 import { Profile } from "../../models/profile";
 import Boom from "@hapi/boom";
-import AppointmentService from "../appointments/appointment.service";
+import AppointmentService from "../appointments/services/appointment.service";
 import { Op } from "sequelize";
 import { WeekDay } from "../settings/profile.interface";
 import { groupByDate } from "../../utils/date-agrupator";
 import { AppointmentType } from "../../models/appointment_type";
+import { getProfessionalRating } from "../../utils/professionals-rating";
 
 class ProfessionalService extends BaseService<User> implements IProfessionalService {
     constructor() {
@@ -106,10 +107,12 @@ public async getAll(professionalId?: string | null, includeModel?: object, page?
   }
 }
 
-async getOne(where: Record<string, unknown>, includeModel?: object, professionalId?: string) {
+async getOneProfessional(where: Record<string, unknown>, includeModel?: object, professionalId?: string) {
   try {
     const professional = await super.getOne(where, [Profile, AppointmentType])
-    return professional;
+    const rating = await getProfessionalRating(String(where.userId))
+    
+    return {professional, rating};
   } catch (error) {
     throw Boom.badRequest(error);
   }

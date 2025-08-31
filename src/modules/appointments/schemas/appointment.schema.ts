@@ -1,5 +1,5 @@
 import { z, ZodType } from 'zod';
-import { AppointmentStatusConst } from './appointment.interface';
+import { AppointmentStatusConst } from '../interfaces/appointment.interface';
 
 export const createAppointmentSchema: ZodType = z.object({
   name: z.string().min(1),

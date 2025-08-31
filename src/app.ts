@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import { boomErrorHandler, errorHandler } from "./middlewares/error-handler";
 import indexRoutes from "./routes/index.routes";
 import { config } from "./config/environments";
+import "./utils/autocomplete-appointments";
     
 export class App {
     app: Application

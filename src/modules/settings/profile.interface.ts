@@ -30,7 +30,10 @@ export interface UserWithProfile {
     createdAt: Date
     updatedAt: Date
     availability: Availability
+    markAppAsCompleted: boolean
   }
+  googleId: string
+  facebookId: string
 }
 
 export type WeekDay =

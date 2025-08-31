@@ -55,7 +55,7 @@ export const LoginService = async (body: LoginUserParams) => {
 
     if (!user.verified) throw Boom.unauthorized("You must verify your email before logging in")
 
-    const token = generateLoginToken({ userId: user.userId, role: user.role })
+    const token = generateLoginToken({ userId: user.userId, role: user.role, lastName: user.profile.lastName })
 
     return { token, user }
   } catch (error) {
@@ -85,5 +85,24 @@ export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
     } catch (error) {
         throw Boom.badRequest(error);
         
+    }
+}
+
+export const GoogleService = async (user: any) => {
+    try {
+        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile.lastName })
+      return token;
+    } catch (error) {
+        throw Boom.badRequest(error)
+    }
+}
+
+export const FacebookService = async (user: any) => {
+    try {
+        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile.lastName })
+
+      return token;
+    } catch (error) {
+        throw Boom.badRequest(error)
     }
 }

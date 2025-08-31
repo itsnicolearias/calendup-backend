@@ -20,7 +20,13 @@ export const config = {
   awsAccessKey: process.env.AWS_ACCESS_KEY_ID,
   awsSecretAccess: process.env.AWS_SECRET_ACCESS,
   awsRegion: process.env.AWS_REGION,
-  awsBucketName: process.env.AWS_BUCKET_NAME
+  awsBucketName: process.env.AWS_BUCKET_NAME,
+  googleClientId: process.env.GOOGLE_CLIENT_ID,
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL,
+  facebookClientId: process.env.FACEBOOK_CLIENT_ID,
+  facebookClientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+  facebookCallbackUrl: process.env.FACEBOOK_CALLBACK_URL
 
 };
 

@@ -6,6 +6,7 @@ import { Appointment } from "./appointment"
 import { Profile } from "./profile"
 import { UserRole } from "../modules/auth/auth.interface"
 import { AppointmentType } from "./appointment_type"
+import { Review } from "./review"
 
 @Table({ tableName: "users", underscored: true })
 export class User extends Model {
@@ -24,7 +25,7 @@ export class User extends Model {
     type: DataType.STRING,
     field: "password"
   })
-  password!: string
+  password: string
 
   @Column({
     type: DataType.STRING
@@ -55,8 +56,24 @@ export class User extends Model {
   @HasMany(() => AppointmentType)
   AppointmentTypes!: AppointmentType[]
 
+  @HasMany(() => Review)
+  Reviews: Review[]
+
+
   @HasOne(() => Profile)
   profile!: Profile
+
+    @Column({
+    type: DataType.STRING,
+    field: "google_id"
+  })
+  googleId: UserRole
+
+    @Column({
+    type: DataType.STRING,
+    field: "facebook_id"
+  })
+  facebookId: UserRole
 
   @Column({
     type: DataType.BOOLEAN,

@@ -1,4 +1,4 @@
-import { Appointment } from "../../models/appointment";
+import { Appointment } from "../../../models/appointment";
 
 export interface CreateAppointmentParams {
   professionalId: string;
@@ -9,7 +9,8 @@ export interface CreateAppointmentParams {
   date: string;
   time: string;
   reason?: string;
-  status: AppointmentStatus
+  status: AppointmentStatus;
+  appointmentCode: string;
 }
 
 export interface AppointmentsResponse {
@@ -18,9 +19,9 @@ export interface AppointmentsResponse {
   pagesQuantity: number;
 }
 
-export const  AppointmentStatusConst = ["pending",  "confirmed", "cancelled"] as const;
+export const  AppointmentStatusConst = ["pending",  "confirmed", "cancelled", "completed"] as const;
 
-export type  AppointmentStatus =  "pending" | "confirmed" | "cancelled"
+export type  AppointmentStatus =  "pending" | "confirmed" | "cancelled" | "completed"
 
 export const AppointmentType = ["in_person", "online"] as const ;
 

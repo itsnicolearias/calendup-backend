@@ -38,3 +38,39 @@ export const VerifyEmailController = async (req: Request, res: Response, next: N
     next(error)
   }
 }
+
+export const CallbackGoogle = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = req.user;
+      const resp = await AuthService.GoogleService(user);
+       res.send(`
+      <script>
+        window.opener.postMessage(
+          { token: "${resp}" },
+          "${config.urlFront}" // dominio de tu frontend
+        );
+        window.close();
+      </script>
+    `);
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const CallbackFacebook = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = req.user;
+      const resp = await AuthService.FacebookService(user);
+       res.send(`
+      <script>
+        window.opener.postMessage(
+          { token: "${resp}" },
+          "${config.urlFront}" // dominio de tu frontend
+        );
+        window.close();
+      </script>
+    `);
+  } catch (error) {
+    next(error)
+  }
+}
