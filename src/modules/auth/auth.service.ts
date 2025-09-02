@@ -90,7 +90,7 @@ export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
 
 export const GoogleService = async (user: any) => {
     try {
-        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile.lastName })
+        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile?.lastName })
       return token;
     } catch (error) {
         throw Boom.badRequest(error)
@@ -99,7 +99,7 @@ export const GoogleService = async (user: any) => {
 
 export const FacebookService = async (user: any) => {
     try {
-        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile.lastName })
+        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile?.lastName })
 
       return token;
     } catch (error) {

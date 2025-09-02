@@ -45,6 +45,16 @@ export const createProfileSchema = z.object({
     markAppAsCompleted: z.boolean().optional(),
     licenseNumber: z.string().optional(),
     profilePicture: z.string().optional(),
+    languages: z.array(z.string()).optional(),
+    education: z.array(
+    z.object({
+      title: z.string().min(1, "Título requerido"),
+      institution: z.string().min(1, "Institución requerida"),
+    })
+    ).optional(),
+    country: z.string().optional(),
+    province: z.string().optional(),
+    city: z.string().optional()
 })
 
 export const updateProfileSchema = createProfileSchema

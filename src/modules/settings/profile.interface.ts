@@ -31,9 +31,20 @@ export interface UserWithProfile {
     updatedAt: Date
     availability: Availability
     markAppAsCompleted: boolean
+    country: string
+    province: string
+    city: string
+    profileCompleted: boolean
+    education: Education[]
+    languages: string[]
   }
   googleId: string
   facebookId: string
+}
+
+export type Education = {
+  title: string
+  institution: string
 }
 
 export type WeekDay =
