@@ -13,6 +13,11 @@ class SecurityService implements ISecurityService {
             if (!user) {
                 throw Boom.notFound("User not found")
             }
+
+            if (!user.password){
+                throw Boom.unauthorized("User no has password")
+            }
+            
             const passwordMatch = await compare(body.password, user.password)
 
             if (!passwordMatch) {
