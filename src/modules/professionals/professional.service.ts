@@ -11,6 +11,7 @@ import { WeekDay } from "../settings/profile.interface";
 import { groupByDate } from "../../utils/date-agrupator";
 import { AppointmentType } from "../../models/appointment_type";
 import { getProfessionalRating } from "../../utils/professionals-rating";
+import { Review } from "../../models/review";
 
 class ProfessionalService extends BaseService<User> implements IProfessionalService {
     constructor() {
@@ -91,7 +92,7 @@ async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>
       }
     }
   }
-  const response = groupByDate(availableSlots)
+  const response = groupByDate(availableSlots) 
   return response
     } catch (error) {
       throw Boom.badRequest(error);
@@ -100,7 +101,18 @@ async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>
 }
 public async getAll(professionalId?: string | null, includeModel?: object, page?: number, size?: number, all?: boolean) {
   try {
-    const professionals = await super.getAll(null, [Profile], page, size, all)
+    const includeClause = [
+      { model: Profile,
+        where: {
+          profileCompleted: true
+        }
+      },
+      { model: AppointmentType },
+      { model: Review }
+    ]
+      
+    
+    const professionals = await super.getAll(null, includeClause, page, size, all)
     return professionals;
   } catch (error) {
     throw Boom.badRequest(error);
