@@ -45,7 +45,7 @@ export const RegisterService = async ( body: RegisterUserParams) => {
 
 export const LoginService = async (body: LoginUserParams) => {
   try {
-    const user = await User.findOne({ 
+    const user = await User.scope("withPassword").findOne({ 
         where: { email: body.email }, 
         include: [Profile] 
     })
@@ -60,7 +60,7 @@ export const LoginService = async (body: LoginUserParams) => {
 
     const token = generateLoginToken({ userId: user.userId, role: user.role, lastName: user.profile.lastName })
 
-    return { token, user }
+    return { token }
   } catch (error) {
     throw Boom.badRequest(error)
   }

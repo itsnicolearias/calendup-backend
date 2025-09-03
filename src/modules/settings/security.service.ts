@@ -8,7 +8,7 @@ class SecurityService implements ISecurityService {
     
     async changePassword(body: ChangePasswordBody, userId: string): Promise<void> {
         try {
-            const user = await User.findOne({ where: { userId: userId}})
+            const user = await User.scope("withPassword").findOne({ where: { userId: userId}})
 
             if (!user) {
                 throw Boom.notFound("User not found")

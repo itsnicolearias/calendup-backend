@@ -8,7 +8,16 @@ import { UserRole } from "../modules/auth/auth.interface"
 import { AppointmentType } from "./appointment_type"
 import { Review } from "./review"
 
-@Table({ tableName: "users", underscored: true })
+@Table({ 
+  tableName: "users", 
+  underscored: true, 
+  defaultScope: {
+      attributes: { exclude: ["password"] }, // 👈 excluye password siempre
+    },
+  scopes: {
+      withPassword: {}, // 👈 scope para incluir password cuando lo necesites
+    }})
+
 export class User extends Model {
 
   
