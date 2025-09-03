@@ -45,7 +45,10 @@ export const RegisterService = async ( body: RegisterUserParams) => {
 
 export const LoginService = async (body: LoginUserParams) => {
   try {
-    const user = await User.findOne({ where: { email: body.email } })
+    const user = await User.findOne({ 
+        where: { email: body.email }, 
+        include: [Profile] 
+    })
 
     if (!user) throw Boom.unauthorized("User does not exist")
 
