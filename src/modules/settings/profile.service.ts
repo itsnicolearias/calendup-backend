@@ -38,7 +38,13 @@ class ProfileService extends BaseService<Profile> implements IProfileService {
 
          await user.update(body)
 
-         return await this.getOneProfile(userId)
+         const profile = await this.getOneProfile(userId)
+
+         if (profile.profile.name && profile.profile.lastName && profile.profile.jobTitle && profile.profile.availability && profile.profile.city && profile.profile.country && profile.profile.province){
+          await user.update({profileCompleted: true})
+         }
+
+         return profile;
       } catch (error) {
         throw Boom.badRequest(error)
       }
