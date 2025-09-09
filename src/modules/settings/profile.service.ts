@@ -38,13 +38,31 @@ class ProfileService extends BaseService<Profile> implements IProfileService {
 
          await user.update(body)
 
-         const profile = await this.getOneProfile(userId)
-
-         if (profile.profile.name && profile.profile.lastName && profile.profile.jobTitle && profile.profile.availability && profile.profile.city && profile.profile.country && profile.profile.province){
+         /*if (profile.profile.name && profile.profile.lastName && profile.profile.jobTitle && profile.profile.availability && profile.profile.city && profile.profile.country && profile.profile.province){
           await user.update({profileCompleted: true})
-         }
+         }*/
 
-         return profile;
+         const requiredFields = [
+          "name",
+          "lastName",
+          "jobTitle",
+          "availability",
+          "city",
+          "country",
+          "province",
+        ];
+
+        const completedFields = requiredFields.filter((field) => !!profile.profile[field as keyof Profile]);
+        const progress = Math.round((completedFields.length / requiredFields.length) * 100);
+
+        await user.update({
+          profileProgress: progress,
+          profileCompleted: completedFields.length === requiredFields.length,
+        });
+
+        const profile = await this.getOneProfile(userId)
+
+        return profile;
       } catch (error) {
         throw Boom.badRequest(error)
       }
