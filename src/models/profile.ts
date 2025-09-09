@@ -121,6 +121,14 @@ export class Profile extends Model {
   })
   languages?: Json
 
+  @Column({
+    type: DataType.SMALLINT,
+    defaultValue: 0,
+    allowNull: false,
+    field: "profile_progress"
+  })
+  profileProgress: number;
+
   @BelongsTo(() => User)
   user!: User
 

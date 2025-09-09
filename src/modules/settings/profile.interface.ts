@@ -37,6 +37,7 @@ export interface UserWithProfile {
     profileCompleted: boolean
     education: Education[]
     languages: string[]
+    profileProgress: number
   }
   googleId: string
   facebookId: string
