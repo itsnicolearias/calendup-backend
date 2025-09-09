@@ -56,11 +56,11 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
           throw Boom.notFound('Professional not found');
         }
 
-        if (!professional.profile.availability){
+        if (!professional.profile.profileCompleted){
           throw Boom.forbidden('Professional must configure profile')
         }
 
-        checkAvailability({date: body.date, time: body.time, appointments: professional.appointments, availability: professional.profile.availability})
+        checkAvailability({date: body.date, time: body.time, appointments: professional.appointments, availability: professional.profile.availability!})
         
         if (professional.profile.defaultAppConfirmation) {
           body.status = "confirmed";
