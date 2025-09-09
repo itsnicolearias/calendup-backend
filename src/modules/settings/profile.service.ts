@@ -52,7 +52,7 @@ class ProfileService extends BaseService<Profile> implements IProfileService {
           "province",
         ];
 
-        const completedFields = requiredFields.filter((field) => !!profile.profile[field as keyof Profile]);
+        const completedFields = requiredFields.filter((field) => !!user[field as keyof Profile]);
         const progress = Math.round((completedFields.length / requiredFields.length) * 100);
 
         await user.update({
