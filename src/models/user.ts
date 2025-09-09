@@ -76,13 +76,13 @@ export class User extends Model {
     type: DataType.STRING,
     field: "google_id"
   })
-  googleId: UserRole
+  googleId: string
 
     @Column({
     type: DataType.STRING,
     field: "facebook_id"
   })
-  facebookId: UserRole
+  facebookId: string
 
   @Column({
     type: DataType.BOOLEAN,

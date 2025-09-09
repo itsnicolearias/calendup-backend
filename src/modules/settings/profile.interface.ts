@@ -38,6 +38,7 @@ export interface UserWithProfile {
     education: Education[]
     languages: string[]
     profileProgress: number
+    isNewUser: boolean
   }
   googleId: string
   facebookId: string

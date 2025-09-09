@@ -129,6 +129,14 @@ export class Profile extends Model {
   })
   profileProgress: number;
 
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: true,
+    allowNull: false,
+    field: 'is_new_user',
+  })
+  isNewUser: boolean;
+
   @BelongsTo(() => User)
   user!: User
 
