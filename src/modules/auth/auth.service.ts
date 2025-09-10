@@ -45,7 +45,10 @@ export const RegisterService = async ( body: RegisterUserParams) => {
 
 export const LoginService = async (body: LoginUserParams) => {
   try {
-    const user = await User.findOne({ where: { email: body.email } })
+    const user = await User.scope("withPassword").findOne({ 
+        where: { email: body.email }, 
+        include: [Profile] 
+    })
 
     if (!user) throw Boom.unauthorized("User does not exist")
 
@@ -57,7 +60,7 @@ export const LoginService = async (body: LoginUserParams) => {
 
     const token = generateLoginToken({ userId: user.userId, role: user.role, lastName: user.profile.lastName })
 
-    return { token, user }
+    return { token }
   } catch (error) {
     throw Boom.badRequest(error)
   }
@@ -90,7 +93,7 @@ export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
 
 export const GoogleService = async (user: any) => {
     try {
-        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile.lastName })
+        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile?.lastName })
       return token;
     } catch (error) {
         throw Boom.badRequest(error)
@@ -99,7 +102,7 @@ export const GoogleService = async (user: any) => {
 
 export const FacebookService = async (user: any) => {
     try {
-        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile.lastName })
+        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile?.lastName })
 
       return token;
     } catch (error) {

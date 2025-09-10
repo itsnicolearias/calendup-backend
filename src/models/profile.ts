@@ -89,6 +89,54 @@ export class Profile extends Model {
   })
   licenseNumber?: String
 
+  @Column({
+    type: DataType.STRING,
+  })
+  country?: String
+
+  @Column({
+    type: DataType.STRING,
+  })
+  province?: String
+
+  @Column({
+    type: DataType.STRING,
+  })
+  city?: String
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+    field: "profile_completed"
+  })
+  profileCompleted: boolean;
+
+  @Column({
+    type: DataType.JSONB,
+  })
+  education?: Json
+
+  @Column({
+    type: DataType.JSONB,
+  })
+  languages?: Json
+
+  @Column({
+    type: DataType.SMALLINT,
+    defaultValue: 0,
+    allowNull: false,
+    field: "profile_progress"
+  })
+  profileProgress: number;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: true,
+    allowNull: false,
+    field: 'is_new_user',
+  })
+  isNewUser: boolean;
+
   @BelongsTo(() => User)
   user!: User
 

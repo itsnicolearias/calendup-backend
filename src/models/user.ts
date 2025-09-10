@@ -8,7 +8,16 @@ import { UserRole } from "../modules/auth/auth.interface"
 import { AppointmentType } from "./appointment_type"
 import { Review } from "./review"
 
-@Table({ tableName: "users", underscored: true })
+@Table({ 
+  tableName: "users", 
+  underscored: true, 
+  defaultScope: {
+      attributes: { exclude: ["password"] }, // 👈 excluye password siempre
+    },
+  scopes: {
+      withPassword: {}, // 👈 scope para incluir password cuando lo necesites
+    }})
+
 export class User extends Model {
 
   
@@ -67,13 +76,13 @@ export class User extends Model {
     type: DataType.STRING,
     field: "google_id"
   })
-  googleId: UserRole
+  googleId: string
 
     @Column({
     type: DataType.STRING,
     field: "facebook_id"
   })
-  facebookId: UserRole
+  facebookId: string
 
   @Column({
     type: DataType.BOOLEAN,
