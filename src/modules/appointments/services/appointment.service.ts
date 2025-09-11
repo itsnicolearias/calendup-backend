@@ -11,6 +11,7 @@ import { decodeToken, generateAppModificationToken, generateGenericToken } from 
 import { CheckAvailabilityBody } from '../../professionals/professional.interface';
 import { Op } from 'sequelize';
 import { GenerateAppCode } from '../../../utils/generate-app-code';
+import { getProfessionalRating } from '../../../utils/professionals-rating';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
@@ -18,7 +19,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
   }
   
   // obtain and update one appointment from a magic link with a jwt, for users that are not logged in
-  async getOneAppointment(token: string): Promise<Appointment> {
+  async getOneAppointment(token: string): Promise<{ appointment: Appointment, rating: any }> {
     try {
       const verifyToken = decodeToken(token, config.jwtUserSecret!)
 
@@ -26,7 +27,9 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
       const appointment = await super.getOne({appointmentId: appointmentId}, [{model: User, include: Profile}])
 
-      return appointment;
+      const rating = await getProfessionalRating(appointment.professionalId)
+
+      return { appointment, rating };
     } catch (error) {
       throw Boom.badRequest(error);
     }
