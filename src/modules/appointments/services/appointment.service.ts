@@ -12,6 +12,7 @@ import { CheckAvailabilityBody } from '../../professionals/professional.interfac
 import { Op } from 'sequelize';
 import { GenerateAppCode } from '../../../utils/generate-app-code';
 import { getProfessionalRating } from '../../../utils/professionals-rating';
+import { AppointmentType } from '../../../models/appointment_type';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
@@ -25,7 +26,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
       const appointmentId = verifyToken.appointmentId
 
-      const appointment = await super.getOne({appointmentId: appointmentId}, [{model: User, include: Profile}])
+      const appointment = await super.getOne({appointmentId: appointmentId}, [{model: User, include: Profile}, AppointmentType])
 
       const rating = await getProfessionalRating(appointment.professionalId)
 
