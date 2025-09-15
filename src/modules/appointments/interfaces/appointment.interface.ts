@@ -26,6 +26,6 @@ export type  AppointmentStatus =  "pending" | "confirmed" | "cancelled" | "compl
 export const AppointmentType = ["in_person", "online"] as const ;
 
 export interface IAppointmentService{
-  getOneAppointment(token: string): Promise<Appointment>;
+  getOneAppointment(token: string): Promise<{ appointment: Appointment, rating: any }>;
   updateAppointment(body: Partial<CreateAppointmentParams>, token: string): Promise<Appointment>
 }
