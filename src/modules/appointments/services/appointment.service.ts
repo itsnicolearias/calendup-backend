@@ -13,6 +13,16 @@ import { Op } from 'sequelize';
 import { GenerateAppCode } from '../../../utils/generate-app-code';
 import { getProfessionalRating } from '../../../utils/professionals-rating';
 import { AppointmentType } from '../../../models/appointment_type';
+import { confirmedUserEmail } from '../../../templates/appointments/userAppSchedule';
+import { confirmedProfessionalEmail } from '../../../templates/appointments/professional-app-schedule';
+import { appointmentPendingUserEmail } from '../../../templates/appointments/appPendingUserEmail';
+import { appointmentPendingProfessionalEmail } from '../../../templates/appointments/appPendingProfessional';
+import { appointmentRescheduledUserEmail } from '../../../templates/appointments/appRescheduledUserEmail';
+import { appointmentRescheduledProfessionalEmail } from '../../../templates/appointments/appRescheduledProfessional';
+import { appointmentCreatedEmail } from '../../../templates/appointments/userAppConfirmation';
+import { appointmentConfirmedProfessionalEmail } from '../../../templates/appointments/appConfirmedProfessional';
+import { appointmentCancelledEmail } from '../../../templates/appointments/appCancelledEmail';
+import { appointmentCompletedEmail } from '../../../templates/appointments/appointmentCompletedEmail';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
@@ -83,50 +93,50 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         await sendEmail({
           to: body.email,
           subject: "Turno agendado correctamente",
-          text: 
-          `Has agendado un turno en CalendUp, consulta los detalles aqui:
-           fecha: ${body.date}
-           hora: ${body.time}
-           profesional: ${professional.profile.name} ${professional.profile.lastName} - ${professional.profile.jobTitle}
-
-          Puedes consultar o modificar tu turno desde aqui ${config.urlFront}/appointments/user-view/${appointment.appointmentId}?authorization=${token} `
+          html: confirmedUserEmail({
+            date: body.date, 
+            time: body.time}, {
+            name: professional.profile.name!, 
+            lastName: professional.profile.lastName, 
+            jobTitle: professional.profile.jobTitle!}, {
+            appointmentId: appointment.appointmentId}, 
+            token)
         })
 
         //notify professional
         await sendEmail({
           to: professional.email,
           subject: "Has recibido un nuevo turno en CalendUp",
-          text:  
-          `Se ha agendado un nuevo turno en tu cuenta
-           fecha: ${body.date}
-           hora: ${body.time}
-           nombre del paciente: ${body.name} ${body.lastName}
-           Puedes consultar todos los detalles del turno aqui ${config.urlFront}/appointments/${appointment.appointmentId}`
+          html: confirmedProfessionalEmail({ 
+            date: body.date, 
+            time: body.time, 
+            name: body.name, 
+            lastName: body.lastName}, { 
+            appointmentId: appointment.appointmentId })
         })
         } else {
            //notify user
         await sendEmail({
           to: body.email,
           subject: "Turno agendado correctamente",
-          text: 
-          `Has agendado un turno en CalendUp, el turno esta pendiente de confimacion, te avisaremos cuando el profesional confirme el turno.
-           fecha: ${body.date}
-           hora: ${body.time}
-           profesional: ${professional.profile.name} ${professional.profile.lastName} - ${professional.profile.jobTitle}
-
-          Puedes consultar o modificar tu turno desde aqui ${config.urlFront}/appointments/user-view/${appointment.appointmentId}?authorization=${token} `
+          html: appointmentPendingUserEmail(
+            body.name, 
+            `${professional.profile.name}  ${professional.profile.lastName}`, 
+            body.date, 
+            body.time, 
+            `${config.urlFront}/appointments/user-view/${appointment.appointmentId}?authorization=${token} `)
         })
 
         //notify professional
         await sendEmail({
           to: professional.email,
           subject: "Nuevo turno pendiente de confirmacion",
-          text:  
-          `Se ha agendado un nuevo turno en tu cuenta,
-           fecha: ${body.date}
-           hora: ${body.time}
-           nombre del paciente: ${body.name} ${body.lastName}
-           Puedes consultar todos los detalles del turno aqui ${config.urlFront}/appointments/${appointment.appointmentId}`
+          html: appointmentPendingProfessionalEmail(
+            professional.profile.name!, 
+            `${body.name} ${body.lastName}`, 
+            body.date, 
+            body.time, 
+            `${config.urlFront}/appointments/${appointment.appointmentId}`)
         })
         }
         
@@ -175,22 +185,25 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         await sendEmail({
           to: app.email,
           subject: "Su turno ha sido reagendado",
-          text: 
-          `Su turno agendado en CalendUp ha sido reagendado, 
-          fecha: ${body.date},
-          hora: ${body.time}
-          Consulte los detalles aqui ${config.urlFront}/appointments/user-view/${app.appointmentId}?authorization=${token} `
+          html: appointmentRescheduledUserEmail(
+            app.name!, 
+            `${app.name} ${app.lastName}`, 
+            body.date ? body.date : app.date, 
+            body.time ? body.time : app.time, 
+            `${config.urlFront}/appointments/user-view/${app.appointmentId}?authorization=${token}` )
         })
 
         //notify professional
         await sendEmail({
           to: app.professional.email,
           subject: "Su turno ha sido reagendado",
-          text:  
-          `Su turno agendado en CalendUp ha sido reagendado,
-          fecha: ${body.date},
-          hora: ${body.time}
-          Consulte los detalles aqui ${config.urlFront}/appointments/${app.appointmentId}`
+          html: appointmentRescheduledProfessionalEmail(
+            app.professional.profile.name!, 
+            `${app.name} ${app.lastName}`, 
+            body.date ? body.date : app.date, 
+            body.time ? body.time : app.time, 
+            `${config.urlFront}/dashboard/appointments/${app.appointmentId}`)
+
         })
       }
 
@@ -199,25 +212,23 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         await sendEmail({
           to: app.email,
           subject: "Su turno ha sido confirmado",
-          text: 
-          `Su turno turno agendado en CalendUp ha sido confirmado:
-           fecha: ${app.date}
-           hora: ${app.time}
-           profesional: ${app.professional.profile.name} ${app.professional.profile.lastName} - ${app.professional.profile.jobTitle}
-
-          Puedes consultar o modificar tu turno desde aqui ${config.urlFront}/appointments/user-view/${app.appointmentId}?authorization=${token} `
+          html: appointmentCreatedEmail(
+            app.name!, 
+            `${app.professional.profile.name} ${app.professional.profile.lastName}`, 
+            app.date, 
+            app.time)
         })
 
         //notify professional
         await sendEmail({
           to: app.professional.email,
           subject: "Turno confirmado correctamente",
-          text:  
-          `Has confirmado el turno correctamente
-           fecha: ${app.date}
-           hora: ${app.time}
-           nombre del paciente: ${app.name} ${app.lastName}
-           Puedes consultar todos los detalles del turno aqui ${config.urlFront}/appointments/${app.appointmentId}`
+          html: appointmentConfirmedProfessionalEmail(
+            app.professional.profile.name!, 
+            `${app.name} ${app.lastName}`, 
+            app.date, 
+            app.time, 
+            `${config.urlFront}/appointments/${app.appointmentId}`)
         })
       }
 
@@ -226,17 +237,25 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         await sendEmail({
           to: app.email,
           subject: "Se ha cancelado su turno",
-          text: 
-          `Su turno agendado en CalendUp ha sido cancelado, 
-          consulte los detalles aqui ${config.urlFront}/appointments/user-view/${app.appointmentId}?authorization=${token} `
+          html: appointmentCancelledEmail(
+            app.name!, 
+            `${app.professional.profile.name} ${app.professional.profile.lastName}`, 
+            app.date, 
+            app.time,
+             `${config.urlFront}/appointments/user-view/${app.appointmentId}?authorization=${token}`
+          )
         })
 
         //notify professional
         await sendEmail({
           to: app.professional.email,
           subject: "Se ha cancelado su turno",
-          text:  
-          `Su turno agendado en CalendUp ha sido cancelado, consulte los detalles aqui ${config.urlFront}/appointments/${app.appointmentId}`
+          html: appointmentConfirmedProfessionalEmail(
+            app.professional.profile.name!, 
+            `${app.name} ${app.lastName}`, 
+            app.date, 
+            app.time, 
+            `${config.urlFront}/dashboard/appointments/${app.appointmentId}`)
         })
       }
 
@@ -247,8 +266,10 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         await sendEmail({
           to: app.email,
           subject: "Califica tu experiencia",
-          text: 
-          `Su turno agendado en CalendUp ha sido completado puedes calificar tu experiencia con el profesional aqui: ${config.urlFront}/appointments/reviews/create?authorization=${completedToken}&professionalId=${app.professionalId} `
+          html: appointmentCompletedEmail(
+            app.name!, 
+            `${app.professional.profile.name} ${app.professional.profile.lastName}`, 
+            `${config.urlFront}/appointments/reviews/create?authorization=${completedToken}&professionalId=${app.professionalId} `)
         })
       }
 
@@ -301,11 +322,14 @@ export async function autoCompleteAppointments() {
   appointments.forEach(async (app) => {
     const completedToken = generateGenericToken({ appointmentId: app.appointmentId }, config.jwtUserSecret!);
     // Notify user
-    await sendEmail({
-      to: app.email,
-      subject: "Califica tu experiencia",
-      text: `Su turno agendado en CalendUp ha sido completado puede calificar su experiencia con el profesional aqui: ${config.urlFront}/appointments/reviews/create?authorization=${completedToken}&professionalId=${app.professionalId}`
-    });
+     await sendEmail({
+          to: app.email,
+          subject: "Califica tu experiencia",
+          html: appointmentCompletedEmail(
+            app.name!, 
+            `${app.professional.profile.name} ${app.professional.profile.lastName}`, 
+            `${config.urlFront}/appointments/reviews/create?authorization=${completedToken}&professionalId=${app.professionalId} `)
+        })
   });
   } catch (error) {
     throw Boom.badRequest(error);

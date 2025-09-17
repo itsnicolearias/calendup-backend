@@ -6,6 +6,8 @@ import  Boom from "@hapi/boom"
 import { Profile } from "../../models/profile"
 import { sendEmail } from "../../libs/nodemailer"
 import { config } from "../../config/environments"
+import { verifyAccountTemplate } from "../../templates/auth/verifyAccount"
+import { accountActivatedTemplate } from "../../templates/auth/accountActivated"
 
 export const RegisterService = async ( body: RegisterUserParams) => {
     try {
@@ -34,7 +36,7 @@ export const RegisterService = async ( body: RegisterUserParams) => {
         await sendEmail({ 
             to: user.email, 
             subject: 'CalendUp - Verifica tu cuenta', 
-            html: `<p> Bienvenido a CalendUp haz, <a href="${link}"> click aqui </a> para activar tu cuenta. </p>`})
+            html: verifyAccountTemplate(link) })
 
         return { user, token }
     } catch (error) {
@@ -80,8 +82,8 @@ export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
 
         await sendEmail({
             to: user.email, 
-            subject: 'Cuenta activada', 
-            text: `Tu cuenta ha sido activada exitosamente.`
+            subject: 'Tu cuenta ha sido activada exitosamente', 
+            html: accountActivatedTemplate()
         })
 
         return { message: "User verified successfully" }

@@ -3,6 +3,7 @@ import { ChangePasswordBody, ISecurityService } from "./security.interface";
 import { User } from "../../models/user";
 import { compare, hash } from "bcryptjs"
 import { sendEmail } from "../../libs/nodemailer";
+import { passwordChangedTemplate } from "../../templates/auth/passwordChanged";
 
 class SecurityService implements ISecurityService {
     
@@ -31,7 +32,7 @@ class SecurityService implements ISecurityService {
             await sendEmail({ 
             to: user.email, 
             subject: 'Se ha modificado su contraseña - CalendUp', 
-            html: `<p> Su contraseña ha sido modificada exitosamente. </p>`
+            html: passwordChangedTemplate()
         })
         } catch (error) {
             throw Boom.badRequest(error)
