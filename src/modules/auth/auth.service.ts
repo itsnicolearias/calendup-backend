@@ -35,7 +35,7 @@ export const RegisterService = async ( body: RegisterUserParams) => {
 
         await sendEmail({ 
             to: user.email, 
-            subject: 'CalendUp - Verifica tu cuenta', 
+            subject: 'CalendUp - Verifica tu cuenta 📅', 
             html: verifyAccountTemplate(link) })
 
         return { user, token }
@@ -82,7 +82,7 @@ export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
 
         await sendEmail({
             to: user.email, 
-            subject: 'Tu cuenta ha sido activada exitosamente', 
+            subject: 'Tu cuenta ha sido activada exitosamente 📅', 
             html: accountActivatedTemplate()
         })
 

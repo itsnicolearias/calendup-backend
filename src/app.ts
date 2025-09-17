@@ -7,6 +7,7 @@ import { boomErrorHandler, errorHandler } from "./middlewares/error-handler";
 import indexRoutes from "./routes/index.routes";
 import { config } from "./config/environments";
 import "./utils/autocomplete-appointments";
+import "./utils/app-reminders"
     
 export class App {
     app: Application

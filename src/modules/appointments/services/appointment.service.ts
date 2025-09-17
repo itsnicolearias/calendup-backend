@@ -14,7 +14,7 @@ import { GenerateAppCode } from '../../../utils/generate-app-code';
 import { getProfessionalRating } from '../../../utils/professionals-rating';
 import { AppointmentType } from '../../../models/appointment_type';
 import { confirmedUserEmail } from '../../../templates/appointments/userAppSchedule';
-import { confirmedProfessionalEmail } from '../../../templates/appointments/professional-app-schedule';
+import { confirmedProfessionalEmail } from '../../../templates/appointments/professionalAppSchedule';
 import { appointmentPendingUserEmail } from '../../../templates/appointments/appPendingUserEmail';
 import { appointmentPendingProfessionalEmail } from '../../../templates/appointments/appPendingProfessional';
 import { appointmentRescheduledUserEmail } from '../../../templates/appointments/appRescheduledUserEmail';
@@ -92,7 +92,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
           //notify user
         await sendEmail({
           to: body.email,
-          subject: "Turno agendado correctamente",
+          subject: "Turno agendado correctamente 📅",
           html: confirmedUserEmail({
             date: body.date, 
             time: body.time}, {
@@ -106,7 +106,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         //notify professional
         await sendEmail({
           to: professional.email,
-          subject: "Has recibido un nuevo turno en CalendUp",
+          subject: "Has recibido un nuevo turno en CalendUp 📅",
           html: confirmedProfessionalEmail({ 
             date: body.date, 
             time: body.time, 
@@ -118,7 +118,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
            //notify user
         await sendEmail({
           to: body.email,
-          subject: "Turno agendado correctamente",
+          subject: "Turno agendado correctamente 📅",
           html: appointmentPendingUserEmail(
             body.name, 
             `${professional.profile.name}  ${professional.profile.lastName}`, 
@@ -130,7 +130,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         //notify professional
         await sendEmail({
           to: professional.email,
-          subject: "Nuevo turno pendiente de confirmacion",
+          subject: "Nuevo turno pendiente de confirmacion 📅",
           html: appointmentPendingProfessionalEmail(
             professional.profile.name!, 
             `${body.name} ${body.lastName}`, 
@@ -211,7 +211,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
          //notify user
         await sendEmail({
           to: app.email,
-          subject: "Su turno ha sido confirmado",
+          subject: "Su turno ha sido confirmado 📅",
           html: appointmentCreatedEmail(
             app.name!, 
             `${app.professional.profile.name} ${app.professional.profile.lastName}`, 
