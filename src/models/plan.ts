@@ -51,4 +51,20 @@ export class Plan extends Model {
 
   @HasMany(() => Subscription)
   subscriptions!: Subscription[];
+
+   @Column({
+    allowNull: false,
+    type: DataType.DATE,
+    field: 'created_at',
+    defaultValue: DataType.NOW,
+  })
+  createdAt: Date;
+
+  @Column({
+    allowNull: false,
+    type: DataType.DATE,
+    field: 'updated_at',
+    defaultValue: DataType.NOW,
+  })
+  updatedAt: Date;
 }

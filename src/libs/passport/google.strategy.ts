@@ -3,6 +3,7 @@ import { Strategy as GoogleStrategy, Profile, StrategyOptions, VerifyCallback } 
 import { User } from "../../models/user"; 
 import { config } from "../../config/environments";
 import { UserRole } from "../../modules/auth/auth.interface";
+import { CreateFreeSubscription } from "../../utils/createFreeSubscription";
 
 const options: StrategyOptions = {
   clientID: config.googleClientId!,
@@ -29,6 +30,8 @@ passport.use(
           }, {
             include: ["profile"]
           });
+
+          await CreateFreeSubscription(user)
         }
 
         return done(null, user);

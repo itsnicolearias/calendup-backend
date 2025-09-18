@@ -21,3 +21,5 @@ export interface SubscriptionAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export const FREE_PLAN_ID = "5cca8214-0630-4210-9aa1-3fc27439ac2b";

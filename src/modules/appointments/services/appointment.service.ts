@@ -23,6 +23,7 @@ import { appointmentCreatedEmail } from '../../../templates/appointments/userApp
 import { appointmentConfirmedProfessionalEmail } from '../../../templates/appointments/appConfirmedProfessional';
 import { appointmentCancelledEmail } from '../../../templates/appointments/appCancelledEmail';
 import { appointmentCompletedEmail } from '../../../templates/appointments/appointmentCompletedEmail';
+import { checkPlanLimit } from '../../../utils/checkPlanLimit';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
@@ -62,6 +63,8 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
   async create(body: CreateAppointmentParams, professionalId?: string, include?: any[]): Promise<Appointment> {
       try {
+        await checkPlanLimit(body.professionalId);
+        
         const professional = await User.findOne({
           where: { userId: body.professionalId },
           include: [Appointment, Profile]

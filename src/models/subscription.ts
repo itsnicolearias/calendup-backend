@@ -63,4 +63,23 @@ export class Subscription extends Model {
 
   @BelongsTo(() => Plan)
   plan!: Plan;
+
+  @BelongsTo(() => User)
+  User!: User;
+
+   @Column({
+    allowNull: false,
+    type: DataType.DATE,
+    field: 'created_at',
+    defaultValue: DataType.NOW,
+  })
+  createdAt: Date;
+
+  @Column({
+    allowNull: false,
+    type: DataType.DATE,
+    field: 'updated_at',
+    defaultValue: DataType.NOW,
+  })
+  updatedAt: Date;
 }

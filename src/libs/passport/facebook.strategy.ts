@@ -3,6 +3,7 @@ import { Strategy as FacebookStrategy } from "passport-facebook";
 import { config } from "../../config/environments";
 import { User } from "../../models/user";
 import { UserRole } from "../../modules/auth/auth.interface";
+import { CreateFreeSubscription } from "../../utils/createFreeSubscription";
 
 passport.use(
   new FacebookStrategy(
@@ -30,6 +31,8 @@ passport.use(
           }, {
             include: ["profile"]
           });
+
+          await CreateFreeSubscription(user);
         }
 
         return done(null, user);

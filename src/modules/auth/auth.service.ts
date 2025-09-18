@@ -8,6 +8,7 @@ import { sendEmail } from "../../libs/nodemailer"
 import { config } from "../../config/environments"
 import { verifyAccountTemplate } from "../../templates/auth/verifyAccount"
 import { accountActivatedTemplate } from "../../templates/auth/accountActivated"
+import { CreateFreeSubscription } from "../../utils/createFreeSubscription"
 
 export const RegisterService = async ( body: RegisterUserParams) => {
     try {
@@ -30,6 +31,8 @@ export const RegisterService = async ( body: RegisterUserParams) => {
             lastName: body.lastName,
         })
 
+        await CreateFreeSubscription(user);
+
         const token = generateVerificationToken(user.userId)
         const  link = `${config.url}/auth/verify-account?token=${token}`;
 
@@ -38,7 +41,6 @@ export const RegisterService = async ( body: RegisterUserParams) => {
             subject: 'CalendUp - Verifica tu cuenta 📅', 
             html: verifyAccountTemplate(link) })
 
-        return { user, token }
     } catch (error) {
         throw Boom.badRequest(error);
     }
