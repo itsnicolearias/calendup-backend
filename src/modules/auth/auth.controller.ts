@@ -4,12 +4,10 @@ import { config } from "../../config/environments"
 
 export const RegisterUserController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await AuthService.RegisterService(req.body)
+    await AuthService.RegisterService(req.body)
 
     return res.status(201).json({
-      message: "User registered successfully. Please check your email.",
-      user: result.user,
-      token: result.token, // Opcional: podés ocultarlo si ya lo enviás por mail
+      message: "User registered successfully. Please check your email."
     })
   } catch (error) {
     next(error);

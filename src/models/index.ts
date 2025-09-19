@@ -4,6 +4,8 @@ import { Profile } from "./profile";
 import { Appointment } from "./appointment";
 import { AppointmentType } from "./appointment_type";
 import { Review } from "./review";
+import { Plan } from "./plan";
+import { Subscription } from "./subscription";
 
 export function Models() {
   const models = [
@@ -11,7 +13,9 @@ export function Models() {
     Profile,
     Appointment,
     AppointmentType,
-    Review
+    Review,
+    Plan,
+    Subscription
   ];
 
   return models;

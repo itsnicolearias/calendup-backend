@@ -7,6 +7,7 @@ import { Profile } from "./profile"
 import { UserRole } from "../modules/auth/auth.interface"
 import { AppointmentType } from "./appointment_type"
 import { Review } from "./review"
+import { Subscription } from "./subscription"
 
 @Table({ 
   tableName: "users", 
@@ -83,6 +84,9 @@ export class User extends Model {
     field: "facebook_id"
   })
   facebookId: string
+
+  @HasOne(() => Subscription)
+  Subscription!: Subscription
 
   @Column({
     type: DataType.BOOLEAN,
