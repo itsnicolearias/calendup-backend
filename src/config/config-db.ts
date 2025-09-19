@@ -9,7 +9,7 @@ export = {
     url: "config.dbUrlT",
   },
   production: {
-    url: "config.dbUrlNP",
+    url: config.dbUrl,
     dialect: 'postgres',
     dialectOptions: {
       ssl: {
