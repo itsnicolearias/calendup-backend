@@ -21,15 +21,14 @@ export class App {
 
     public async config() {
     
-        /*const whiteList: any[] = [
-          `/.localhost:${config.port}$/`,
-          `/.localhost:${config.portFront}$/`,
-          `/.${config.urlFront}`,
-          /.localhost:3000$/
-        ];*/
+        const whiteList: any[] = [
+           new RegExp(config.urlFront!), // convierte el string en RegExp
+          //.localhost:3000$/
+        ];
         const options: cors.CorsOptions = {
-          origin: '*',
-          //credentials: true,
+          methods: ["GET", "POST", "PUT", "DELETE"],
+          origin: whiteList,
+          credentials: true,
         };
         this.app.use(morgan('dev'))
         this.app.use(cors(options));
