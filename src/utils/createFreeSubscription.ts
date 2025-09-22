@@ -17,7 +17,7 @@ export const CreateFreeSubscription = async (user: User) => {
             startDate: new Date(),
         });
 
-        return subscription;
+        return { subscription, freePlan };
 
     } catch (error) {
         throw Boom.badRequest(error)

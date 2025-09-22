@@ -9,6 +9,7 @@ import { config } from "../../config/environments"
 import { verifyAccountTemplate } from "../../templates/auth/verifyAccount"
 import { accountActivatedTemplate } from "../../templates/auth/accountActivated"
 import { CreateFreeSubscription } from "../../utils/createFreeSubscription"
+import { newUsersNotification } from "../../utils/newUsersNotification"
 
 export const RegisterService = async ( body: RegisterUserParams) => {
     try {
@@ -25,13 +26,13 @@ export const RegisterService = async ( body: RegisterUserParams) => {
             role: UserRole.PROFESSIONAL,
         })
 
-        await Profile.create({
+        const profile = await Profile.create({
             userId: user.userId,
             name: body.firstName,
             lastName: body.lastName,
         })
 
-        await CreateFreeSubscription(user);
+        const sub = await CreateFreeSubscription(user);
 
         const token = generateVerificationToken(user.userId)
         const  link = `${config.url}/auth/verify-account?token=${token}`;
@@ -40,6 +41,8 @@ export const RegisterService = async ( body: RegisterUserParams) => {
             to: user.email, 
             subject: 'CalendUp - Verifica tu cuenta 📅', 
             html: verifyAccountTemplate(link) })
+
+        await newUsersNotification(profile.name!, sub.freePlan.name, profile.lastName)
 
     } catch (error) {
         throw Boom.badRequest(error);
