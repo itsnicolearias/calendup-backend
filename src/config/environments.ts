@@ -26,7 +26,8 @@ export const config = {
   googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL,
   facebookClientId: process.env.FACEBOOK_CLIENT_ID,
   facebookClientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-  facebookCallbackUrl: process.env.FACEBOOK_CALLBACK_URL
+  facebookCallbackUrl: process.env.FACEBOOK_CALLBACK_URL,
+  freePlanId: process.env.FREE_PLAN_ID
 
 };
 
