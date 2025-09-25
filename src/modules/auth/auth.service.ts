@@ -1,6 +1,6 @@
 import { compare, hash } from "bcryptjs"
 import { User } from "../../models/user"
-import { LoginUserParams, RegisterUserParams, UserRole, VerifyEmailParams } from "./auth.interface"
+import { LoginUserParams, RegisterUserParams, ResetPasswordProps, UserRole, VerifyEmailParams } from "./auth.interface"
 import { decodeToken, generateLoginToken, generateVerificationToken } from "../../utils/jwt"
 import  Boom from "@hapi/boom"
 import { Profile } from "../../models/profile"
@@ -10,6 +10,9 @@ import { verifyAccountTemplate } from "../../templates/auth/verifyAccount"
 import { accountActivatedTemplate } from "../../templates/auth/accountActivated"
 import { CreateFreeSubscription } from "../../utils/createFreeSubscription"
 import { newUsersNotification } from "../../utils/newUsersNotification"
+import jwt from "jsonwebtoken"
+import { resetPasswordRequestTemplate } from "../../templates/auth/forgetPassword"
+import { resetPasswordSuccessTemplate } from "../../templates/auth/resetPAssword"
 
 export const RegisterService = async ( body: RegisterUserParams) => {
     try {
@@ -116,3 +119,56 @@ export const FacebookService = async (user: any) => {
         throw Boom.badRequest(error)
     }
 }
+
+export const ForgotPassword = async (email: string) => {
+    try {
+        console.log(email)
+        const user = await User.findOne({ where:  {email} })
+
+        if (!user){
+             throw Boom.notFound("User not found")
+        }
+
+        const token = jwt.sign({userId: user.userId}, config.jwtRecoverySecret!, { expiresIn: "1h"})
+
+        await user.update({ resetToken: token})
+
+        const link =  `${config.urlFront}/auth/reset-password?reset-token=${token}`
+
+        await sendEmail({
+            to: user.email,
+            subject: "Recupera tu contraseña en CalendUp",
+            html: resetPasswordRequestTemplate(link)
+        })
+    } catch (error) {
+        throw Boom.badRequest(error)
+    }
+}
+
+export const ResetPassword = async (body: ResetPasswordProps) => {
+    try {
+       const payload =  decodeToken(body. token, config.jwtRecoverySecret!)
+    
+       const user = await User.scope("withPassword").findByPk(payload.userId)
+       if (!user) throw Boom.notFound("User not found")
+
+       if (user.resetToken !== body.token){
+            throw Boom.forbidden("Tokens does not match")
+       }
+       console.log(body.newPassword)
+
+        user.password = await hash(body.newPassword, 10)
+       
+        await user.save()
+
+        await sendEmail({ 
+        to: user.email, 
+        subject: 'Tu contraseña ha sido restablecida', 
+        html: resetPasswordSuccessTemplate()
+    })
+
+    } catch (error) {
+        throw Boom.badRequest(error)
+    }
+}
+

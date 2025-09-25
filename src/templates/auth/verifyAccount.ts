@@ -1,4 +1,3 @@
-// templates/auth/verifyAccount.ts
 export function verifyAccountTemplate(link: string)  {
   return `
   <div style="font-family: Arial, sans-serif; background-color:#f9f9f9; padding:20px;">
