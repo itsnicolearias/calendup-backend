@@ -122,7 +122,6 @@ export const FacebookService = async (user: any) => {
 
 export const ForgotPassword = async (email: string) => {
     try {
-        console.log(email)
         const user = await User.findOne({ where:  {email} })
 
         if (!user){
@@ -155,7 +154,6 @@ export const ResetPassword = async (body: ResetPasswordProps) => {
        if (user.resetToken !== body.token){
             throw Boom.forbidden("Tokens does not match")
        }
-       console.log(body.newPassword)
 
         user.password = await hash(body.newPassword, 10)
        
