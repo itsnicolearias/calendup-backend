@@ -39,6 +39,7 @@ export interface UserWithProfile {
     languages: string[]
     profileProgress: number
     isNewUser: boolean
+    pcModalShowed: boolean
   }
   googleId: string
   facebookId: string
