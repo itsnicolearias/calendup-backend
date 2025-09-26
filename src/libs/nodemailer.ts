@@ -10,7 +10,7 @@ const transport: SMTPTransport | SMTPTransport.Options | string = {
   //pool: true,
   host: config.smtpHost,
   port: Number(config.smtpPort),
-  secure: true,
+  secure: false,
   auth: {
     user: config.smtpUsername,
     pass: config.smtpPassword,
