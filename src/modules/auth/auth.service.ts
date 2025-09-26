@@ -12,7 +12,7 @@ import { CreateFreeSubscription } from "../../utils/createFreeSubscription"
 import { newUsersNotification } from "../../utils/newUsersNotification"
 import jwt from "jsonwebtoken"
 import { resetPasswordRequestTemplate } from "../../templates/auth/forgetPassword"
-import {resetPasswordSuccessTemplate}  from "../../templates/auth/resetPAssword"
+import {resetPasswordSuccessTemplate}  from "../../templates/auth/resetPassword"
 
 export const RegisterService = async ( body: RegisterUserParams) => {
     try {
