@@ -22,7 +22,7 @@ export function confirmedUserEmail(
               
               <!-- Header -->
               <tr>
-                <td align="center" style="background: linear-gradient(to right, #ac043f, #0388bd); padding:20px; color:#ffffff; font-size:20px; font-weight:bold;">
+                <td align="center" style="background: #0388bd; padding:20px; color:#ffffff; font-size:20px; font-weight:bold;">
                   📅 CalendUp
                 </td>
               </tr>
@@ -39,7 +39,7 @@ export function confirmedUserEmail(
                   </ul>
                   <p style="margin:30px 0; text-align:center;">
                     <a href="${config.urlFront}/appointments/user-view/${appointment.appointmentId}?authorization=${token}" 
-                       style="background: linear-gradient(to right, #ac043f, #0388bd); color:#ffffff; text-decoration:none; padding:12px 20px; border-radius:5px; display:inline-block;">
+                       style="background: #0388bd; color:#ffffff; text-decoration:none; padding:12px 20px; border-radius:5px; display:inline-block;">
                       Ver turno
                     </a>
                   </p>

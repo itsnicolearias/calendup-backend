@@ -21,3 +21,11 @@ export const verifySchema = z.object({
 })
 
 export type VerifySchema = z.infer<typeof verifySchema>
+
+export const resetPasswordSchema = z.object({
+  newPassword: z.string().min(8, "Password must be at least 8 characters long"),
+})
+
+export const forgotPasswordSchema = z.object({
+  email: z.email("Invalid email")
+})

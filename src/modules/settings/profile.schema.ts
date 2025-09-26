@@ -43,6 +43,7 @@ export const createProfileSchema = z.object({
     insuranceProviders: z.array(insuranceProviders).optional(),
     defaultAppConfirmation: z.boolean().optional(),
     markAppAsCompleted: z.boolean().optional(),
+    pcModalShowed: z.boolean().optional(),
     isNewUser: z.boolean().optional(),
     licenseNumber: z.string().optional(),
     profilePicture: z.string().optional(),

@@ -19,3 +19,8 @@ export interface LoginUserParams {
   email: string
   password: string
 }
+
+export interface ResetPasswordProps {
+  token: string
+  newPassword: string
+}

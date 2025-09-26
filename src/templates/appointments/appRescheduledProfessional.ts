@@ -9,7 +9,7 @@ export function appointmentRescheduledProfessionalEmail(professionalName: string
   <body style="font-family: Arial, sans-serif; background-color: #f9fafb; color: #111827; padding: 20px;">
     <table width="100%" style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;">
       <tr>
-        <td style="padding:20px;text-align:center;background:linear-gradient(to right,#ac043f,#0388bd);color:#fff;">
+        <td style="padding:20px;text-align:center;background:#0388bd;color:#fff;">
           <h1 style="margin:0;font-size:22px;">Calendup</h1>
         </td>
       </tr>
@@ -19,7 +19,7 @@ export function appointmentRescheduledProfessionalEmail(professionalName: string
           <p>Un turno con <strong>${patientName}</strong> fue reagendado:</p>
           <p><strong>Nueva fecha:</strong> ${date}<br/><strong>Hora:</strong> ${time}</p>
           <p style="margin-top:20px;text-align:center;">
-            <a href="${appointmentUrl}" style="background:linear-gradient(to right,#ac043f,#0388bd);color:#ffffff;padding:10px 20px;border-radius:6px;text-decoration:none;">Ver turno</a>
+            <a href="${appointmentUrl}" style="background:#0388bd;color:#ffffff;padding:10px 20px;border-radius:6px;text-decoration:none;">Ver turno</a>
           </p>
         </td>
       </tr>

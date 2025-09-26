@@ -72,3 +72,33 @@ export const CallbackFacebook = async (req: Request, res: Response, next: NextFu
     next(error)
   }
 }
+
+export const ForgotPasswordController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body
+    await AuthService.ForgotPassword(email)
+    return res.status(200).json({
+      message: "Please check your email."
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const ResetPasswordController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { token } = req.query
+    if (typeof token !== "string") {
+      return res.status(400).json({ message: "Token is required" })
+    }
+    const { newPassword } =  req.body
+
+    await AuthService.ResetPassword({newPassword, token })
+
+    return res.status(200).json({
+      message: "Please log in."
+    })
+  } catch (error) {
+    next(error)
+  }
+}

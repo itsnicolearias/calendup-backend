@@ -9,7 +9,7 @@ export function appointmentReminderEmail(name: string, professional: string, dat
   <body style="font-family: Arial, sans-serif; background-color: #f9fafb; color: #111827; padding: 20px;">
     <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
       <tr>
-        <td style="padding: 20px; text-align: center; background: linear-gradient(to right, #ac043f, #0388bd); color: #ffffff;">
+        <td style="padding: 20px; text-align: center; background: #0388bd; color: #ffffff;">
           <h1 style="margin: 0; font-size: 22px;">Calendup</h1>
         </td>
       </tr>

@@ -1,12 +1,12 @@
 import  Boom from "@hapi/boom"
-import { FREE_PLAN_ID } from "../modules/subscriptions/interfaces";
 import { Plan } from "../models/plan";
 import { Subscription } from "../models/subscription";
 import { User } from "../models/user";
+import { config } from "../config/environments";
 
 export const CreateFreeSubscription = async (user: User) => {
     try {
-        const freePlan = await Plan.findOne({ where: { planId: FREE_PLAN_ID } });
+        const freePlan = await Plan.findOne({ where: { planId: config.freePlanId } });
         
         if (!freePlan) throw Boom.notFound("Free plan not found");
 
@@ -17,7 +17,7 @@ export const CreateFreeSubscription = async (user: User) => {
             startDate: new Date(),
         });
 
-        return subscription;
+        return { subscription, freePlan };
 
     } catch (error) {
         throw Boom.badRequest(error)

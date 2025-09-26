@@ -112,6 +112,13 @@ export class Profile extends Model {
   profileCompleted: boolean;
 
   @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+    field: "pc_modal_showed"
+  })
+  pcModalShowed: boolean;
+
+  @Column({
     type: DataType.JSONB,
   })
   education?: Json
