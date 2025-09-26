@@ -15,7 +15,7 @@ const transport: SMTPTransport.Options = {
     pass: config.smtpPassword,
   },
   requireTLS: true,
-  connectionTimeout: 30_000, // 30s
+  connectionTimeout: 60_000, // 30s
   greetingTimeout: 10_000,   // 10s
   socketTimeout: 30_000      // 30s
 };
