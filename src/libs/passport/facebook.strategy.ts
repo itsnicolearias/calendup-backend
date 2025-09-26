@@ -5,6 +5,8 @@ import { User } from "../../models/user";
 import { UserRole } from "../../modules/auth/auth.interface";
 import { CreateFreeSubscription } from "../../utils/createFreeSubscription";
 import { newUsersNotification } from "../../utils/newUsersNotification";
+import { sendEmail } from "../nodemailer";
+import { accountActivatedTemplate } from "../../templates/auth/accountActivated";
 
 passport.use(
   new FacebookStrategy(
@@ -34,6 +36,12 @@ passport.use(
           });
 
           const sub = await CreateFreeSubscription(user);
+
+          await sendEmail({
+              to: user.email, 
+              subject: 'Tu cuenta ha sido activada exitosamente 📅', 
+              html: accountActivatedTemplate()
+          })
 
           await newUsersNotification(user.profile.name!, sub.freePlan.name, user.profile.lastName)
         }
