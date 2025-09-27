@@ -15,9 +15,9 @@ const transport: SMTPTransport.Options = {
     pass: config.smtpPassword,
   },
   requireTLS: true,
-  connectionTimeout: 60_000, // 30s
-  greetingTimeout: 10_000,   // 10s
-  socketTimeout: 30_000      // 30s
+  connectionTimeout: 200_000, // 30s
+  greetingTimeout: 200_000,   // 10s
+  socketTimeout: 200_000      // 30s
 };
 
 export const transporter = nodemailer.createTransport(transport);
