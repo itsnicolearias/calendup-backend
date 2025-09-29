@@ -13,6 +13,7 @@ import { newUsersNotification } from "../../utils/newUsersNotification"
 import jwt from "jsonwebtoken"
 import { resetPasswordRequestTemplate } from "../../templates/auth/forgetPassword"
 import {resetPasswordSuccessTemplate}  from "../../templates/auth/resetPassword"
+import { sendEmailGoogle } from "../../libs/gmail"
 
 export const RegisterService = async ( body: RegisterUserParams) => {
     try {
@@ -40,7 +41,7 @@ export const RegisterService = async ( body: RegisterUserParams) => {
         const token = generateVerificationToken(user.userId)
         const  link = `${config.url}/auth/verify-account?token=${token}`;
 
-        await sendEmail({ 
+        await sendEmailGoogle({ 
             to: user.email, 
             subject: 'CalendUp - Verifica tu cuenta 📅', 
             html: verifyAccountTemplate(link) })
@@ -88,7 +89,7 @@ export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
         user.verified = true
         await user.save()
 
-        await sendEmail({
+        await sendEmailGoogle({
             to: user.email, 
             subject: 'Tu cuenta ha sido activada exitosamente 📅', 
             html: accountActivatedTemplate()
