@@ -4,6 +4,7 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import boom from "@hapi/boom";
 import { config } from "../config/environments";
 import { EmailOptions } from "../interfaces/nodemailer";
+import { sendEmailGoogle } from "./gmail";
 
 // Transport con timeouts y TLS
 const transport: SMTPTransport.Options = {
@@ -37,7 +38,7 @@ export async function sendEmail(
 
   while (attempt < maxRetries) {
     try {
-      await transporter.sendMail(options);
+      await sendEmailGoogle(data);
       console.log(`✅ Email enviado en intento #${attempt + 1}`);
       return;
     } catch (error) {
