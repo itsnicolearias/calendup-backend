@@ -27,7 +27,11 @@ export const config = {
   facebookClientId: process.env.FACEBOOK_CLIENT_ID,
   facebookClientSecret: process.env.FACEBOOK_CLIENT_SECRET,
   facebookCallbackUrl: process.env.FACEBOOK_CALLBACK_URL,
-  freePlanId: process.env.FREE_PLAN_ID
+  freePlanId: process.env.FREE_PLAN_ID,
+  gmailApiClientId: process.env.GMAIL_API_CLIENT_ID,
+  gmailApiClientSecret: process.env.GMAIL_API_CLIENT_SECRET,
+  gmailApiRedirectUri: process.env.GMAIL_API_REDIRECT_URI,
+  gmailApiRefreshToken: process.env.GMAIL_API_REFRESH_TOKEN,
 
 };
 

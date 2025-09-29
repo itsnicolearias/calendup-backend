@@ -1,6 +1,6 @@
 import  Boom from "@hapi/boom"
-import { sendEmail } from "../libs/nodemailer"
 import { config } from "../config/environments"
+import { sendEmailGoogle } from "../libs/gmail"
 
 export const newUsersNotification  = async (name: string, subscription: string, lastname?: string) => {
     try {
@@ -13,7 +13,7 @@ export const newUsersNotification  = async (name: string, subscription: string, 
             Tipo de suscripcion: ${subscription}`
                     
         }
-        await sendEmail(data)
+        await sendEmailGoogle(data)
     } catch (error) {
         throw Boom.badRequest(error)
     }

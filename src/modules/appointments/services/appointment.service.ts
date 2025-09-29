@@ -24,6 +24,7 @@ import { appointmentConfirmedProfessionalEmail } from '../../../templates/appoin
 import { appointmentCancelledEmail } from '../../../templates/appointments/appCancelledEmail';
 import { appointmentCompletedEmail } from '../../../templates/appointments/appointmentCompletedEmail';
 import { checkPlanLimit } from '../../../utils/checkPlanLimit';
+import { sendEmailGoogle } from '../../../libs/gmail';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
@@ -93,7 +94,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
         if (body.status === "confirmed"){
           //notify user
-        await sendEmail({
+        await sendEmailGoogle({
           to: body.email,
           subject: "Turno agendado correctamente 📅",
           html: confirmedUserEmail({
@@ -107,7 +108,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         })
 
         //notify professional
-        await sendEmail({
+        await sendEmailGoogle({
           to: professional.email,
           subject: "Has recibido un nuevo turno en CalendUp 📅",
           html: confirmedProfessionalEmail({ 
