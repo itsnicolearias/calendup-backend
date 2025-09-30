@@ -10,6 +10,10 @@ const oAuth2Client = new google.auth.OAuth2({
 
 oAuth2Client.setCredentials({ refresh_token: config.gmailApiRefreshToken })
 
+function encodeSubject(subject: string) {
+  return "=?UTF-8?B?" + Buffer.from(subject).toString("base64") + "?=";
+}
+
 export async function sendEmailGoogle({
   to,
   subject,
@@ -23,10 +27,12 @@ export async function sendEmailGoogle({
 }) {
   try {
     // Construcción MIME (soporta texto y/o HTML)
+    const encodedSubject = encodeSubject(subject);
+
     const headers = [
       `From: Calendup <${config.emailFrom}>`,
       `To: ${to}`,
-      `Subject: ${subject}`,
+      `Subject: ${encodedSubject}`,
       "MIME-Version: 1.0",
       `Content-Type: ${html ? "text/html; charset=utf-8" : "text/plain; charset=utf-8"}`,
     ];
