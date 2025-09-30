@@ -1,9 +1,6 @@
 import { google } from "googleapis";
-import nodemailer from "nodemailer";
 import { config } from "../../config/environments";
 import Boom from "@hapi/boom";
-import Mail from "nodemailer/lib/mailer";
-import { EmailOptions } from "../../interfaces/nodemailer";
 
 const oAuth2Client = new google.auth.OAuth2({ 
   client_id: config.gmailApiClientId, 
@@ -13,31 +10,44 @@ const oAuth2Client = new google.auth.OAuth2({
 
 oAuth2Client.setCredentials({ refresh_token: config.gmailApiRefreshToken })
 
-export async function sendEmailGoogle(data: EmailOptions) {
+export async function sendEmailGoogle({
+  to,
+  subject,
+  text,
+  html,
+}: {
+  to: string;
+  subject: string;
+  text?: string;
+  html?: string;
+}) {
   try {
+    // Construcción MIME (soporta texto y/o HTML)
+    const headers = [
+      `From: Calendup <${config.emailFrom}>`,
+      `To: ${to}`,
+      `Subject: ${subject}`,
+      "MIME-Version: 1.0",
+      `Content-Type: ${html ? "text/html; charset=utf-8" : "text/plain; charset=utf-8"}`,
+    ];
 
-    // Obtener access token dinámico
-    const accessToken = await oAuth2Client.getAccessToken();
+    const body = html ?? text ?? "";
 
-    // Transporter de nodemailer usando Gmail API (no SMTP normal)
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        type: "OAuth2",
-        user: config.emailFrom,
-        clientId: config.gmailApiClientId,
-        clientSecret: config.gmailApiClientSecret,
-        refreshToken: config.gmailApiRefreshToken,
-        accessToken: accessToken.token ?? undefined
-      }
+    const rawMessage = [...headers, "", body].join("\n");
+
+    const encodedMessage = Buffer.from(rawMessage)
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    const gmail = google.gmail({ version: "v1", auth: oAuth2Client });
+
+    await gmail.users.messages.send({
+      userId: "me",
+      requestBody: { raw: encodedMessage },
     });
 
-    const options: Mail.Options = {
-        ...data,
-        from: config.emailFrom,
-      };
-
-    await transporter.sendMail(options);
   } catch (error) {
     throw Boom.badRequest(error);
   }
