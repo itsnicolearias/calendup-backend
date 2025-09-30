@@ -2,8 +2,8 @@ import Boom from "@hapi/boom";
 import { ChangePasswordBody, ISecurityService } from "./security.interface";
 import { User } from "../../models/user";
 import { compare, hash } from "bcryptjs"
-import { sendEmail } from "../../libs/nodemailer";
 import { passwordChangedTemplate } from "../../templates/auth/passwordChanged";
+import { sendEmailGoogle } from "../../libs/gmail";
 
 class SecurityService implements ISecurityService {
     
@@ -29,7 +29,7 @@ class SecurityService implements ISecurityService {
 
             await user.save()
 
-            await sendEmail({ 
+            await sendEmailGoogle({ 
             to: user.email, 
             subject: 'Se ha modificado su contraseña - CalendUp', 
             html: passwordChangedTemplate()

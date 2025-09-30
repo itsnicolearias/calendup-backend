@@ -1,9 +1,9 @@
 import cron from "node-cron";
 import { Appointment } from "../models/appointment";
-import { sendEmail } from "../libs/nodemailer";
 import { Profile } from "../models/profile";
 import { User } from "../models/user";
 import { appointmentReminderEmail } from "../templates/appointments/appReminderEmail";
+import { sendEmailGoogle } from "../libs/gmail";
 
 // Función para unir date + time (strings) en un objeto Date
 function parseAppointmentDateTime(date: string, time: string): Date {
@@ -40,7 +40,7 @@ cron.schedule("0 * * * *", async () => {
         const professional = appointment.professional.profile;
         if (!appointment?.email) continue;
 
-        await sendEmail({
+        await sendEmailGoogle({
           to: appointment.email,
           subject: "Recordatorio de tu turno 📅",
           html: appointmentReminderEmail(

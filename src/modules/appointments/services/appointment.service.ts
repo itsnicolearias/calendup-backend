@@ -120,7 +120,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         })
         } else {
            //notify user
-        await sendEmail({
+        await sendEmailGoogle({
           to: body.email,
           subject: "Turno agendado correctamente 📅",
           html: appointmentPendingUserEmail(
@@ -132,7 +132,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         })
 
         //notify professional
-        await sendEmail({
+        await sendEmailGoogle({
           to: professional.email,
           subject: "Nuevo turno pendiente de confirmacion 📅",
           html: appointmentPendingProfessionalEmail(
@@ -186,7 +186,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
       const token = generateAppModificationToken({appointmentId: app.appointmentId}, config.jwtUserSecret!, updatedApp.date)
       if (body?.date || body?.time){
         //notify user
-        await sendEmail({
+        await sendEmailGoogle({
           to: app.email,
           subject: "Su turno ha sido reagendado",
           html: appointmentRescheduledUserEmail(
@@ -198,7 +198,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         })
 
         //notify professional
-        await sendEmail({
+        await sendEmailGoogle({
           to: app.professional.email,
           subject: "Su turno ha sido reagendado",
           html: appointmentRescheduledProfessionalEmail(
@@ -213,7 +213,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
       if (body.status === "confirmed"){
          //notify user
-        await sendEmail({
+        await sendEmailGoogle({
           to: app.email,
           subject: "Su turno ha sido confirmado 📅",
           html: appointmentCreatedEmail(
@@ -224,7 +224,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         })
 
         //notify professional
-        await sendEmail({
+        await sendEmailGoogle({
           to: app.professional.email,
           subject: "Turno confirmado correctamente",
           html: appointmentConfirmedProfessionalEmail(
@@ -238,7 +238,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
       if (body.status === "cancelled"){
         //notify user
-        await sendEmail({
+        await sendEmailGoogle({
           to: app.email,
           subject: "Se ha cancelado su turno",
           html: appointmentCancelledEmail(
@@ -251,7 +251,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         })
 
         //notify professional
-        await sendEmail({
+        await sendEmailGoogle({
           to: app.professional.email,
           subject: "Se ha cancelado su turno",
           html: appointmentConfirmedProfessionalEmail(
@@ -267,7 +267,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
         const completedToken = generateGenericToken({appointmentId: app.appointmentId}, config.jwtUserSecret!)
         //notify user
-        await sendEmail({
+        await sendEmailGoogle({
           to: app.email,
           subject: "Califica tu experiencia",
           html: appointmentCompletedEmail(
@@ -301,15 +301,15 @@ export async function autoCompleteAppointments() {
           {
         model: Profile,
         as: "profile",
-        where: { markAppAsCompleted: true },
-        attributes: [], // no necesitamos datos del profile
+        where: { markAppAsCompleted: true, profileCompleted: true },
+        //attributes: [], // no necesitamos datos del profile
       },
         ]
       }
       
     ],
     attributes: ["appointmentId"],
-    raw: true,
+    //raw: true,
   });
 
   const idsToUpdate = appointments.map((a) => a.appointmentId);
@@ -326,17 +326,17 @@ export async function autoCompleteAppointments() {
   appointments.forEach(async (app) => {
     const completedToken = generateGenericToken({ appointmentId: app.appointmentId }, config.jwtUserSecret!);
     // Notify user
-     await sendEmail({
+     await sendEmailGoogle({
           to: app.email,
           subject: "Califica tu experiencia",
           html: appointmentCompletedEmail(
             app.name!, 
-            `${app.professional.profile.name} ${app.professional.profile.lastName}`, 
+            `${app.professional?.profile?.name} ${app.professional?.profile?.lastName}`, 
             `${config.urlFront}/appointments/reviews/create?authorization=${completedToken}&professionalId=${app.professionalId} `)
         })
   });
   } catch (error) {
-    throw Boom.badRequest(error);
+    console.error(error);
   }
   
 }
