@@ -43,7 +43,7 @@ export const RegisterService = async ( body: RegisterUserParams) => {
 
         await sendEmailGoogle({ 
             to: user.email, 
-            subject: 'CalendUp - Verifica tu cuenta 📅', 
+            subject: 'Verifica tu cuenta 📅', 
             html: verifyAccountTemplate(link) })
 
         await newUsersNotification(profile.name!, sub.freePlan.name, profile.lastName)
@@ -135,7 +135,7 @@ export const ForgotPassword = async (email: string) => {
 
         const link =  `${config.urlFront}/auth/reset-password?reset-token=${token}`
 
-        await sendEmail({
+        await sendEmailGoogle({
             to: user.email,
             subject: "Recupera tu contraseña en CalendUp",
             html: resetPasswordRequestTemplate(link)
@@ -160,7 +160,7 @@ export const ResetPassword = async (body: ResetPasswordProps) => {
        
         await user.save()
 
-        await sendEmail({ 
+        await sendEmailGoogle({ 
         to: user.email, 
         subject: 'Tu contraseña ha sido restablecida', 
         html: resetPasswordSuccessTemplate()
