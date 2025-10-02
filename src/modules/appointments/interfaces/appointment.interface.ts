@@ -28,4 +28,15 @@ export const AppointmentType = ["in_person", "online"] as const ;
 export interface IAppointmentService{
   getOneAppointment(token: string): Promise<{ appointment: Appointment, rating: any }>;
   updateAppointment(body: Partial<CreateAppointmentParams>, token: string): Promise<Appointment>
+  getAllApp(professionalId?: string | null, includeModel?: object, page?: number, size?: number, all?: boolean, where?: Record<string, unknown>): Promise<GetAllAppResponse>;
+}
+
+export interface GetAllAppResponse {
+    appointments: {
+      count: number;
+      pagesQuantity: number;
+      rows: Appointment[]
+    },
+    createdThisMonth: number;
+    
 }

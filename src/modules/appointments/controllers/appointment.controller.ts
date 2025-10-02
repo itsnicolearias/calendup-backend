@@ -17,7 +17,7 @@ export const getAppointments = async (req: Request, res: Response, next: NextFun
      const allRecords: boolean = all === 'true';
     const professionalId = req['myUser']?.userId
 
-    const data = await AppointmentService.getAll(professionalId, [], Number(page), Number(size), allRecords);
+    const data = await AppointmentService.getAllApp(professionalId, [], Number(page), Number(size), allRecords);
     res.json(data);
   } catch (err) {
     next(err);

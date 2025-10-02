@@ -12,6 +12,7 @@ import { groupByDate } from "../../utils/date-agrupator";
 import { AppointmentType } from "../../models/appointment_type";
 import { getProfessionalRating } from "../../utils/professionals-rating";
 import { Review } from "../../models/review";
+import { Appointment } from "../../models/appointment";
 
 class ProfessionalService extends BaseService<User> implements IProfessionalService {
     constructor() {
@@ -49,7 +50,7 @@ async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>
   const appointments = appointmentsResponse.rows
 
   // Estructura de turnos agendados para búsqueda rápida
-  const bookedSet = new Set(appointments.map((appt) => `${appt.date}-${appt.time}`))
+  const bookedSet = new Set(appointments.map((appt: Appointment) => `${appt.date}-${appt.time}`))
 
   const availableSlots: AvailableSlot[] = []
 
