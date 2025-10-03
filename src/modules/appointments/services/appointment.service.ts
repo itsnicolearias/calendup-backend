@@ -1,10 +1,9 @@
 import Boom from '@hapi/boom';
 import BaseService from '../../base/base.service';
-import { CreateAppointmentParams, IAppointmentService } from '../interfaces/appointment.interface';
+import { CreateAppointmentParams, GetAllAppResponse, IAppointmentService } from '../interfaces/appointment.interface';
 import { User } from '../../../models/user';
 import { Profile } from '../../../models/profile';
 import { checkAvailability } from '../../../utils/check-professional-availability';
-import { sendEmail } from '../../../libs/nodemailer';
 import { config } from '../../../config/environments';
 import { Appointment } from '../../../models/appointment';
 import { decodeToken, generateAppModificationToken, generateGenericToken } from '../../../utils/jwt';
@@ -29,6 +28,19 @@ import { sendEmailGoogle } from '../../../libs/gmail';
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
     super(Appointment);
+  }
+
+  public async getAllApp(professionalId?: string | null, includeModel?: object, page?: number, size?: number, all?: boolean, where?: Record<string, unknown>): Promise<GetAllAppResponse> {
+    try {
+      const appointments = await super.getAll(professionalId, includeModel, page, size, all)
+
+      const appWithStats = countAppointmentsThisMonth(appointments.rows)
+
+      return { appointments, createdThisMonth: appWithStats }
+      
+    } catch (error) {
+      throw Boom.badRequest(error);
+    }
   }
   
   // obtain and update one appointment from a magic link with a jwt, for users that are not logged in
@@ -339,6 +351,19 @@ export async function autoCompleteAppointments() {
     console.error(error);
   }
   
+}
+
+
+export function countAppointmentsThisMonth(appointments: Appointment[]): number {
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+  return appointments.filter((appt) => {
+
+    const createdAt = new Date(appt.createdAt);
+    return createdAt >= startOfMonth && createdAt <= endOfMonth;
+  }).length;
 }
 
 
