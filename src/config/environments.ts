@@ -32,6 +32,7 @@ export const config = {
   gmailApiClientSecret: process.env.GMAIL_API_CLIENT_SECRET,
   gmailApiRedirectUri: process.env.GMAIL_API_REDIRECT_URI,
   gmailApiRefreshToken: process.env.GMAIL_API_REFRESH_TOKEN,
+  argHolidaysApi: process.env.ARG_HOLIDAYS_API,
 
 };
 

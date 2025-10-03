@@ -10,7 +10,10 @@ export interface AvailableSlot {
   time: string // '14:00'
 }
 
-export type AvailableSlotResponse = Record<string, string[]>
+export type AvailableSlotResponse  = {
+  availableSlots: Record<string, string[]>,
+  holidays: { date: string; type: string; name: string }[]
+} 
 
 export type AvailableSlotBody = {
   professionalId: string,
