@@ -27,7 +27,7 @@ export class App {
         ];
         const options: cors.CorsOptions = {
           methods: ["GET", "POST", "PUT", "DELETE"],
-          origin: whiteList,
+          origin: "*",
           credentials: true,
         };
         this.app.use(morgan('dev'))
