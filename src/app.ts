@@ -8,6 +8,7 @@ import indexRoutes from "./routes/index.routes";
 import { config } from "./config/environments";
 import "./utils/autocomplete-appointments";
 import "./utils/app-reminders"
+import { InitSubscriptionPlan } from "./libs/mercado-pago/create-plans";
     
 export class App {
     app: Application
@@ -52,6 +53,9 @@ export class App {
         console.log(`Server running on port ${config.port}`);
       });
        await this.database.authenticate().then(() => console.log('DB connected'));
+
+       // feat: add validation with env
+       await InitSubscriptionPlan();
     }
 }
 

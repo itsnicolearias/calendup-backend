@@ -7,7 +7,6 @@ export const SubscriptionController = {
    */
   async handleWebhook(req: Request, res: Response, next: NextFunction) {
     try {
-        console.log("Webhook recibido:", req.body); // Log the incoming request body
       const result = await SubscriptionService.handleWebhook(req);
       res.status(200).json(result);
     } catch (error) {

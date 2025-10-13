@@ -5,6 +5,7 @@ export interface PlanAttributes {
   annualPrice: number;
   currency: string;
   mpPlanId: string;
+  mpAnnualPlanId: string;
   features: {
     maxAppointmentsPerMonth?: number;
     [key: string]: any; // flexibilidad para más features en el futuro

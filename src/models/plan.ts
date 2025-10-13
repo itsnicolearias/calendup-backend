@@ -52,6 +52,13 @@ export class Plan extends Model {
 
   @Column({
     type: DataType.STRING,
+    allowNull: true,
+    field: "mp_annual_plan_id",
+  })
+  mpAnnualPlanId: string;
+
+  @Column({
+    type: DataType.STRING,
     allowNull: false,
     defaultValue: "USD",
   })

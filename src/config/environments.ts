@@ -33,6 +33,8 @@ export const config = {
   gmailApiRedirectUri: process.env.GMAIL_API_REDIRECT_URI,
   gmailApiRefreshToken: process.env.GMAIL_API_REFRESH_TOKEN,
   argHolidaysApi: process.env.ARG_HOLIDAYS_API,
+  mpAccessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN,
+  mpReturnUrl: process.env.MERCADO_PAGO_RETURN_URL,
 
 };
 

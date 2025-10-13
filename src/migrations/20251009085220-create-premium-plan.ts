@@ -7,6 +7,11 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
         allowNull: true,
     })
 
+    await queryInterface.addColumn("plans", "mp_annual_plan_id", {
+        type: DataTypes.STRING,
+        allowNull: true,
+    })
+
     await queryInterface.addColumn("plans", "annual_price", {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
@@ -70,6 +75,7 @@ export async function down(queryInterface: QueryInterface): Promise<void> {
     "plans",
     { plan_id: "5cca8215-0630-4211-9aa1-3fc27439ac3b" }
     )
+    await queryInterface.removeColumn("plans", "mp_annual_plan_id")
 
     await queryInterface.removeColumn("plans", "mp_plan_id")
 

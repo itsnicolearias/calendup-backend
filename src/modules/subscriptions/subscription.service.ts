@@ -4,6 +4,9 @@ import { User } from "../../models/user";
 import { Plan } from "../../models/plan";
 import { Subscription } from "../../models/subscription";
 import BaseService from "../base/base.service";
+import { getSubscriptionData } from "../../libs/mercado-pago";
+import { config } from "../../config/environments";
+
 
 class SubscriptionService extends BaseService<Subscription> {
     constructor() {
@@ -13,26 +16,45 @@ class SubscriptionService extends BaseService<Subscription> {
   /**
    * Update User subscription
    */
-  async updateSubscription(data: {
-    status: string;
-    payer_email: string;
-    plan_id: string;
-  }) {
+  async updateSubscription(subscriptionId: string) {
     try {
-      const { status, payer_email, plan_id } = data;
+      const subscriptionData = await getSubscriptionData(subscriptionId)
+      const { status, payer_email, next_payment_date  } = subscriptionData;
 
-      const user = await User.findOne({ where: { email: payer_email } });
-      if (!user) throw Boom.notFound("User not found");
+      const { preapproval_plan_id, auto_recurring } = subscriptionData as any;
 
-      const plan = await Plan.findByPk(plan_id);
-      if (!plan) throw Boom.notFound("Plan not found");
+      const user = await User.findOne({ where: { email: payer_email }, include: Subscription });
+      
+      if (user) {
 
-      const [subscription] = await Subscription.update({
-        planId: plan.planId,
-        status,
-      }, { where: { subscriptionId: user.Subscription.subscriptionId } });
+        if (status === "authorized" || status === "active") {
 
-      return subscription;
+          const plan = await Plan.findOne({ where: { mpPlanId: preapproval_plan_id} });
+          const planAnnual = await Plan.findOne({ where: { mpAnnualPlanId: preapproval_plan_id } });
+
+          if (!plan && !planAnnual) throw Boom.notFound("Plan not found");
+
+          await Subscription.update({
+            planId: plan?.planId,
+            status: "active",
+            startDate: auto_recurring.start_date,
+            endDate: next_payment_date,
+          }, { where: { subscriptionId: user.Subscription.subscriptionId } });
+      
+      } else if (status === "cancelled" || status === "paused") {
+
+        const freePlan = await Plan.findOne({ where: { planId: config.freePlanId } });
+
+          await Subscription.update(
+            {
+              planId: freePlan?.planId,
+              status: "active"
+            },
+            { where: { subscriptionId: user.Subscription.subscriptionId } }
+          );
+        }
+
+        }    
     } catch (error) {
       throw Boom.badRequest(error);
     }
@@ -43,22 +65,14 @@ class SubscriptionService extends BaseService<Subscription> {
    */
   async handleWebhook(req: Request) {
     try {
-      const { type, data } = req.body;
+      const { type, data, action } = req.body;
 
-      /*if (type !== "preapproval") {
-        return { message: "Evento ignorado" };
-      }*/
-     console.log(type)
-     console.log(data)
+     if (type === "subscription_preapproval" && action === "updated") {
+      await this.updateSubscription(data.id);
 
-      const subscriptionData = {
-        status: data.status,
-        payer_email: data.payer_email,
-        plan_id: data.external_reference, // este valor lo envías al crear el plan
-      };
-
-      await this.updateSubscription(subscriptionData);
       return { message: "Suscripción actualizada correctamente" };
+     }
+      
     } catch (error) {
       throw Boom.badRequest(error);
     }
