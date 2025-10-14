@@ -54,8 +54,10 @@ export class App {
       });
        await this.database.authenticate().then(() => console.log('DB connected'));
 
-       // feat: add validation with env
-       await InitSubscriptionPlan();
+       if (config.createMpPlans) {
+        await InitSubscriptionPlan();
+       }
+       
     }
 }
 

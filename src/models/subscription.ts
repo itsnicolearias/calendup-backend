@@ -61,6 +61,12 @@ export class Subscription extends Model {
   })
   endDate?: Date;
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  type: string;
+
   @BelongsTo(() => Plan)
   plan!: Plan;
 

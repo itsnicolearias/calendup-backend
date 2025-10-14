@@ -58,10 +58,17 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     }, 
     { plan_id: "5cca8214-0630-4210-9aa1-3fc27439ac2b" }
     )
+
+    await queryInterface.addColumn("subscriptions", "type", {
+        type: DataTypes.STRING,
+        allowNull: true,
+    })
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {
     
+    await queryInterface.removeColumn("subscriptions", "type")
+
     await queryInterface.bulkUpdate(
     "plans", 
     { features: JSON.stringify({

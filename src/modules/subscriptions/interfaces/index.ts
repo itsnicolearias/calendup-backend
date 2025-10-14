@@ -8,6 +8,13 @@ export interface PlanAttributes {
   mpAnnualPlanId: string;
   features: {
     maxAppointmentsPerMonth?: number;
+    services: boolean,
+    customBranding: boolean,
+    calendarAvailable: boolean,
+    zoomAvailable: boolean,
+    meetAvailable: boolean,
+    prioritySupport: boolean,
+    appointmentsPays: boolean,
     [key: string]: any; // flexibilidad para más features en el futuro
   };
   createdAt?: Date;
@@ -18,9 +25,10 @@ export interface SubscriptionAttributes {
   subscriptionId?: number;
   userId: number;
   planId: number;
-  status: "active" | "canceled" | "paused";
+  status: "active" | "cancelled" | "paused";
   startDate: Date;
   endDate?: Date;
+  type?: "monthly" | "annual";
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -35,6 +35,7 @@ export const config = {
   argHolidaysApi: process.env.ARG_HOLIDAYS_API,
   mpAccessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN,
   mpReturnUrl: process.env.MERCADO_PAGO_RETURN_URL,
+  createMpPlans: process.env.CREATE_MP_PLANS === 'true',
 
 };
 

@@ -23,7 +23,8 @@ class SubscriptionService extends BaseService<Subscription> {
 
       const { preapproval_plan_id, auto_recurring } = subscriptionData as any;
 
-      const user = await User.findOne({ where: { email: payer_email }, include: Subscription });
+      // TEST THIS IN PROD
+      const user = await User.findOne({ where: { email: "test_user_2369776882369531791@testuser.com"}, include: Subscription });
       
       if (user) {
 
@@ -35,10 +36,11 @@ class SubscriptionService extends BaseService<Subscription> {
           if (!plan && !planAnnual) throw Boom.notFound("Plan not found");
 
           await Subscription.update({
-            planId: plan?.planId,
+            planId: plan ? plan.planId : planAnnual?.planId,
             status: "active",
             startDate: auto_recurring.start_date,
             endDate: next_payment_date,
+            type: planAnnual ? "annual" : "monthly",
           }, { where: { subscriptionId: user.Subscription.subscriptionId } });
       
       } else if (status === "cancelled" || status === "paused") {
