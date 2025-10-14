@@ -1,0 +1,43 @@
+import Boom from "@hapi/boom";
+import { client } from ".";
+import { PreApproval } from "mercadopago";
+import { PreApprovalSearchOptions } from "mercadopago/dist/clients/preApproval/search/types";
+
+const preApproval = new PreApproval(client);
+
+export const getSubscriptionData = async (subscriptionId: string) => {
+    try {
+        const subscription = await preApproval.get({ id: subscriptionId })
+
+        return subscription
+    } catch (error) {
+        throw Boom.badRequest(error.message);
+    }
+}
+
+export const searchSubscription = async (options: PreApprovalSearchOptions) => {
+    try {
+        const subscription = await preApproval.search({ options  })
+
+        return subscription
+    } catch (error) {
+        throw Boom.badRequest(error);
+    }
+}
+
+/**
+ * Cancela una suscripción en Mercado Pago
+ * @param subscriptionId ID de la suscripción (preapproval_id)
+ */
+export const cancelMpSubscription = async (subscriptionId: string) => {
+  try {
+    const cancelled = await preApproval.update({
+      id: subscriptionId,
+      body: { status: "cancelled" },
+    });
+
+    return cancelled;
+  } catch (error: any) {
+    throw Boom.badRequest(error.message);
+  }
+};

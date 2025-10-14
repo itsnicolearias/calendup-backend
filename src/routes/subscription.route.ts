@@ -4,10 +4,11 @@ import { SubscriptionController } from "../modules/subscriptions/subscription.co
 
 const router = Router();
 
-// Webhook de Mercado Pago
+
 router.post("/webhooks/mercado-pago", SubscriptionController.handleWebhook);
 
-// Obtener suscripción del usuario autenticado
 router.get("/", auth, SubscriptionController.getUserSubscription);
+
+router.put("/cancel/:id", auth, SubscriptionController.cancelUserSubscription);
 
 export default router;

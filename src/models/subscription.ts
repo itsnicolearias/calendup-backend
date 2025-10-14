@@ -65,7 +65,7 @@ export class Subscription extends Model {
     type: DataType.STRING,
     allowNull: true,
   })
-  type: string;
+  type: "monthly" | "annual";
 
   @BelongsTo(() => Plan)
   plan!: Plan;

@@ -26,4 +26,15 @@ export const SubscriptionController = {
       next(error);
     }
   },
+
+   async cancelUserSubscription(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.params.id;
+
+      await SubscriptionService.cancelSubscription(userId);
+      res.status(200).json({ message: "Subscription cancelled successfully" });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

@@ -4,8 +4,8 @@ import { User } from "../../models/user";
 import { Plan } from "../../models/plan";
 import { Subscription } from "../../models/subscription";
 import BaseService from "../base/base.service";
-import { getSubscriptionData } from "../../libs/mercado-pago";
 import { config } from "../../config/environments";
+import { cancelMpSubscription, getSubscriptionData, searchSubscription } from "../../libs/mercado-pago/subscriptions";
 
 
 class SubscriptionService extends BaseService<Subscription> {
@@ -24,7 +24,7 @@ class SubscriptionService extends BaseService<Subscription> {
       const { preapproval_plan_id, auto_recurring } = subscriptionData as any;
 
       // TEST THIS IN PROD
-      const user = await User.findOne({ where: { email: "test_user_2369776882369531791@testuser.com"}, include: Subscription });
+      const user = await User.findOne({ where: { email: payer_email}, include: Subscription });
       
       if (user) {
 
@@ -87,7 +87,7 @@ class SubscriptionService extends BaseService<Subscription> {
     try {
       const subscription = await Subscription.findOne({
         where: { userId },
-        include: [{ model: Plan }],
+        include: [ Plan, User ],
       });
 
       if (!subscription) throw Boom.notFound("Subscription not found");
@@ -97,6 +97,25 @@ class SubscriptionService extends BaseService<Subscription> {
       throw Boom.badRequest(error);
     }
   }
+
+  async cancelSubscription(userId: string){
+    try {
+      const sus = await this.getUserSubscription(userId);
+
+      const preapprovalPlanId = sus.type === "monthly" ? sus.plan.mpPlanId : sus.plan.mpAnnualPlanId;
+
+      const mpSus = await searchSubscription({ preapproval_plan_id: preapprovalPlanId, payer_email: sus.User.email });
+
+      if (!mpSus.results || mpSus.results.length === 0) {
+        throw Boom.notFound("No se encontró una suscripción activa en Mercado Pago para este usuario.");
+      }
+
+      await cancelMpSubscription(mpSus.results[0].id!);
+    } catch (error) {
+      throw Boom.badRequest(error);
+    }
+  }
+
 };
 
 export default new SubscriptionService();
