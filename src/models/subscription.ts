@@ -67,6 +67,13 @@ export class Subscription extends Model {
   })
   type: "monthly" | "annual";
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: "mp_subscription_id",
+  })
+  mpSubscriptionId?: string;
+
   @BelongsTo(() => Plan)
   plan!: Plan;
 

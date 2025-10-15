@@ -9,9 +9,13 @@ export const getSubscriptionData = async (subscriptionId: string) => {
     try {
         const subscription = await preApproval.get({ id: subscriptionId })
 
+        if (!subscription){
+          throw Boom.notFound("Subscription not found");
+        }
+
         return subscription
     } catch (error) {
-        throw Boom.badRequest(error.message);
+        throw Boom.badRequest(error);
     }
 }
 

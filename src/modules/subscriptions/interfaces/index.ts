@@ -29,6 +29,7 @@ export interface SubscriptionAttributes {
   startDate: Date;
   endDate?: Date;
   type?: "monthly" | "annual";
+  mpSubscriptionId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

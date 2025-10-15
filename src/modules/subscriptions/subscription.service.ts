@@ -34,13 +34,16 @@ class SubscriptionService extends BaseService<Subscription> {
           const planAnnual = await Plan.findOne({ where: { mpAnnualPlanId: preapproval_plan_id } });
 
           if (!plan && !planAnnual) throw Boom.notFound("Plan not found");
+          
+          const planId = plan ? plan.planId : planAnnual?.planId;
 
           await Subscription.update({
-            planId: plan ? plan.planId : planAnnual?.planId,
+            planId,
             status: "active",
             startDate: auto_recurring.start_date,
             endDate: next_payment_date,
             type: planAnnual ? "annual" : "monthly",
+            mpSubscriptionId: subscriptionData.id,
           }, { where: { subscriptionId: user.Subscription.subscriptionId } });
       
       } else if (status === "cancelled" || status === "paused") {
@@ -50,7 +53,7 @@ class SubscriptionService extends BaseService<Subscription> {
           await Subscription.update(
             {
               planId: freePlan?.planId,
-              status: "active"
+              status: "cancelled",
             },
             { where: { subscriptionId: user.Subscription.subscriptionId } }
           );
@@ -102,15 +105,9 @@ class SubscriptionService extends BaseService<Subscription> {
     try {
       const sus = await this.getUserSubscription(userId);
 
-      const preapprovalPlanId = sus.type === "monthly" ? sus.plan.mpPlanId : sus.plan.mpAnnualPlanId;
+      if (!sus.mpSubscriptionId) throw Boom.notFound("Mp Subscription ID not found");
 
-      const mpSus = await searchSubscription({ preapproval_plan_id: preapprovalPlanId, payer_email: sus.User.email });
-
-      if (!mpSus.results || mpSus.results.length === 0) {
-        throw Boom.notFound("No se encontró una suscripción activa en Mercado Pago para este usuario.");
-      }
-
-      await cancelMpSubscription(mpSus.results[0].id!);
+      await cancelMpSubscription(sus.mpSubscriptionId);
     } catch (error) {
       throw Boom.badRequest(error);
     }
