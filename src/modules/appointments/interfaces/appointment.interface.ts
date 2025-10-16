@@ -10,6 +10,7 @@ export interface CreateAppointmentParams {
   time: string;
   reason?: string;
   status: AppointmentStatus;
+  selectedAppMode?: AppointmentMode;
   appointmentCode: string;
 }
 
@@ -19,11 +20,13 @@ export interface AppointmentsResponse {
   pagesQuantity: number;
 }
 
-export const  AppointmentStatusConst = ["pending",  "confirmed", "cancelled", "completed"] as const;
+export const  AppointmentStatusConst = ["pending",  "confirmed", "cancelled", "completed", "cancelledByUser"] as const;
 
-export type  AppointmentStatus =  "pending" | "confirmed" | "cancelled" | "completed"
+export type  AppointmentStatus =  "pending" | "confirmed" | "cancelled" | "completed" | "cancelledByUser"
 
-export const AppointmentType = ["in_person", "online"] as const ;
+export const AppointmentModeConst = ["in_person", "online", "combined"] as const ;
+
+export type AppointmentMode = "in_person" | "online" | "combined" ;
 
 export interface IAppointmentService{
   getOneAppointment(token: string): Promise<{ appointment: Appointment, rating: any }>;

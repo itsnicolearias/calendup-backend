@@ -40,6 +40,7 @@ export interface UserWithProfile {
     profileProgress: number
     isNewUser: boolean
     pcModalShowed: boolean
+    appMode?: string
   }
   googleId: string
   facebookId: string

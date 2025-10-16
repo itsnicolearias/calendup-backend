@@ -144,6 +144,13 @@ export class Profile extends Model {
   })
   isNewUser: boolean;
 
+  @Column({
+    type: DataType.STRING,
+    field: "app_mode",
+    allowNull: true
+  })
+  appMode?: String
+
   @BelongsTo(() => User)
   user!: User
 

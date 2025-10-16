@@ -21,9 +21,6 @@ export class AppointmentType extends Model {
   @Column(DataType.STRING)
   description?: string
 
-  @Column({type: DataType.STRING, field: "session_type"})
-  sessionType?: string
-
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, field: "professional_id" })
   professionalId!: string

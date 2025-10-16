@@ -55,6 +55,9 @@ export class Appointment extends Model {
   @BelongsTo(() => AppointmentType)
   AppointmentType?: User
 
+  @Column({type: DataType.STRING, field: "selected_app_mode", allowNull: true})
+  selectedAppMode: string
+
   @HasOne(() => Review)
   Review: Review[]
 
