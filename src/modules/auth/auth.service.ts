@@ -4,7 +4,6 @@ import { LoginUserParams, RegisterUserParams, ResetPasswordProps, UserRole, Veri
 import { decodeToken, generateLoginToken, generateVerificationToken } from "../../utils/jwt"
 import  Boom from "@hapi/boom"
 import { Profile } from "../../models/profile"
-import { sendEmail } from "../../libs/nodemailer"
 import { config } from "../../config/environments"
 import { verifyAccountTemplate } from "../../templates/auth/verifyAccount"
 import { accountActivatedTemplate } from "../../templates/auth/accountActivated"
@@ -13,7 +12,7 @@ import { newUsersNotification } from "../../utils/newUsersNotification"
 import jwt from "jsonwebtoken"
 import { resetPasswordRequestTemplate } from "../../templates/auth/forgetPassword"
 import {resetPasswordSuccessTemplate}  from "../../templates/auth/resetPassword"
-import { sendEmailGoogle } from "../../libs/gmail"
+import { sendEmailGoogle } from "../../libs/google-apis/gmail"
 
 export const RegisterService = async ( body: RegisterUserParams) => {
     try {

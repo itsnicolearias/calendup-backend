@@ -3,7 +3,7 @@ import { ChangePasswordBody, ISecurityService } from "./security.interface";
 import { User } from "../../../models/user";
 import { compare, hash } from "bcryptjs"
 import { passwordChangedTemplate } from "../../../templates/auth/passwordChanged";
-import { sendEmailGoogle } from "../../../libs/gmail";
+import { sendEmailGoogle } from "../../../libs/google-apis/gmail";
 
 class SecurityService implements ISecurityService {
     

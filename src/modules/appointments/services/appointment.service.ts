@@ -23,7 +23,7 @@ import { appointmentConfirmedProfessionalEmail } from '../../../templates/appoin
 import { appointmentCancelledEmail } from '../../../templates/appointments/appCancelledEmail';
 import { appointmentCompletedEmail } from '../../../templates/appointments/appointmentCompletedEmail';
 import { checkPlanLimit } from '../../../utils/checkPlanLimit';
-import { sendEmailGoogle } from '../../../libs/gmail';
+import { sendEmailGoogle } from '../../../libs/google-apis/gmail';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {

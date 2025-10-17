@@ -1,5 +1,5 @@
 import { Appointment } from "../../models/appointment";
-import { Availability, WeekDay } from "../settings/profile.interface";
+import { Availability, WeekDay } from "../settings/profile/profile.interface";
 
 export interface IProfessionalService {
     getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>;
