@@ -2,7 +2,7 @@ import {
   Table, Column, Model, DataType, ForeignKey, BelongsTo
 } from "sequelize-typescript"
 import { User } from "./user"
-import { Availability } from "../modules/settings/profile.interface"
+import { Availability } from "../modules/settings/profile/profile.interface"
 import { Json } from "sequelize/types/utils"
 
 @Table({ tableName: "profiles", underscored: true })

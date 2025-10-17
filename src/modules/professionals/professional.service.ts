@@ -7,7 +7,7 @@ import { Profile } from "../../models/profile";
 import Boom from "@hapi/boom";
 import AppointmentService from "../appointments/services/appointment.service";
 import { Op } from "sequelize";
-import { WeekDay } from "../settings/profile.interface";
+import { WeekDay } from "../settings/profile/profile.interface";
 import { groupByDate, obtainArgHolidays } from "../../utils/date-slots";
 import { AppointmentType } from "../../models/appointment_type";
 import { getProfessionalRating } from "../../utils/professionals-rating";

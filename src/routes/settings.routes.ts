@@ -2,12 +2,12 @@ import { Router } from "express"
 import {
   getProfile,
   updateProfile,
-} from "../modules/settings/profile.controllers"
+} from "../modules/settings/profile/profile.controllers"
 import { validate } from "../middlewares/zod-validation"
-import { updateProfileSchema } from "../modules/settings/profile.schema"
+import { updateProfileSchema } from "../modules/settings/profile/profile.schema"
 import { auth } from "../middlewares/auth"
-import { changePasswordSchema } from "../modules/settings/security.schema"
-import { changePassword } from "../modules/settings/security.controller"
+import { changePasswordSchema } from "../modules/settings/security/security.schema"
+import { changePassword } from "../modules/settings/security/security.controller"
 
 const router = Router()
 

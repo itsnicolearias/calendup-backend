@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { AppointmentModeConst } from "../appointments/interfaces/appointment.interface"
+import { AppointmentModeConst } from "../../appointments/interfaces/appointment.interface"
 
 const timeRangeSchema = z.object({
   start: z

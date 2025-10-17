@@ -1,6 +1,6 @@
 import { String } from "aws-sdk/clients/cloudwatchevents";
-import { User } from "../../models/user"
-import { UserRole } from "../auth/auth.interface"
+import { User } from "../../../models/user";
+import { UserRole } from "../../auth/auth.interface";
 export interface IProfileService{
   getOneProfile(userId: string): Promise<User>;
   updateProfile(body: UserWithProfile, userId: String): Promise<User>

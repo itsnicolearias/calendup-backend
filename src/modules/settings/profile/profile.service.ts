@@ -1,11 +1,11 @@
 import Boom from "@hapi/boom";
-import { Profile } from "../../models/profile";
-import BaseService from "../base/base.service";
-import { User } from "../../models/user";
+import { Profile } from "../../../models/profile";
+import BaseService from "../../base/base.service";
+import { User } from "../../../models/user";
 import { IProfileService, UserWithProfile } from "./profile.interface";
-import { AppointmentType } from "../../models/appointment_type";
-import { Subscription } from "../../models/subscription";
-import { Plan } from "../../models/plan";
+import { AppointmentType } from "../../../models/appointment_type";
+import { Subscription } from "../../../models/subscription";
+import { Plan } from "../../../models/plan";
 
 class ProfileService extends BaseService<Profile> implements IProfileService {
   constructor() {

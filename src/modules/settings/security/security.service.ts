@@ -1,9 +1,9 @@
 import Boom from "@hapi/boom";
 import { ChangePasswordBody, ISecurityService } from "./security.interface";
-import { User } from "../../models/user";
+import { User } from "../../../models/user";
 import { compare, hash } from "bcryptjs"
-import { passwordChangedTemplate } from "../../templates/auth/passwordChanged";
-import { sendEmailGoogle } from "../../libs/gmail";
+import { passwordChangedTemplate } from "../../../templates/auth/passwordChanged";
+import { sendEmailGoogle } from "../../../libs/gmail";
 
 class SecurityService implements ISecurityService {
     
