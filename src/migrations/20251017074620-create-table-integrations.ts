@@ -22,11 +22,11 @@ export default {
         allowNull: false,
       },
       access_token: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true,
       },
       refresh_token: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true,
       },
       token_expires_at: {

@@ -8,6 +8,7 @@ import { UserRole } from "../modules/auth/auth.interface"
 import { AppointmentType } from "./appointment_type"
 import { Review } from "./review"
 import { Subscription } from "./subscription"
+import { Integration } from "./integrations"
 
 @Table({ 
   tableName: "users", 
@@ -69,6 +70,8 @@ export class User extends Model {
   @HasMany(() => Review)
   Reviews: Review[]
 
+  @HasMany(() => Integration)
+  Integrations: Integration[]
 
   @HasOne(() => Profile)
   profile!: Profile

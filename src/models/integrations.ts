@@ -72,6 +72,14 @@ export class Integration extends Model {
       field: "auto_create_meet_links"
     })
     autoCreateMeetLinks: boolean;
+
+    @Column({
+      type: DataType.BOOLEAN,
+      defaultValue: false,
+      allowNull: true,
+      field: "auto_send_meet_links"
+    })
+    autoSendMeetLinks: boolean;
   
     @Column({
       type: DataType.BOOLEAN,

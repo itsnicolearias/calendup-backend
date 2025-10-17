@@ -37,6 +37,7 @@ export const config = {
   mpAccessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN,
   mpReturnUrl: process.env.MERCADO_PAGO_RETURN_URL,
   createMpPlans: process.env.CREATE_MP_PLANS === 'true',
+  cryptoEncriptionKey: process.env.CRYPTO_ENCRYPTION_KEY,
 
 };
 

@@ -38,7 +38,7 @@ export class Subscription extends Model {
     allowNull: false,
     field: "plan_id",
   })
-  planId!: number;
+  planId!: string;
 
   @Column({
     type: DataType.STRING,
