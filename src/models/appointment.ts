@@ -58,6 +58,9 @@ export class Appointment extends Model {
   @Column({type: DataType.STRING, field: "selected_app_mode", allowNull: true})
   selectedAppMode: string
 
+  @Column({type: DataType.STRING, field: "meeting_link", allowNull: true})
+  meetingLink: string
+
   @HasOne(() => Review)
   Review: Review[]
 

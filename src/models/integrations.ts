@@ -26,7 +26,7 @@ export class Integration extends Model {
     field: "user_id",
     allowNull: false,
   })
-  userId!: string
+  professionalId!: string
 
   @Column({
     type: DataType.STRING,
@@ -63,7 +63,31 @@ export class Integration extends Model {
   active: boolean
 
   @BelongsTo(() => User)
-  User!: User
+  Professional!: User
+
+  @Column({
+      type: DataType.BOOLEAN,
+      defaultValue: false,
+      allowNull: true,
+      field: "auto_create_meet_links"
+    })
+    autoCreateMeetLinks: boolean;
+  
+    @Column({
+      type: DataType.BOOLEAN,
+      defaultValue: false,
+      allowNull: true,
+      field: "sync_app_with_calendar"
+    })
+    syncAppWithCalendar: boolean;
+  
+    @Column({
+      type: DataType.BOOLEAN,
+      defaultValue: false,
+      allowNull: true,
+      field: "show_events_in_agenda"
+    })
+    showEventsInAgenda: boolean;
 
   @Column({
     allowNull: false,

@@ -12,6 +12,7 @@ export interface CreateAppointmentParams {
   status: AppointmentStatus;
   selectedAppMode?: AppointmentMode;
   appointmentCode: string;
+  meetingLink: string
 }
 
 export interface AppointmentsResponse {

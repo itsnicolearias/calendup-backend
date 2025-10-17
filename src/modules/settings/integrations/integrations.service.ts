@@ -2,10 +2,14 @@ import { IIntegrationsService } from "./integrations.interface";
 import boom from '@hapi/boom'
 import { Integration } from "../../../models/integrations";
 import { oauth2Google } from "../../../libs/google-apis/intex";
+import BaseService from "../../base/base.service";
 
 
 
-class IntegrationService implements IIntegrationsService {
+class IntegrationService extends BaseService<Integration>  implements IIntegrationsService {
+    constructor() {
+        super(Integration);
+      }
 
 public async getCalendarAuthUrl(): Promise<string> {
     try {
@@ -28,7 +32,7 @@ public async getCalendarAuthUrl(): Promise<string> {
   
 }
 
-public async  handleCalendarCallback(code: string, userId: string): Promise<void> {
+public async  handleCalendarCallback(code: string, professionalId: string): Promise<void> {
     try {
         const { tokens } = await oauth2Google.getToken(code)
         oauth2Google.setCredentials(tokens)
@@ -36,8 +40,9 @@ public async  handleCalendarCallback(code: string, userId: string): Promise<void
         if (!tokens.refresh_token) throw boom.badRequest('Refresh Token not obtained')
 
         await Integration.upsert({
-            userId,
+            professionalId,
             provider: 'google_calendar',
+            active: true,
             accessToken: tokens.access_token,
             refreshToken: tokens.refresh_token,
         })
