@@ -5,7 +5,7 @@ import { decodeToken } from '../utils/jwt';
 import { User } from '../models/user';
 
 export const validateRole = (roles: string[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, _res: Response, next: NextFunction) => {
     try {
       const Authorization = req.headers['authorization'];
 

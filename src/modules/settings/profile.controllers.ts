@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import { Request, Response, NextFunction } from "express"
 import  ProfileService from "./profile.service"
 import { User } from "../../models/user";

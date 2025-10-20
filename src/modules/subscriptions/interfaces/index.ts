@@ -5,6 +5,7 @@ export interface PlanAttributes {
   currency: string;
   features: {
     maxAppointmentsPerMonth?: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any; // flexibilidad para más features en el futuro
   };
   createdAt?: Date;

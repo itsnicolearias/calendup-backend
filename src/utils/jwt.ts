@@ -13,7 +13,7 @@ export const generateVerificationToken = (userId: string) => {
   
 }
 
-export const generateGenericToken = (data: any, secret: string) => {
+export const generateGenericToken = (data: object, secret: string) => {
     try {
         return jwt.sign(data, secret)
     } catch (error) {
@@ -22,7 +22,7 @@ export const generateGenericToken = (data: any, secret: string) => {
   
 }
 
-export const generateAppModificationToken = (data: any, secret: string, appointmentDate: string) => {
+export const generateAppModificationToken = (data: object, secret: string, appointmentDate: string) => {
     try {
         const date = new Date(`${appointmentDate}T23:59:59Z`); 
 

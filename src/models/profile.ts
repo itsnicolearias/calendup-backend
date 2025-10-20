@@ -74,35 +74,35 @@ export class Profile extends Model {
     field: "default_app_confirmation",
     defaultValue: true
   })
-  defaultAppConfirmation?: Boolean
+  defaultAppConfirmation?: boolean
 
   @Column({
     type: DataType.BOOLEAN,
     field: "mark_app_as_completed",
     defaultValue: true
   })
-  markAppAsCompleted?: Boolean
+  markAppAsCompleted?: boolean
 
   @Column({
     type: DataType.STRING,
     field: "license_number"
   })
-  licenseNumber?: String
+  licenseNumber?: string
 
   @Column({
     type: DataType.STRING,
   })
-  country?: String
+  country?: string
 
   @Column({
     type: DataType.STRING,
   })
-  province?: String
+  province?: string
 
   @Column({
     type: DataType.STRING,
   })
-  city?: String
+  city?: string
 
   @Column({
     type: DataType.BOOLEAN,

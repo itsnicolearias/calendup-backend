@@ -1,4 +1,4 @@
-export interface ISecurityService{
+export interface ISecurityService {
   changePassword(body: ChangePasswordBody, userId: string): Promise<void>;
 }
 

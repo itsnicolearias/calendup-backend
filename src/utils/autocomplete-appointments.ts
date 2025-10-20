@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import cron from "node-cron";
 import { autoCompleteAppointments } from "../modules/appointments/services/appointment.service";
 
