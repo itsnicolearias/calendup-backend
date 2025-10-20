@@ -1,0 +1,61 @@
+name: CI Backend
+
+on:
+  pull_request:
+    branches: [ main ] # solo en PR hacia estas ramas
+  push:
+    branches: [ main ] # opcional: también al pushear directo
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: calendup_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/calendup_test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint check
+        run: npm run lint
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Run tests (if any)
+        run: |
+          if [ -f "jest.config.js" ] || [ -f "jest.config.ts" ]; then
+            npm test
+          else
+            echo "⚠️ No test config found, skipping tests."
+          fi
+
+      - name: Verify dependencies and vulnerabilities
+        run: |
+          npm audit --audit-level=high || echo "Audit found issues but continuing"
