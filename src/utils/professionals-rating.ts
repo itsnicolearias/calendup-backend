@@ -2,8 +2,9 @@ import { fn, col } from "sequelize";
 import { Review } from "../models/review";
 import Boom from "@hapi/boom";
 
-export async function getProfessionalRating(professionalId: string) {
+export async function getProfessionalRating(professionalId: string): Promise<RatingResponse> {
     try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result: any = await Review.findAll({
             where: { professionalId },
             attributes: [
@@ -25,4 +26,9 @@ export async function getProfessionalRating(professionalId: string) {
         throw Boom.badRequest(error);
     }
   
+}
+
+export interface RatingResponse {
+    averageRating: number;
+    totalReviews: number;
 }

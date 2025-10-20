@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Database from "./libs/sequelize";
 import express, { Application } from "express";
 import cors from 'cors';
@@ -21,7 +22,7 @@ export class App {
 
     public async config() {
     
-        const whiteList: any[] = [
+        const whiteList = [
            new RegExp(config.urlFront!), // convierte el string en RegExp
           //.localhost:3000$/
         ];

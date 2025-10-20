@@ -18,7 +18,7 @@ export async function checkPlanLimit(userId: string) {
         }
 
         // Verificar si el plan tiene features con límite de turnos
-        const features = subscription.plan.features as any;
+        const features = subscription.plan.features;
         const maxAppointments = features?.maxAppointmentsPerMonth;
 
         if (maxAppointments) {

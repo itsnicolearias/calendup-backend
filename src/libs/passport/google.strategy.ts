@@ -16,7 +16,7 @@ const options: StrategyOptions = {
 
 passport.use(
   new GoogleStrategy(options,
-    async function (accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) {
+    async function (_accessToken: string, _refreshToken: string, profile: Profile, done: VerifyCallback) {
       try {
         let user = await User.findOne({ where: { googleId: profile.id } });
 

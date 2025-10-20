@@ -1,4 +1,5 @@
-import Mail from "nodemailer/lib/mailer";
+/* eslint-disable no-console */
+//import Mail from "nodemailer/lib/mailer";
 import * as nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import boom from "@hapi/boom";
@@ -29,10 +30,10 @@ export async function sendEmail(
   maxRetries = 3,
   delayMs = 2000
 ): Promise<void> {
-  const options: Mail.Options = {
+  /*const options: Mail.Options = {
     ...data,
     from: config.emailFrom,
-  };
+  };*/
 
   let attempt = 0;
 

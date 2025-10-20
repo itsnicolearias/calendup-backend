@@ -3,7 +3,8 @@ import { ZodType } from "zod"
 import { Request, Response, NextFunction } from "express"
 import  Boom from "@hapi/boom"
 
-export const validate = (schema: ZodType<any>, property: "body" | "query" | "params") => (req: Request, res: Response, next: NextFunction) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const validate = (schema: ZodType<any>, property: "body" | "query" | "params") => (req: Request, _res: Response, next: NextFunction) => {
   try {
     req[property] = schema.parse(req[property])
     next()

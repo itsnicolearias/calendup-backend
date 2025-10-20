@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { compare, hash } from "bcryptjs"
 import { User } from "../../models/user"
 import { LoginUserParams, RegisterUserParams, ResetPasswordProps, UserRole, VerifyEmailParams } from "./auth.interface"
 import { decodeToken, generateLoginToken, generateVerificationToken } from "../../utils/jwt"
 import  Boom from "@hapi/boom"
 import { Profile } from "../../models/profile"
-import { sendEmail } from "../../libs/nodemailer"
 import { config } from "../../config/environments"
 import { verifyAccountTemplate } from "../../templates/auth/verifyAccount"
 import { accountActivatedTemplate } from "../../templates/auth/accountActivated"
@@ -104,7 +104,7 @@ export const VerifyEmailService = async ({ token }: VerifyEmailParams) => {
 
 export const GoogleService = async (user: any) => {
     try {
-        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile?.lastName })
+        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile?.lastName ?? '' })
       return token;
     } catch (error) {
         throw Boom.badRequest(error)
@@ -113,7 +113,7 @@ export const GoogleService = async (user: any) => {
 
 export const FacebookService = async (user: any) => {
     try {
-        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile?.lastName })
+        const token = generateLoginToken({ userId: user.userId!, role: user.role!, lastName: user.profile?.lastName ?? "" })
 
       return token;
     } catch (error) {
