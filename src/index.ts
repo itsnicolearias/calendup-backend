@@ -9,9 +9,10 @@ Database.authenticate()
 
 const appInstance = new App();
 const expressApp = appInstance.getExpressInstance();
-
-export default serverless(expressApp);
+const handler = serverless(expressApp);
 
 if (process.env.NODE_ENV !== "production") {
     appInstance.listen();
 }
+
+module.exports = handler;

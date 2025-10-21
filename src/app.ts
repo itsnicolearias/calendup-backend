@@ -32,6 +32,7 @@ export class App {
             origin: whiteList,
             credentials: true,
         };
+        this.app.get('/api/health', (_req, res) => res.send("ok"));
         this.app.use(morgan('dev'));
         this.app.use(cors(options));
         this.app.use(express.json());
