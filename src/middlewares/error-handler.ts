@@ -2,7 +2,7 @@
 import Boom from '@hapi/boom';
 import { NextFunction, Response, Request } from 'express';
 
-export function errorHandler(_req: Request, res: Response, error: any) {
+export function errorHandler(req: Request, res: Response, error: any) {
   const err = Boom.internal(error);
   const { output } = err;
   res.status(output.statusCode).json(output.payload);
@@ -10,7 +10,7 @@ export function errorHandler(_req: Request, res: Response, error: any) {
 
 export function boomErrorHandler(
   error: any,
-  //req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {
