@@ -24,12 +24,12 @@ export class App {
     }
 
     private config() {
-        const whiteList = [
+        /*const whiteList = [
             new RegExp(config.urlFront!)
-        ];
+        ];*/
         const options: cors.CorsOptions = {
             methods: ["GET", "POST", "PUT", "DELETE"],
-            origin: whiteList,
+            origin: "*",
             credentials: true,
         };
         this.app.get('/api/health', (_req, res) => res.send("ok"));
