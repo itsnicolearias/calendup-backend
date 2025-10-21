@@ -1,8 +1,10 @@
 import { App } from "./app";
 
-export async function main() {
+async function main() {
     const app = new App();
     await app.listen()
 }
 
 main();
+
+module.exports = { main }
