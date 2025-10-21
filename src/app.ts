@@ -45,6 +45,10 @@ export class App {
         this.app.use('/api', indexRoutes);
       }
 
+    getExpressInstance() {
+    return this.app
+    }
+
     async listen() {
         this.app.use(boomErrorHandler);
         this.app.use(errorHandler);

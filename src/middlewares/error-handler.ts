@@ -22,5 +22,5 @@ export function boomErrorHandler(
   }
   const { output } = error;
 
-  res.status(output?.statusCode).json(output.payload);
+  res.status(output?.statusCode || 500).json(output?.payload);
 }
