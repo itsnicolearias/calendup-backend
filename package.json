@@ -13,6 +13,9 @@
     "migrations:delete": "npx sequelize db:migrate:undo:all",
     "migrations:revert": "npx sequelize db:migrate:undo --name"
   },
+  "engines": {
+  "node": "20.x"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
