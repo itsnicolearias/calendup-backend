@@ -18,6 +18,11 @@ class IndexRoutes {
     this.router.use('/settings', SettingRouter); 
     this.router.use('/professionals', ProfessionalRouter); 
     this.router.get('/get-signed-url', getSignedUrl)
+
+    this.router.get("/health", (_req, res) => {
+      res.json({ status: "ok" })
+    })
+
   }
 }
 

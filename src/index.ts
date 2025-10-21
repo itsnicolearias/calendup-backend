@@ -1,11 +1,17 @@
-import { App } from "./app"
-import serverless from "serverless-http"
+/* eslint-disable no-console */
+import { App } from "./app";
+import serverless from "serverless-http";
+import Database from "./libs/sequelize";
 
-const app = new App()
-const expressApp = app.getExpressInstance()
+Database.authenticate()
+  .then(() => console.log("✅ DB connected"))
+  .catch(err => console.error("❌ DB connection error:", err));
 
-export default serverless(expressApp)
+const appInstance = new App();
+const expressApp = appInstance.getExpressInstance();
+
+export default serverless(expressApp);
 
 if (process.env.NODE_ENV !== "production") {
-  app.listen()
-};
+    appInstance.listen();
+}
