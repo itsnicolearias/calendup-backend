@@ -1,8 +1,11 @@
-import { App } from "./app";
+import { App } from "./app"
+import serverless from "serverless-http"
 
-export async function main() {
-    const app = new App();
-    await app.listen()
-}
+const app = new App()
+export const handler = serverless(app.getExpressInstance());
 
-main();
+if (process.env.NODE_ENV !== "production") {
+  app.listen()
+};
+
+export default app;

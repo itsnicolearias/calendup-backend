@@ -45,12 +45,17 @@ export class App {
         this.app.use('/api', indexRoutes);
       }
 
+    getExpressInstance() {
+    return this.app
+    }
+
     async listen() {
         this.app.use(boomErrorHandler);
         this.app.use(errorHandler);
 
-       this.app.listen(config.port);
-       console.log('server running')
+       this.app.listen({ port: config.port, host: '0.0.0.0' }, () => {
+        console.log(`Server running on port ${config.port}`);
+      });
        await this.database.authenticate().then(() => console.log('DB connected'));
     }
 }
