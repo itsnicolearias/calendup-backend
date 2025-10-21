@@ -17,8 +17,10 @@ const options: any = {
 
 if (config.isProd) {
   options.dialectOptions = {
+    ...options.dialectOptions,
     ssl: {
       rejectUnauthorized: false,
+      require: true,
     },
   };
 }
