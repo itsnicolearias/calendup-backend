@@ -1,6 +1,6 @@
 import { App } from "./app";
 
-async function main() {
+export async function main() {
     const app = new App();
     await app.listen()
 }
