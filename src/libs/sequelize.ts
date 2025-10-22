@@ -24,8 +24,8 @@ if (config.isProd) {
   };
 }
 
-//const dbEnv: any = config.env;
+const url = config.env === "test" ? config.dbUrlTest : config.dbUrl;
 
-const Database = new Sequelize(String(config.dbUrl), options);
+const Database = new Sequelize(String(url), options);
 
 export default Database;

@@ -1,0 +1,54 @@
+name: Run Backend Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      ENV: test
+      DATABASE_TEST_URL: ${{ secrets.DATABASE_TEST_URL }}
+
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 5433:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: calendup-db-test
+        options: >-
+          --health-cmd="pg_isready -U postgres -d calendup-db-test"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for Postgres
+        run: |
+          echo "Esperando a que Postgres esté listo..."
+          for i in {1..10}; do
+            pg_isready -h localhost -p 5433 -U postgres && break
+            sleep 3
+          done
+
+      - name: Run migrations
+        run: npm run migrations:run
+
+      - name: Run tests
+        run: npm run test

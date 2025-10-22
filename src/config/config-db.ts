@@ -6,7 +6,7 @@ export = {
     url: config.dbUrl
   },
   test: {
-    url: "config.dbUrlT",
+    url: config.dbUrlTest,
   },
   production: {
     url: config.dbUrl,

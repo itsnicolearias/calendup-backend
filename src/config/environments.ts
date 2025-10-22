@@ -5,6 +5,7 @@ export const config = {
   isProd: process.env.NODE_ENV === 'production',
   port: process.env.PORT || 4000,
   dbUrl: process.env.DATABASE_URL,
+  dbUrlTest: process.env.DATABASE_TEST_URL,
   smtpHost: process.env.SMTP_HOST,
   smtpPort: process.env.SMTP_PORT,
   smtpUsername: process.env.SMTP_USERNAME,
