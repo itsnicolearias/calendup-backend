@@ -69,6 +69,7 @@ export class Plan extends Model {
     allowNull: false,
     defaultValue: {},
   })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   features: Record<string, any>;
 
   @HasMany(() => Subscription)

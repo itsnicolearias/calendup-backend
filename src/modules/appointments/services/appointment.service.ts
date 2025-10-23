@@ -10,7 +10,7 @@ import { decodeToken, generateAppModificationToken, generateGenericToken } from 
 import { CheckAvailabilityBody } from '../../professionals/professional.interface';
 import { Op } from 'sequelize';
 import { GenerateAppCode } from '../../../utils/generate-app-code';
-import { getProfessionalRating } from '../../../utils/professionals-rating';
+import { getProfessionalRating, RatingResponse } from '../../../utils/professionals-rating';
 import { AppointmentType } from '../../../models/appointment_type';
 import { confirmedUserEmail } from '../../../templates/appointments/userAppSchedule';
 import { confirmedProfessionalEmail } from '../../../templates/appointments/professionalAppSchedule';
@@ -31,7 +31,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
     super(Appointment);
   }
 
-  public async getAllApp(professionalId?: string | null, includeModel?: object, page?: number, size?: number, all?: boolean, where?: Record<string, unknown>): Promise<GetAllAppResponse> {
+  public async getAllApp(professionalId?: string | null, includeModel?: object, page?: number, size?: number, all?: boolean): Promise<GetAllAppResponse> {
     try {
       const appointments = await super.getAll(professionalId, includeModel, page, size, all)
 
@@ -45,7 +45,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
   }
   
   // obtain and update one appointment from a magic link with a jwt, for users that are not logged in
-  async getOneAppointment(token: string): Promise<{ appointment: Appointment, rating: any }> {
+  async getOneAppointment(token: string): Promise<{ appointment: Appointment, rating: RatingResponse }> {
     try {
       const verifyToken = decodeToken(token, config.jwtUserSecret!)
 
@@ -75,7 +75,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
     }
   }
 
-  async create(body: CreateAppointmentParams, professionalId?: string, include?: any[]): Promise<Appointment> {
+  async create(body: CreateAppointmentParams, professionalId?: string, include?: []): Promise<Appointment> {
       try {
         await checkPlanLimit(body.professionalId);
         
@@ -202,7 +202,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
       }
 
       // actualizar
-      const updatedApp = await super.update(body, where)
+      const updatedApp = await super.update(body, where, professionalId)
       
       // notificar a los usuarios
       const token = generateAppModificationToken({appointmentId: app.appointmentId}, config.jwtUserSecret!, updatedApp.date)
@@ -358,6 +358,7 @@ export async function autoCompleteAppointments() {
         })
   });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error(error);
   }
   

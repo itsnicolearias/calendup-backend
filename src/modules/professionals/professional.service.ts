@@ -102,7 +102,7 @@ async getAvailableSlots(body: AvailableSlotBody): Promise<AvailableSlotResponse>
     }
   
 }
-public async getAll(professionalId?: string | null, includeModel?: object, page?: number, size?: number, all?: boolean) {
+public async getAll(_professionalId?: string | null, _includeModel?: object, page?: number, size?: number, all?: boolean) {
   try {
     const includeClause = [
       { model: Profile,
@@ -122,7 +122,7 @@ public async getAll(professionalId?: string | null, includeModel?: object, page?
   }
 }
 
-async getOneProfessional(where: Record<string, unknown>, includeModel?: object, professionalId?: string) {
+async getOneProfessional(where: Record<string, unknown>) {
   try {
     const professional = await super.getOne(where, [Profile, AppointmentType])
     const rating = await getProfessionalRating(String(where.userId))

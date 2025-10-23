@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Database from "./libs/sequelize";
 import express, { Application } from "express";
 import cors from 'cors';
@@ -22,7 +23,7 @@ export class App {
 
     public async config() {
     
-        const whiteList: any[] = [
+        const whiteList: RegExp[] = [
            new RegExp(config.urlFront!), // convierte el string en RegExp
           //.localhost:3000$/
         ];
@@ -31,6 +32,7 @@ export class App {
           origin: "*",
           credentials: true,
         };
+        this.app.get('/api/health', (_req, res) => res.send("ok"));
         this.app.use(morgan('dev'))
         this.app.use(cors(options));
         this.app.use(express.json()); 
@@ -60,6 +62,3 @@ export class App {
        
     }
 }
-
-
-

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import boom from '@hapi/boom';
 import moment from 'moment';
 import { GetAllResponse, IBaseService } from '../base/base.interface';
@@ -28,7 +29,7 @@ class BaseService<T> implements IBaseService<T> {
     where?: Record<string, unknown>,
   ): Promise<GetAllResponse<T>> {
     try {
-      let whereCondition = { ...where };
+      const whereCondition = { ...where };
       if (professionalId) {
         whereCondition.professionalId = professionalId;
       }

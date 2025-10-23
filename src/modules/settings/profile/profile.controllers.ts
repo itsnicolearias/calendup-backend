@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import { Request, Response, NextFunction } from "express"
 import { JwtPayload } from "jsonwebtoken";
 import ProfileService from "./profile.service";
