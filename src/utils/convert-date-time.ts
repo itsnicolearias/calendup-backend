@@ -7,7 +7,9 @@ export const buildGoogleDateTime = (date: string, time: string, timeZone = 'Amer
 }
 
 export const calculateEndTime = (date: string, startTime: string, duration: number): string => {
-  return dayjs(`${date}${startTime}, America/Argentina/Buenos_Aires`)
-    .add(duration, 'minute')
-    .format()
+  const timeZone = 'America/Argentina/Buenos_Aires'
+  const enddate =  dayjs(`${date} ${startTime}`, timeZone)
+    .add(duration, 'minutes')
+    
+   return enddate.format()
 }

@@ -6,6 +6,7 @@ import { IProfileService, UserWithProfile } from "./profile.interface";
 import { AppointmentType } from "../../../models/appointment_type";
 import { Subscription } from "../../../models/subscription";
 import { Plan } from "../../../models/plan";
+import { Integration } from "../../../models/integrations";
 
 class ProfileService extends BaseService<Profile> implements IProfileService {
   constructor() {
@@ -16,7 +17,7 @@ class ProfileService extends BaseService<Profile> implements IProfileService {
       try {
         const user = await User.findOne({
             where: { userId: userId},
-            include: [Profile, AppointmentType, {model: Subscription, include: [Plan] }]
+            include: [Profile, AppointmentType, {model: Subscription, include: [Plan] }, Integration]
         })
 
         if (!user) {

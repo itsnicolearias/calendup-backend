@@ -1,13 +1,11 @@
-import { oauth2Google } from "../../../libs/google-apis/intex";
+import { Integration } from "../../../models/integrations";
 
 export type IntegrationsProviders =  "google"| "zoom"
 
 export interface IIntegrationsService {
     getCalendarAuthUrl(): Promise<string>
-    handleCalendarCallback(code: string, professionalId: string): Promise<void>
-    canAutoCreateMeet(userId: string): Promise<Boolean>;
-    createGoogleMeetLink(userId: string, clientName: string, date: string, time: string, duration: number): Promise<string | null | undefined>;
-    getAuthorizedClient(userId: string): Promise<typeof oauth2Google>
+    handleCalendarCallback(_code: string, _professionalId: string): Promise<void>
+    canAutoCreateMeet(_userId: string): Promise<{create: boolean, integration?: Integration}>;
 }
 
 export interface IntegrationParams {

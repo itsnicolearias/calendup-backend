@@ -1,17 +1,13 @@
 import { IIntegrationsService } from "./integrations.interface";
 import boom from '@hapi/boom'
 import { Integration } from "../../../models/integrations";
-import { oauth2Google } from "../../../libs/google-apis/intex";
+import { oauth2Google } from "../../../libs/google-apis";
 import BaseService from "../../base/base.service";
 import { User } from "../../../models/user";
 import { Plan } from "../../../models/plan";
 import { Subscription } from "../../../models/subscription";
 import { config } from "../../../config/environments";
-import { google } from "googleapis";
-import { decrypt, encrypt } from "../../../libs/crypto";
-import { buildGoogleDateTime, calculateEndTime } from "../../../utils/convert-date-time";
-
-
+import { encrypt } from "../../../libs/crypto";
 
 class IntegrationService extends BaseService<Integration>  implements IIntegrationsService {
     constructor() {
@@ -33,10 +29,7 @@ public async getCalendarAuthUrl(): Promise<string> {
         return link;
     } catch (error) {
         throw boom.badRequest(error)
-    }
-
-
-  
+    } 
 }
 
 public async handleCalendarCallback(code: string, professionalId: string): Promise<void> {
@@ -64,90 +57,28 @@ public async handleCalendarCallback(code: string, professionalId: string): Promi
 
 
 /**
- * Devuelve un cliente OAuth2 autorizado para el usuario.
+ * Verifica si un usuario premium tiene activada la opcion de auto crear links de reunion.
  */
-async getAuthorizedClient(userId: string) {
+public async canAutoCreateMeet(userId: string): Promise<{create: boolean, integration?: Integration}> {
     try {
-        const integration = await Integration.findOne({
-            where: { userId, provider: 'google' }
-        })
-
-        if (!integration) throw boom.notFound('Integration not found')
-
-        const accessToken = decrypt(integration.accessToken!)
-        const refreshToken = decrypt(integration.refreshToken!)
-
-        oauth2Google.setCredentials({
-            access_token: accessToken,
-            refresh_token: refreshToken
-        })
-
-        return oauth2Google;
-    } catch (error) {
-        throw boom.badRequest(error);
-    }
-  
-}
-
-/**
- * Crea una reunión de Google Meet y devuelve el link.
- */
-public async createGoogleMeetLink(userId: string, clientName: string, date: string, time: string, duration: number) {
-    try {
-        const client = await this.getAuthorizedClient(userId)
-        const calendar = google.calendar({ version: 'v3', auth: client })
-
-        const startTime = buildGoogleDateTime(date, time);
-        const endTime = calculateEndTime(date, time, duration)
-
-        const event = {
-            summary: `Reunion con ${clientName}`,
-            start: { dateTime: startTime },
-            end: { dateTime: endTime },
-            conferenceData: {
-            createRequest: {
-                requestId: `meet-${Date.now()}`,
-                conferenceSolutionKey: { type: 'hangoutsMeet' }
-            }
-            }
-        }
-
-        const response = await calendar.events.insert({
-            calendarId: 'primary',
-            requestBody: event,
-            conferenceDataVersion: 1
-        })
-
-        return response.data?.hangoutLink
-    } catch (error) {
-        throw boom.badRequest(error);
-    }
-  
-}
-
-/**
- * Verifica si un usuario premium tiene activada la integración con Google Meet.
- */
-public async canAutoCreateMeet(userId: string): Promise<Boolean> {
-    try {
-        const user = await User.findOne({ where: {userId}, include: [Subscription, Plan, Integration]})
+        const user = await User.findOne({ where: {userId}, include: [{model: Subscription, include: [Plan] }, Integration]})
 
         if (!user) {
             throw boom.notFound("User not found")
         }
-        const isPremium = user.Subscription.planId !== config.freePlanId && user.Subscription.plan.features["meetAvailable"]
+        const isPremium = user.Subscription.planId !== config.freePlanId && user.Subscription.plan.features["meetAvailable"] || user.Subscription.plan.features["zoomAvailable"]
         if (!isPremium) {
-            return false;
+            return { create: false };
         }
 
-        const meetIntegration = user.Integrations.find(i => (i.provider === "google"))
-        if (!meetIntegration){
-            return false;
+        const findIntegration = user.Integrations.find(i => (i.provider === "google" || i.provider === "zoom"))
+        if (!findIntegration){
+            return { create: false }
         }
 
-        const canAutoCreate = meetIntegration?.autoCreateMeetLinks;
+        const canAutoCreate = findIntegration?.autoCreateMeetLinks;
 
-        return isPremium && canAutoCreate
+        return  {create: canAutoCreate, integration: findIntegration}
     } catch (error) {
         throw boom.badRequest(error);
     }

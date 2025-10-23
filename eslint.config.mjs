@@ -25,7 +25,7 @@ export default defineConfig([
             '@typescript-eslint/interface-name-prefix': 'off',
             // 🔹 Personaliza reglas:
             "no-console": "error", // era error, ahora warning
-            "no-unused-vars": "warn", // cambiar error a warning
+            "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }], // cambiar error a warning
             "@typescript-eslint/explicit-module-boundary-types": 'off',
             "@typescript-eslint/no-explicit-any": "warn", // avisar, no romper build
             '@typescript-eslint/no-namespace': 'off',

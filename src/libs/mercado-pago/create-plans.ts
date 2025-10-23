@@ -1,4 +1,5 @@
-import Boom from "@hapi/boom";
+/* eslint-disable no-console */
+//import Boom from "@hapi/boom";
 import { Plan } from "../../models/plan";
 import { config } from "../../config/environments";
 import { PreApprovalPlan } from "mercadopago";
@@ -77,6 +78,7 @@ export const InitSubscriptionPlan = async () => {
       }
     }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("❌ Error al inicializar planes:",  error);
   }

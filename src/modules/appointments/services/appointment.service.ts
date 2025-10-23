@@ -25,6 +25,9 @@ import { appointmentCompletedEmail } from '../../../templates/appointments/appoi
 import { checkPlanLimit } from '../../../utils/checkPlanLimit';
 import { sendEmailGoogle } from '../../../libs/google-apis/gmail';
 import integrationsService from '../../settings/integrations/integrations.service';
+import { createAppointmentEvent } from '../../../libs/google-apis/meet';
+import profileService from '../../settings/profile/profile.service';
+import { getUserCalendarEvents } from '../../../libs/google-apis/calendar';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
@@ -36,6 +39,16 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
       const appointments = await super.getAll(professionalId, includeModel, page, size, all)
 
       const appWithStats = countAppointmentsThisMonth(appointments.rows)
+
+      const professional = await profileService.getOneProfile(professionalId)
+
+      if (professional.Subscription.planId !== config.freePlanId){
+        if (professional.Integrations && professional.Integrations.find((i) => i.provider === "google" && i.showEventsInAgenda === true)) {
+          const googleEvents = await getUserCalendarEvents(professionalId)
+
+          return { appointments, createdThisMonth: appWithStats, googleEvents }
+        }
+      }
 
       return { appointments, createdThisMonth: appWithStats }
       
@@ -101,16 +114,35 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
         body.appointmentCode = GenerateAppCode(professional.profile.lastName);
 
-        const createMeetLink = await integrationsService.canAutoCreateMeet(body.professionalId)
-
-        if (createMeetLink) {
-          const link = await integrationsService.createGoogleMeetLink(body.professionalId, `${body.name} ${body.lastName}`, body.date, body.time, professional.profile.appointmentDuration!)
-
-          body.meetingLink = link!;
-        }
+       
         
         
         const appointment = await super.create(body, professionalId, include);
+
+        const createMeetLink = await integrationsService.canAutoCreateMeet(body.professionalId)
+
+        if (createMeetLink.integration) {
+          let link: string;          
+          const autoCreateMeet = createMeetLink.create && appointment.selectedAppMode === "online";
+
+          if (createMeetLink.integration.provider === "google" && createMeetLink.integration.syncAppWithCalendar === true) {
+            link = await createAppointmentEvent({ 
+            userId: body.professionalId, 
+            clientName: `${body.name} ${body.lastName}`, 
+            date: body.date, 
+            time: body.time, 
+            duration: professional.profile.appointmentDuration!,
+            autoCreateMeet,
+          })
+          }
+
+          if (appointment.selectedAppMode === "online"){
+            appointment.meetingLink = link!;
+            await appointment.save()
+          }
+          
+        }
+
 
         const token = generateAppModificationToken({appointmentId: appointment.appointmentId}, config.jwtUserSecret!, appointment.date)
 
