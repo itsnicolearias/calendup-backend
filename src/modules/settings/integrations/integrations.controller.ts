@@ -66,3 +66,24 @@ export const handleCalendarCallback = async (req: Request, res: Response, next: 
     next(error)
   }
 }
+
+export const startZoomAuth = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const url = await integrationsService.getZoomAuthUrl()
+    console.log(url)
+    res.redirect(url)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleZoomCallback = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const code = req.query.code as string
+    const userId = req?.myUser?.userId
+    await integrationsService.handleZoomCallback(code, userId)
+    res.redirect(`${config.urlFront}/settings/integrations?success=google`)
+  } catch (error) {
+    next(error)
+  }
+}

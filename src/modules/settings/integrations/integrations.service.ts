@@ -8,6 +8,7 @@ import { Plan } from "../../../models/plan";
 import { Subscription } from "../../../models/subscription";
 import { config } from "../../../config/environments";
 import { encrypt } from "../../../libs/crypto";
+import axios from "axios";
 
 class IntegrationService extends BaseService<Integration>  implements IIntegrationsService {
     constructor() {
@@ -82,8 +83,74 @@ public async canAutoCreateMeet(userId: string): Promise<{create: boolean, integr
     } catch (error) {
         throw boom.badRequest(error);
     }
-
 }
+
+ public async getZoomAuthUrl(): Promise<string> {
+    try {
+        console.log("*******")
+      const redirectUri = config.zoomRedirectUrl;
+      const scopes = [
+       "meeting:read",
+  "meeting:write",
+  "user:read",
+  "user:write"
+      ].join(" ");
+
+      const authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.zoomClientId}&redirect_uri=${encodeURIComponent(
+        redirectUri
+      )}&scope=${encodeURIComponent(scopes)}`;
+
+      return authUrl;
+    } catch (error) {
+        console.log(error)
+      throw boom.badRequest("Error generating Zoom auth URL");
+    }
+  }
+
+  public async handleZoomCallback(code: string, professionalId: string): Promise<void> {
+    try {
+      const tokenUrl = "https://zoom.us/oauth/token";
+      const redirectUri = config.zoomRedirectUrl;
+
+      const authHeader = Buffer.from(
+        `${config.zoomClientId}:${config.zoomClientSecret}`
+      ).toString("base64");
+
+      const response = await axios.post(
+        tokenUrl,
+        null,
+        {
+          params: {
+            grant_type: "authorization_code",
+            code,
+            redirect_uri: redirectUri,
+          },
+          headers: {
+            Authorization: `Basic ${authHeader}`,
+          },
+        }
+      );
+
+      const { access_token, refresh_token } = response.data;
+      if (!refresh_token) throw boom.badRequest("Refresh Token not obtained");
+
+      const encryptedAccess = encrypt(access_token);
+      const encryptedRefresh = encrypt(refresh_token);
+
+      await Integration.upsert({
+        professionalId,
+        provider: "zoom",
+        active: true,
+        accessToken: encryptedAccess,
+        refreshToken: encryptedRefresh,
+      });
+    } catch (error) {
+      console.error("Zoom callback error:", error);
+      throw boom.badRequest("Error handling Zoom callback");
+    }
+  }
+
+  
 
 }
 

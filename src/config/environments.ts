@@ -38,7 +38,9 @@ export const config = {
   mpReturnUrl: process.env.MERCADO_PAGO_RETURN_URL,
   createMpPlans: process.env.CREATE_MP_PLANS === 'true',
   cryptoEncriptionKey: process.env.CRYPTO_ENCRYPTION_KEY,
-
+  zoomClientId: process.env.ZOOM_CLIENT_ID,
+  zoomClientSecret: process.env.ZOOM_CLIENT_SECRET,
+  zoomRedirectUrl: process.env.ZOOM_REDIRECT_URI,
 };
 
 module.exports = { config };
