@@ -8,10 +8,10 @@ import { validate } from "../middlewares/zod-validation"
 const router = Router()
 
 router.get('/calendar/auth', auth, checkFeatureAccess("calendarAvailable"), startCalendarAuth)
-router.get('/calendar/callback', auth, handleCalendarCallback)
+router.get('/calendar/callback', handleCalendarCallback)
 
-router.get('/zoom/auth', auth, startZoomAuth)
-router.get('/zoom/callback', auth, handleZoomCallback)
+router.get('/zoom/auth', auth, checkFeatureAccess("zoomAvailable"), startZoomAuth)
+router.get('/zoom/callback', handleZoomCallback)
 
 router.get('/', auth, getIntegrations);
 router.get('/:id', auth, getIntegration);

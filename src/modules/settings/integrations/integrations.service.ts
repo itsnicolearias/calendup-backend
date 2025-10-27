@@ -9,23 +9,26 @@ import { Subscription } from "../../../models/subscription";
 import { config } from "../../../config/environments";
 import { encrypt } from "../../../libs/crypto";
 import axios from "axios";
+import { decodeToken, generateGenericToken } from "../../../utils/jwt";
 
 class IntegrationService extends BaseService<Integration>  implements IIntegrationsService {
     constructor() {
         super(Integration);
       }
 
-public async getCalendarAuthUrl(): Promise<string> {
+public async getCalendarAuthUrl(userId: string): Promise<string> {
     try {
         const scopes = [
             'https://www.googleapis.com/auth/calendar',
             'https://www.googleapis.com/auth/calendar.events',
         ]
 
+        const stateToken = generateGenericToken({userId}, config.jwtSecret)
         const link = oauth2Google.generateAuthUrl({
             access_type: 'offline',
             prompt: 'consent',
             scope: scopes,
+            state: stateToken
         })
         return link;
     } catch (error) {
@@ -33,8 +36,10 @@ public async getCalendarAuthUrl(): Promise<string> {
     } 
 }
 
-public async handleCalendarCallback(code: string, professionalId: string): Promise<void> {
+public async handleCalendarCallback(code: string, state: string): Promise<void> {
     try {
+        const { userId } = decodeToken(state, config.jwtSecret);
+
         const { tokens } = await oauth2Google.getToken(code)
         oauth2Google.setCredentials(tokens)
 
@@ -44,7 +49,7 @@ public async handleCalendarCallback(code: string, professionalId: string): Promi
         const encryptedRefresh = encrypt(tokens.refresh_token)
 
         await Integration.upsert({
-            professionalId,
+            professionalId: userId,
             provider: 'google',
             active: true,
             accessToken: encryptedAccess,
@@ -85,30 +90,25 @@ public async canAutoCreateMeet(userId: string): Promise<{create: boolean, integr
     }
 }
 
- public async getZoomAuthUrl(): Promise<string> {
+ public async getZoomAuthUrl(userId: string): Promise<string> {
     try {
-        console.log("*******")
+      const stateToken = generateGenericToken({userId}, config.jwtSecret)
       const redirectUri = config.zoomRedirectUrl;
-      const scopes = [
-       "meeting:read",
-  "meeting:write",
-  "user:read",
-  "user:write"
-      ].join(" ");
 
       const authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.zoomClientId}&redirect_uri=${encodeURIComponent(
         redirectUri
-      )}&scope=${encodeURIComponent(scopes)}`;
+      )}&state=${stateToken}`;
 
       return authUrl;
     } catch (error) {
-        console.log(error)
-      throw boom.badRequest("Error generating Zoom auth URL");
+      throw boom.badRequest("Error generating Zoom auth URL", error);
     }
   }
 
-  public async handleZoomCallback(code: string, professionalId: string): Promise<void> {
+  public async handleZoomCallback(code: string, state: string): Promise<void> {
     try {
+      const { userId } = decodeToken(state, config.jwtSecret);
+
       const tokenUrl = "https://zoom.us/oauth/token";
       const redirectUri = config.zoomRedirectUrl;
 
@@ -138,15 +138,14 @@ public async canAutoCreateMeet(userId: string): Promise<{create: boolean, integr
       const encryptedRefresh = encrypt(refresh_token);
 
       await Integration.upsert({
-        professionalId,
+        professionalId: userId,
         provider: "zoom",
         active: true,
         accessToken: encryptedAccess,
         refreshToken: encryptedRefresh,
       });
     } catch (error) {
-      console.error("Zoom callback error:", error);
-      throw boom.badRequest("Error handling Zoom callback");
+      throw boom.badRequest("Error handling Zoom callback", error);
     }
   }
 

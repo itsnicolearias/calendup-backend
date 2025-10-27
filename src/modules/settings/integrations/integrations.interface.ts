@@ -3,7 +3,7 @@ import { Integration } from "../../../models/integrations";
 export type IntegrationsProviders =  "google"| "zoom"
 
 export interface IIntegrationsService {
-    getCalendarAuthUrl(): Promise<string>
+    getCalendarAuthUrl(_userId: string): Promise<string>
     handleCalendarCallback(_code: string, _professionalId: string): Promise<void>
     canAutoCreateMeet(_userId: string): Promise<{create: boolean, integration?: Integration}>;
 }

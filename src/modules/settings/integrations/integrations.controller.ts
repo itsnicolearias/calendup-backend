@@ -39,7 +39,7 @@ export const updateIntegration = async (req: Request, res: Response, next: NextF
 export const deleteIntegration = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const professionalId = req.myUser?.userId;
-    const data = await integrationsService.delete({ integrationId: req.params.id }, professionalId, false);
+    const data = await integrationsService.delete({ integrationId: req.params.id }, professionalId, true);
     res.json(data);
   } catch (err) {
     next(err);
@@ -49,8 +49,9 @@ export const deleteIntegration = async (req: Request, res: Response, next: NextF
 
 export const startCalendarAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const url = await integrationsService.getCalendarAuthUrl()
-    res.redirect(url)
+    const userId = req?.myUser?.userId
+    const url = await integrationsService.getCalendarAuthUrl(userId)
+    res.json(url)
   } catch (error) {
     next(error)
   }
@@ -58,9 +59,9 @@ export const startCalendarAuth = async (req: Request, res: Response, next: NextF
 
 export const handleCalendarCallback = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const code = req.query.code as string
-    const userId = req?.myUser?.userId
-    await integrationsService.handleCalendarCallback(code, userId)
+    const { code, state } = req.query as { code: string; state: string };
+
+    await integrationsService.handleCalendarCallback(code, state)
     res.redirect(`${config.urlFront}/settings/integrations?success=google`)
   } catch (error) {
     next(error)
@@ -69,9 +70,10 @@ export const handleCalendarCallback = async (req: Request, res: Response, next: 
 
 export const startZoomAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const url = await integrationsService.getZoomAuthUrl()
-    console.log(url)
-    res.redirect(url)
+     const userId = req?.myUser?.userId
+
+    const url = await integrationsService.getZoomAuthUrl(userId)
+    res.json(url)
   } catch (error) {
     next(error)
   }
@@ -79,9 +81,8 @@ export const startZoomAuth = async (req: Request, res: Response, next: NextFunct
 
 export const handleZoomCallback = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const code = req.query.code as string
-    const userId = req?.myUser?.userId
-    await integrationsService.handleZoomCallback(code, userId)
+    const { code, state } = req.query as { code: string; state: string };
+    await integrationsService.handleZoomCallback(code, state)
     res.redirect(`${config.urlFront}/settings/integrations?success=google`)
   } catch (error) {
     next(error)
