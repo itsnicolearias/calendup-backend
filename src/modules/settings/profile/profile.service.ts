@@ -52,8 +52,12 @@ class ProfileService extends BaseService<Profile> implements IProfileService {
           "availability",
           "city",
           "country",
-          "province",
+          "province"
         ];
+
+        if (user.appMode === "combined" || user.appMode === "in_person") {
+          requiredFields.push("address");
+        }
 
         const completedFields = requiredFields.filter((field) => !!user[field as keyof Profile]);
         const progress = Math.round((completedFields.length / requiredFields.length) * 100);

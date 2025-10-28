@@ -48,10 +48,16 @@ public async handleCalendarCallback(code: string, state: string): Promise<void> 
         const encryptedAccess = encrypt(tokens.access_token!)
         const encryptedRefresh = encrypt(tokens.refresh_token)
 
+        const integrations = await this.getAll(userId);
+
+      const existsGoogleIntegration = integrations.rows.find((i) => i.provider === "zoom" && i.active === true)
+
+      const setActive = !existsGoogleIntegration
+
         await Integration.upsert({
             professionalId: userId,
             provider: 'google',
-            active: true,
+            active: setActive,
             accessToken: encryptedAccess,
             refreshToken: encryptedRefresh,
         })
@@ -77,12 +83,12 @@ public async canAutoCreateMeet(userId: string): Promise<{create: boolean, integr
             return { create: false };
         }
 
-        const findIntegration = user.Integrations.find(i => (i.provider === "google" || i.provider === "zoom"))
+        const findIntegration = user.Integrations.find(i => ((i.provider === "google" && i.active) || (i.provider === "zoom" && i.active)))
         if (!findIntegration){
             return { create: false }
         }
 
-        const canAutoCreate = findIntegration?.autoCreateMeetLinks;
+        const canAutoCreate = findIntegration?.autoCreateMeetLinks === true;
 
         return  {create: canAutoCreate, integration: findIntegration}
     } catch (error) {
@@ -137,10 +143,16 @@ public async canAutoCreateMeet(userId: string): Promise<{create: boolean, integr
       const encryptedAccess = encrypt(access_token);
       const encryptedRefresh = encrypt(refresh_token);
 
+      const integrations = await this.getAll(userId);
+
+      const existsGoogleIntegration = integrations.rows.find((i) => i.provider === "google" && i.active === true)
+
+      const setActive = existsGoogleIntegration  ? false : true
+
       await Integration.upsert({
         professionalId: userId,
         provider: "zoom",
-        active: true,
+        active: setActive,
         accessToken: encryptedAccess,
         refreshToken: encryptedRefresh,
       });

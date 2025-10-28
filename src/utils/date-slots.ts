@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom"
 import { AvailableSlot } from "../modules/professionals/professional.interface"
 import { config } from "../config/environments"
 
@@ -31,8 +30,9 @@ export async function obtainArgHolidays (year: number, month: number) {
             type: h.tipo  
           }))
 
-        return holidays;
+        return holidays || [];
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   } catch (error) {
-    throw Boom.badRequest(error);
+    return []
   }
 }

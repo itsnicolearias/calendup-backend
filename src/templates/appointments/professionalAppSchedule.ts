@@ -1,5 +1,3 @@
-// src/utils/emails/appointments/confirmedProfessionalEmail.ts
-
 import { config } from "../../config/environments";
 
 export function confirmedProfessionalEmail(

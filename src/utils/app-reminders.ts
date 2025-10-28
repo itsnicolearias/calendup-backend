@@ -48,7 +48,9 @@ cron.schedule("0 * * * *", async () => {
             appointment.name!,
             `${professional.name} ${professional.lastName}`,
             appointment.date,
-            appointment.time
+            appointment.time,
+            appointment.selectedAppMode!,
+            appointment.meetingLink!
           ),
         });
       }

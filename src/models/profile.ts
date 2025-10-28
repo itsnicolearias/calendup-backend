@@ -4,6 +4,7 @@ import {
 import { User } from "./user"
 import { Availability } from "../modules/settings/profile/profile.interface"
 import { Json } from "sequelize/types/utils"
+import { AppointmentMode } from "../modules/appointments/interfaces/appointment.interface"
 
 @Table({ tableName: "profiles", underscored: true })
 export class Profile extends Model {
@@ -149,7 +150,7 @@ export class Profile extends Model {
     field: "app_mode",
     allowNull: true
   })
-  appMode?: String
+  appMode?: AppointmentMode
 
   @BelongsTo(() => User)
   user!: User

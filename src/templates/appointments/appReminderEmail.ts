@@ -1,4 +1,4 @@
-export function appointmentReminderEmail(name: string, professional: string, date: string, time: string) {
+export function appointmentReminderEmail(name: string, professional: string, date: string, time: string, appMode: string, appLink: string) {
   return `
   <!DOCTYPE html>
   <html lang="es">
@@ -18,7 +18,10 @@ export function appointmentReminderEmail(name: string, professional: string, dat
           <h2 style="margin-bottom: 15px;">Hola, ${name}</h2>
           <p>Este es un recordatorio de tu turno con <strong>${professional}</strong>.</p>
           <p><strong>Fecha:</strong> ${date}<br/><strong>Hora:</strong> ${time}</p>
+          <p><strong>Modalidad de turno:</strong> ${appMode === "online" ? "Online" : "Presencial"}</p>
+          <p><strong>Link para reuniones online:</strong> ${appMode === "online" ? appLink : "No corresponde"}</p>
           <p style="margin-top: 20px;">Te esperamos a la hora indicada.</p>
+
         </td>
       </tr>
     </table>

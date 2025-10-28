@@ -24,10 +24,9 @@ import { appointmentCancelledEmail } from '../../../templates/appointments/appCa
 import { appointmentCompletedEmail } from '../../../templates/appointments/appointmentCompletedEmail';
 import { checkPlanLimit } from '../../../utils/checkPlanLimit';
 import { sendEmailGoogle } from '../../../libs/google-apis/gmail';
-import integrationsService from '../../settings/integrations/integrations.service';
-import { createAppointmentEvent } from '../../../libs/google-apis/meet';
 import profileService from '../../settings/profile/profile.service';
 import { getUserCalendarEvents } from '../../../libs/google-apis/calendar';
+import { handleOnlineMeetings } from '../../../utils/createOnlineMeetings';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
@@ -114,33 +113,19 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
         body.appointmentCode = GenerateAppCode(professional.profile.lastName);
 
-       
-        
-        
+        if (professional.profile.appMode === "online"){
+          body.selectedAppMode = "online"
+        } else if (professional.profile.appMode === "in_person"){
+          body.selectedAppMode = "in_person";
+        }
+
+
         const appointment = await super.create(body, professionalId, include);
 
-        const createMeetLink = await integrationsService.canAutoCreateMeet(body.professionalId)
+        const link = await handleOnlineMeetings(appointment, professional)
 
-        if (createMeetLink.integration) {
-          let link: string;          
-          const autoCreateMeet = createMeetLink.create && appointment.selectedAppMode === "online";
-
-          if (createMeetLink.integration.provider === "google" && createMeetLink.integration.syncAppWithCalendar === true) {
-            link = await createAppointmentEvent({ 
-            userId: body.professionalId, 
-            clientName: `${body.name} ${body.lastName}`, 
-            date: body.date, 
-            time: body.time, 
-            duration: professional.profile.appointmentDuration!,
-            autoCreateMeet,
-          })
-          }
-
-          if (appointment.selectedAppMode === "online"){
-            appointment.meetingLink = link!;
-            await appointment.save()
-          }
-          
+        if (link){
+          await appointment.update({meetingLink: link});
         }
 
 
@@ -157,7 +142,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
             name: professional.profile.name!, 
             lastName: professional.profile.lastName, 
             jobTitle: professional.profile.jobTitle!}, {
-            appointmentId: appointment.appointmentId}, 
+            appointmentId: appointment.appointmentId, mode: appointment.selectedAppMode, link: appointment?.meetingLink }, 
             token)
         })
 
@@ -274,7 +259,10 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
             app.name!, 
             `${app.professional.profile.name} ${app.professional.profile.lastName}`, 
             app.date, 
-            app.time)
+            app.time,
+            updatedApp.selectedAppMode!,
+            updatedApp.meetingLink!
+          )
         })
 
         //notify professional

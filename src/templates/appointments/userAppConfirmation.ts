@@ -1,4 +1,4 @@
-export function appointmentCreatedEmail(name: string, professional: string, date: string, time: string) {
+export function appointmentCreatedEmail(name: string, professional: string, date: string, time: string, appMode: string, appLink: string) {
   return `
   <!DOCTYPE html>
   <html lang="es">
@@ -18,6 +18,8 @@ export function appointmentCreatedEmail(name: string, professional: string, date
           <h2 style="margin-bottom: 15px;">¡Hola, ${name}!</h2>
           <p>Tu turno fue confirmado con <strong>${professional}</strong>.</p>
           <p><strong>Fecha:</strong> ${date}<br/><strong>Hora:</strong> ${time}</p>
+          <p><strong>Modalidad de turno:</strong> ${appMode === "online" ? "Online" : "Presencial"}</p>
+          <p><strong>Link para reuniones online:</strong> ${appMode === "online" ? appLink : "No corresponde"}</p>
           <p style="margin-top: 20px;">Gracias por confiar en <strong>Calendup</strong>.</p>
         </td>
       </tr>

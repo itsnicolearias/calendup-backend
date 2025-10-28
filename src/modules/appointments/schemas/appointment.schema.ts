@@ -11,7 +11,7 @@ export const createAppointmentSchema: ZodType = z.object({
   time: z.string().regex(/^\d{2}:\d{2}$/),
   reason: z.string().optional(),
   appointmentTypeId: z.uuidv4().optional().nullable(),
-  selectedAppMode: z.enum(AppointmentModeConst).optional().nullable(),
+  selectedAppMode: z.union([z.enum(AppointmentModeConst), z.literal("")]).optional().nullable(),
   
 });
 
@@ -25,5 +25,5 @@ export const updateAppointmentSchema: ZodType = z.object({
   reason: z.string().optional(),
   status: z.enum(AppointmentStatusConst).optional(),
   appointmentTypeId: z.uuidv4().optional().nullable(),
-  selectedAppMode: z.enum(AppointmentModeConst).optional().nullable(),
+  selectedAppMode: z.union([z.enum(AppointmentModeConst), z.literal("")]).optional().nullable(),
 });
