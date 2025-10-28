@@ -4,6 +4,9 @@ import { User } from "../../../models/user";
 import { compare, hash } from "bcryptjs"
 import { passwordChangedTemplate } from "../../../templates/auth/passwordChanged";
 import { sendEmailGoogle } from "../../../libs/google-apis/gmail";
+import { SupportMessageInput } from "./security.schema";
+import { sendEmail } from "../../../libs/nodemailer";
+import { config } from "../../../config/environments";
 
 class SecurityService implements ISecurityService {
     
@@ -38,6 +41,28 @@ class SecurityService implements ISecurityService {
             throw Boom.badRequest(error)
         }
     }
+
+    async sendSupportEmail(data: SupportMessageInput) {
+    try {
+        const { name, email, message } = data;
+        await sendEmail({
+            to: config.emailFrom,
+            subject: `Consulta de ${name}`,
+            text: `De: ${name} <${email}>\n\n${message}`,
+
+        })
+
+        await sendEmail({
+            to: email,
+            subject: "Hemos recibido tu mensaje",
+            text: `Hola ${name},\n\nGracias por contactarte con CalendUp. Nuestro equipo te responderá a la brevedad.\n\nSaludos,\nEquipo de Soporte CalendUp.`,
+        });
+
+        return { success: true };
+    } catch (error) {
+      throw Boom.badRequest("Error sending support email", error);
+    }
+  }
     
 }
 
