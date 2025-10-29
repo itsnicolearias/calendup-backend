@@ -37,7 +37,7 @@ export function confirmedUserEmail(
                     <li><strong>Hora:</strong> ${body.time}</li>
                     <li><strong>Profesional:</strong> ${professional.name} ${professional.lastName} - ${professional.jobTitle}</li>
                     <li><strong>Modalidad de turno:</strong> ${appointment.mode === "online" ? "Online" : "Presencial"}</li>
-                    <li><strong>Link para reuniones online:</strong> ${appointment.mode === "online" ? appointment?.link : "No corresponde"}</li>
+                    <li><strong>Link para reuniones online:</strong> ${(appointment.mode === "online"  && appointment?.link) ? appointment?.link : "No corresponde"}</li>
                   </ul>
                   <p style="margin:30px 0; text-align:center;">
                     <a href="${config.urlFront}/appointments/user-view/${appointment.appointmentId}?authorization=${token}" 

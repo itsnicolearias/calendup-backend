@@ -3,16 +3,20 @@ import axios from "axios";
 import { Integration } from "../../models/integrations";
 import { decrypt, encrypt } from "../crypto";
 import { config } from "../../config/environments";
+import { buildGoogleDateTime } from "../../utils/convert-date-time";
 
 export async function createZoomMeeting(
     professionalId: string,
     topic: string,
-    startTime: string,
+    date: string,
+    time: string,
     durationMinutes = 30
   ): Promise<{ join_url: string; start_url: string }> {
     try {
       const accessToken = await getAccessToken(professionalId);
       const url = "https://api.zoom.us/v2/users/me/meetings";
+
+      const startTime = buildGoogleDateTime(date, time);
 
       const payload = {
         topic,

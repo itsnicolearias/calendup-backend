@@ -5,7 +5,7 @@ import { createAppointmentEvent } from "../libs/google-apis/meet";
 import { createZoomMeeting } from "../libs/zoom";
 import { User } from "../models/user";
 
-export const handleOnlineMeetings = async (appointment: Appointment, professional: User ): Promise<string | undefined> => {
+export const handleOnlineMeetings = async (appointment: Appointment, professional: User ): Promise<{ link: string, autoSendLink: boolean }| undefined> => {
     try {
         const createMeetLink = await integrationsService.canAutoCreateMeet(appointment.professionalId)
         let link: string;  
@@ -27,9 +27,12 @@ export const handleOnlineMeetings = async (appointment: Appointment, professiona
             
         } else if (createMeetLink.integration.provider === "zoom" && appointment.selectedAppMode === "online" && createMeetLink.create) {
 
-            const res = await createZoomMeeting(appointment.professionalId, `Reunion con ${appointment.name} ${appointment.lastName}`, 
-            new Date(`${appointment.date}T${appointment.time}:00` ).toISOString(),
-            professional.profile.appointmentDuration!);
+            const res = await createZoomMeeting(
+                appointment.professionalId, 
+                `Reunion con ${appointment.name} ${appointment.lastName}`, 
+                appointment.date,
+                appointment.time,
+                professional.profile.appointmentDuration!);
 
             link = res.join_url
             }
@@ -40,7 +43,7 @@ export const handleOnlineMeetings = async (appointment: Appointment, professiona
             }
             
         }
-        return link;
+        return { link, autoSendLink: createMeetLink.integration.autoSendMeetLinks}
     } catch (error) {
         throw badRequest(error);
     }

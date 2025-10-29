@@ -122,12 +122,13 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
 
         const appointment = await super.create(body, professionalId, include);
 
-        const link = await handleOnlineMeetings(appointment, professional)
+        const getInfo = await handleOnlineMeetings(appointment, professional)
+
+        const link = getInfo?.link;
 
         if (link){
           await appointment.update({meetingLink: link});
         }
-
 
         const token = generateAppModificationToken({appointmentId: appointment.appointmentId}, config.jwtUserSecret!, appointment.date)
 
@@ -142,7 +143,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
             name: professional.profile.name!, 
             lastName: professional.profile.lastName, 
             jobTitle: professional.profile.jobTitle!}, {
-            appointmentId: appointment.appointmentId, mode: appointment.selectedAppMode, link: appointment?.meetingLink }, 
+            appointmentId: appointment.appointmentId, mode: appointment.selectedAppMode, link: getInfo.autoSendLink ? appointment?.meetingLink: null }, 
             token)
         })
 
