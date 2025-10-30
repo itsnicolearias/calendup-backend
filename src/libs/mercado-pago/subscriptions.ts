@@ -41,6 +41,7 @@ export const cancelMpSubscription = async (subscriptionId: string) => {
     });
 
     return cancelled;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     throw Boom.badRequest(error.message);
   }

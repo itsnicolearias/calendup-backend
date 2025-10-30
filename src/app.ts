@@ -29,7 +29,7 @@ export class App {
         ];
         const options: cors.CorsOptions = {
           methods: ["GET", "POST", "PUT", "DELETE"],
-          origin: "*",
+          origin: whiteList,
           credentials: true,
         };
         this.app.get('/api/health', (_req, res) => res.send("ok"));

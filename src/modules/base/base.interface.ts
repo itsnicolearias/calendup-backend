@@ -1,46 +1,47 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express';
 
 export interface IBaseService<T> {
   getAll(
-    professionalId?: string,
-    includeModel?: object,
-    page?: number,
-    size?: number,
-    all?: boolean,
-    where?: object,
+    _professionalId?: string,
+    _includeModel?: object,
+    _page?: number,
+    _size?: number,
+    _all?: boolean,
+    _where?: object,
   ): Promise<GetAllResponse<T>>;
 
   getOne(
-    where: object,
-    includeModel?: any,
-    professionalId?: string,
+    _where: object,
+    _includeModel?: any,
+    _professionalId?: string,
   ): Promise<T>;
 
   create(
-    body: Partial<T>,
-    professionalId?: string,
+    _body: Partial<T>,
+    _professionalId?: string,
   ): Promise<T>;
 
   update(
-    body: Partial<T>,
-    where: object,
-    professionalId?: string,
+    _body: Partial<T>,
+    _where: object,
+    _professionalId?: string,
   ): Promise<T>;
 
   delete(
-    where: object,
-    professionalId?: string,
+    _where: object,
+    _professionalId?: string,
   ): Promise<{ message: string; record?: any }>;
 }
 
 
 
 export interface IBaseController {
-  getAll(req: Request, res: Response, next: NextFunction): Promise<void>;
-  getOne(req: Request, res: Response, next: NextFunction): Promise<void>;
-  create(req: Request, res: Response, next: NextFunction): Promise<void>;
-  update(req: Request, res: Response, next: NextFunction): Promise<void>;
-  delete(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getAll(_req: Request, _res: Response, _next: NextFunction): Promise<void>;
+  getOne(_req: Request, _res: Response, _next: NextFunction): Promise<void>;
+  create(_req: Request, _res: Response, _next: NextFunction): Promise<void>;
+  update(_req: Request, _res: Response, _next: NextFunction): Promise<void>;
+  delete(_req: Request, _res: Response, _next: NextFunction): Promise<void>;
 }
 
 export interface GetAllResponse<T> {

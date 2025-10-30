@@ -5,7 +5,7 @@ import { Plan } from "../../models/plan";
 import { Subscription } from "../../models/subscription";
 import BaseService from "../base/base.service";
 import { config } from "../../config/environments";
-import { cancelMpSubscription, getSubscriptionData, searchSubscription } from "../../libs/mercado-pago/subscriptions";
+import { cancelMpSubscription, getSubscriptionData } from "../../libs/mercado-pago/subscriptions";
 
 
 class SubscriptionService extends BaseService<Subscription> {
@@ -21,6 +21,7 @@ class SubscriptionService extends BaseService<Subscription> {
       const subscriptionData = await getSubscriptionData(subscriptionId)
       const { status, payer_email, next_payment_date  } = subscriptionData;
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { preapproval_plan_id, auto_recurring } = subscriptionData as any;
 
       // TEST THIS IN PROD

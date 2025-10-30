@@ -1,5 +1,5 @@
 export interface ISecurityService {
-  changePassword(body: ChangePasswordBody, userId: string): Promise<void>;
+  changePassword(_body: ChangePasswordBody, _userId: string): Promise<void>;
 }
 
 export interface ChangePasswordBody {
