@@ -1,8 +1,8 @@
 /* eslint-disable no-unsafe-optional-chaining */
 import { Request, Response, NextFunction } from "express"
-import  ProfileService from "./profile.service"
-import { User } from "../../models/user";
 import { JwtPayload } from "jsonwebtoken";
+import ProfileService from "./profile.service";
+import { User } from "../../../models/user";
 
 declare global {
   namespace Express {

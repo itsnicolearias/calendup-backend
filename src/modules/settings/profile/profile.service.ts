@@ -1,11 +1,12 @@
 import Boom from "@hapi/boom";
-import { Profile } from "../../models/profile";
-import BaseService from "../base/base.service";
-import { User } from "../../models/user";
+import { Profile } from "../../../models/profile";
+import BaseService from "../../base/base.service";
+import { User } from "../../../models/user";
 import { IProfileService, UserWithProfile } from "./profile.interface";
-import { AppointmentType } from "../../models/appointment_type";
-import { Subscription } from "../../models/subscription";
-import { Plan } from "../../models/plan";
+import { AppointmentType } from "../../../models/appointment_type";
+import { Subscription } from "../../../models/subscription";
+import { Plan } from "../../../models/plan";
+import { Integration } from "../../../models/integrations";
 
 class ProfileService extends BaseService<Profile> implements IProfileService {
   constructor() {
@@ -16,7 +17,7 @@ class ProfileService extends BaseService<Profile> implements IProfileService {
       try {
         const user = await User.findOne({
             where: { userId: userId},
-            include: [Profile, AppointmentType, {model: Subscription, include: [Plan] }]
+            include: [Profile, AppointmentType, {model: Subscription, include: [Plan] }, Integration]
         })
 
         if (!user) {
@@ -51,8 +52,12 @@ class ProfileService extends BaseService<Profile> implements IProfileService {
           "availability",
           "city",
           "country",
-          "province",
+          "province"
         ];
+
+        if (user.appMode === "combined" || user.appMode === "in_person") {
+          requiredFields.push("address");
+        }
 
         const completedFields = requiredFields.filter((field) => !!user[field as keyof Profile]);
         const progress = Math.round((completedFields.length / requiredFields.length) * 100);

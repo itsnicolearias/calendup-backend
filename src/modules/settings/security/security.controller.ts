@@ -19,3 +19,12 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
     next(error)
   }
 }
+
+export const sendSupportMessage = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await securityService.sendSupportEmail(req.body);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};

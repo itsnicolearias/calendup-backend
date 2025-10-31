@@ -23,7 +23,10 @@ import { appointmentConfirmedProfessionalEmail } from '../../../templates/appoin
 import { appointmentCancelledEmail } from '../../../templates/appointments/appCancelledEmail';
 import { appointmentCompletedEmail } from '../../../templates/appointments/appointmentCompletedEmail';
 import { checkPlanLimit } from '../../../utils/checkPlanLimit';
-import { sendEmailGoogle } from '../../../libs/gmail';
+import { sendEmailGoogle } from '../../../libs/google-apis/gmail';
+import profileService from '../../settings/profile/profile.service';
+import { getUserCalendarEvents } from '../../../libs/google-apis/calendar';
+import { handleOnlineMeetings } from '../../../utils/createOnlineMeetings';
 
 class AppointmentService extends BaseService<Appointment> implements IAppointmentService {
   constructor() {
@@ -35,6 +38,16 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
       const appointments = await super.getAll(professionalId, includeModel, page, size, all)
 
       const appWithStats = countAppointmentsThisMonth(appointments.rows)
+
+      const professional = await profileService.getOneProfile(professionalId)
+
+      if (professional.Subscription.planId !== config.freePlanId){
+        if (professional.Integrations && professional.Integrations.find((i) => i.provider === "google" && i.showEventsInAgenda === true)) {
+          const googleEvents = await getUserCalendarEvents(professionalId)
+
+          return { appointments, createdThisMonth: appWithStats, googleEvents }
+        }
+      }
 
       return { appointments, createdThisMonth: appWithStats }
       
@@ -99,8 +112,23 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
         }
 
         body.appointmentCode = GenerateAppCode(professional.profile.lastName);
-        
+
+        if (professional.profile.appMode === "online"){
+          body.selectedAppMode = "online"
+        } else if (professional.profile.appMode === "in_person"){
+          body.selectedAppMode = "in_person";
+        }
+
+
         const appointment = await super.create(body, professionalId, include);
+
+        const getInfo = await handleOnlineMeetings(appointment, professional)
+
+        const link = getInfo?.link;
+
+        if (link){
+          await appointment.update({meetingLink: link});
+        }
 
         const token = generateAppModificationToken({appointmentId: appointment.appointmentId}, config.jwtUserSecret!, appointment.date)
 
@@ -115,7 +143,7 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
             name: professional.profile.name!, 
             lastName: professional.profile.lastName, 
             jobTitle: professional.profile.jobTitle!}, {
-            appointmentId: appointment.appointmentId}, 
+            appointmentId: appointment.appointmentId, mode: appointment.selectedAppMode, link: getInfo.autoSendLink ? appointment?.meetingLink: null }, 
             token)
         })
 
@@ -232,7 +260,10 @@ class AppointmentService extends BaseService<Appointment> implements IAppointmen
             app.name!, 
             `${app.professional.profile.name} ${app.professional.profile.lastName}`, 
             app.date, 
-            app.time)
+            app.time,
+            updatedApp.selectedAppMode!,
+            updatedApp.meetingLink!
+          )
         })
 
         //notify professional

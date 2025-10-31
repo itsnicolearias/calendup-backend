@@ -6,7 +6,7 @@ import { UserRole } from "../../modules/auth/auth.interface";
 import { CreateFreeSubscription } from "../../utils/createFreeSubscription";
 import { newUsersNotification } from "../../utils/newUsersNotification";
 import { accountActivatedTemplate } from "../../templates/auth/accountActivated";
-import { sendEmailGoogle } from "../gmail";
+import { sendEmailGoogle } from "../google-apis/gmail";
 
 const options: StrategyOptions = {
   clientID: config.googleClientId!,

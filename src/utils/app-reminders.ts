@@ -4,7 +4,7 @@ import { Appointment } from "../models/appointment";
 import { Profile } from "../models/profile";
 import { User } from "../models/user";
 import { appointmentReminderEmail } from "../templates/appointments/appReminderEmail";
-import { sendEmailGoogle } from "../libs/gmail";
+import { sendEmailGoogle } from "../libs/google-apis/gmail";
 
 // Función para unir date + time (strings) en un objeto Date
 function parseAppointmentDateTime(date: string, time: string): Date {
@@ -48,7 +48,9 @@ cron.schedule("0 * * * *", async () => {
             appointment.name!,
             `${professional.name} ${professional.lastName}`,
             appointment.date,
-            appointment.time
+            appointment.time,
+            appointment.selectedAppMode!,
+            appointment.meetingLink!
           ),
         });
       }

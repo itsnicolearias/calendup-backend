@@ -24,6 +24,7 @@ export const config = {
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
   googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL,
+  calendarCallbackUrl: process.env.CALENDAR_CALLBACK_URL,
   facebookClientId: process.env.FACEBOOK_CLIENT_ID,
   facebookClientSecret: process.env.FACEBOOK_CLIENT_SECRET,
   facebookCallbackUrl: process.env.FACEBOOK_CALLBACK_URL,
@@ -33,7 +34,13 @@ export const config = {
   gmailApiRedirectUri: process.env.GMAIL_API_REDIRECT_URI,
   gmailApiRefreshToken: process.env.GMAIL_API_REFRESH_TOKEN,
   argHolidaysApi: process.env.ARG_HOLIDAYS_API,
-
+  mpAccessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN,
+  mpReturnUrl: process.env.MERCADO_PAGO_RETURN_URL,
+  createMpPlans: process.env.CREATE_MP_PLANS === 'true',
+  cryptoEncriptionKey: process.env.CRYPTO_ENCRYPTION_KEY,
+  zoomClientId: process.env.ZOOM_CLIENT_ID,
+  zoomClientSecret: process.env.ZOOM_CLIENT_SECRET,
+  zoomRedirectUrl: process.env.ZOOM_REDIRECT_URI,
 };
 
 module.exports = { config };

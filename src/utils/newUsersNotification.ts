@@ -1,6 +1,6 @@
 import  Boom from "@hapi/boom"
 import { config } from "../config/environments"
-import { sendEmailGoogle } from "../libs/gmail"
+import { sendEmailGoogle } from "../libs/google-apis/gmail"
 
 export const newUsersNotification  = async (name: string, subscription: string, lastname?: string) => {
     try {

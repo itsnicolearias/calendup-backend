@@ -2,8 +2,9 @@ import {
   Table, Column, Model, DataType, ForeignKey, BelongsTo
 } from "sequelize-typescript"
 import { User } from "./user"
-import { Availability } from "../modules/settings/profile.interface"
+import { Availability } from "../modules/settings/profile/profile.interface"
 import { Json } from "sequelize/types/utils"
+import { AppointmentMode } from "../modules/appointments/interfaces/appointment.interface"
 
 @Table({ tableName: "profiles", underscored: true })
 export class Profile extends Model {
@@ -143,6 +144,13 @@ export class Profile extends Model {
     field: 'is_new_user',
   })
   isNewUser: boolean;
+
+  @Column({
+    type: DataType.STRING,
+    field: "app_mode",
+    allowNull: true
+  })
+  appMode?: AppointmentMode
 
   @BelongsTo(() => User)
   user!: User

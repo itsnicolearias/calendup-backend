@@ -1,9 +1,10 @@
 import { String } from "aws-sdk/clients/cloudwatchevents";
-import { User } from "../../models/user"
-import { UserRole } from "../auth/auth.interface"
+import { User } from "../../../models/user";
+import { UserRole } from "../../auth/auth.interface";
+import { AppointmentMode } from "../../appointments/interfaces/appointment.interface";
 export interface IProfileService{
-  getOneProfile(userId: string): Promise<User>;
-  updateProfile(body: UserWithProfile, userId: String): Promise<User>
+  getOneProfile(_userId: string): Promise<User>;
+  updateProfile(_body: UserWithProfile, _userId: String): Promise<User>
 }
 
 export interface UserWithProfile {
@@ -40,6 +41,7 @@ export interface UserWithProfile {
     profileProgress: number
     isNewUser: boolean
     pcModalShowed: boolean
+    appMode?: AppointmentMode
   }
   googleId: string
   facebookId: string

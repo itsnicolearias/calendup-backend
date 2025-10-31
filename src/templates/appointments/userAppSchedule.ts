@@ -4,7 +4,7 @@ import { config } from "../../config/environments";
 export function confirmedUserEmail(
   body: { date: string; time: string },
   professional: { name: string; lastName: string; jobTitle: string  },
-  appointment: { appointmentId: string },
+  appointment: { appointmentId: string, link?: string, mode: string },
   token: string
 ): string {
   return `
@@ -36,6 +36,8 @@ export function confirmedUserEmail(
                     <li><strong>Fecha:</strong> ${body.date}</li>
                     <li><strong>Hora:</strong> ${body.time}</li>
                     <li><strong>Profesional:</strong> ${professional.name} ${professional.lastName} - ${professional.jobTitle}</li>
+                    <li><strong>Modalidad de turno:</strong> ${appointment.mode === "online" ? "Online" : "Presencial"}</li>
+                    <li><strong>Link para reuniones online:</strong> ${(appointment.mode === "online"  && appointment?.link) ? appointment?.link : "No corresponde"}</li>
                   </ul>
                   <p style="margin:30px 0; text-align:center;">
                     <a href="${config.urlFront}/appointments/user-view/${appointment.appointmentId}?authorization=${token}" 

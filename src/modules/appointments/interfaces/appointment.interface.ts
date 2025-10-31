@@ -1,4 +1,6 @@
+import { calendar_v3 } from "googleapis";
 import { Appointment } from "../../../models/appointment";
+import { RatingResponse } from "../../../utils/professionals-rating";
 
 export interface CreateAppointmentParams {
   professionalId: string;
@@ -10,7 +12,9 @@ export interface CreateAppointmentParams {
   time: string;
   reason?: string;
   status: AppointmentStatus;
+  selectedAppMode?: AppointmentMode;
   appointmentCode: string;
+  meetingLink: string
 }
 
 export interface AppointmentsResponse {
@@ -19,16 +23,18 @@ export interface AppointmentsResponse {
   pagesQuantity: number;
 }
 
-export const  AppointmentStatusConst = ["pending",  "confirmed", "cancelled", "completed"] as const;
+export const  AppointmentStatusConst = ["pending",  "confirmed", "cancelled", "completed", "cancelledByUser"] as const;
 
-export type  AppointmentStatus =  "pending" | "confirmed" | "cancelled" | "completed"
+export type  AppointmentStatus =  "pending" | "confirmed" | "cancelled" | "completed" | "cancelledByUser"
 
-export const AppointmentType = ["in_person", "online"] as const ;
+export const AppointmentModeConst = ["in_person", "online", "combined"] as const ;
+
+export type AppointmentMode = "in_person" | "online" | "combined" ;
 
 export interface IAppointmentService{
-  getOneAppointment(token: string): Promise<{ appointment: Appointment, rating: any }>;
-  updateAppointment(body: Partial<CreateAppointmentParams>, token: string): Promise<Appointment>
-  getAllApp(professionalId?: string | null, includeModel?: object, page?: number, size?: number, all?: boolean, where?: Record<string, unknown>): Promise<GetAllAppResponse>;
+  getOneAppointment(_token: string): Promise<{ appointment: Appointment, rating: RatingResponse }>;
+  updateAppointment(_body: Partial<CreateAppointmentParams>, _token: string): Promise<Appointment>
+  getAllApp(_professionalId?: string | null, _includeModel?: object, _page?: number, _size?: number, _all?: boolean, _where?: Record<string, unknown>): Promise<GetAllAppResponse>;
 }
 
 export interface GetAllAppResponse {
@@ -38,5 +44,6 @@ export interface GetAllAppResponse {
       rows: Appointment[]
     },
     createdThisMonth: number;
+    googleEvents?: calendar_v3.Schema$Event[]
     
 }

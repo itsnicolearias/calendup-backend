@@ -13,7 +13,7 @@ import { newUsersNotification } from "../../utils/newUsersNotification"
 import jwt from "jsonwebtoken"
 import { resetPasswordRequestTemplate } from "../../templates/auth/forgetPassword"
 import {resetPasswordSuccessTemplate}  from "../../templates/auth/resetPassword"
-import { sendEmailGoogle } from "../../libs/gmail"
+import { sendEmailGoogle } from "../../libs/google-apis/gmail"
 
 export const RegisterService = async ( body: RegisterUserParams) => {
     try {

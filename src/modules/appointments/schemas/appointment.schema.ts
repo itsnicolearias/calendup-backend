@@ -1,5 +1,5 @@
 import { z, ZodType } from 'zod';
-import { AppointmentStatusConst } from '../interfaces/appointment.interface';
+import { AppointmentModeConst, AppointmentStatusConst } from '../interfaces/appointment.interface';
 
 export const createAppointmentSchema: ZodType = z.object({
   name: z.string().min(1),
@@ -11,6 +11,7 @@ export const createAppointmentSchema: ZodType = z.object({
   time: z.string().regex(/^\d{2}:\d{2}$/),
   reason: z.string().optional(),
   appointmentTypeId: z.uuidv4().optional().nullable(),
+  selectedAppMode: z.union([z.enum(AppointmentModeConst), z.literal("")]).optional().nullable(),
   
 });
 
@@ -24,4 +25,5 @@ export const updateAppointmentSchema: ZodType = z.object({
   reason: z.string().optional(),
   status: z.enum(AppointmentStatusConst).optional(),
   appointmentTypeId: z.uuidv4().optional().nullable(),
+  selectedAppMode: z.union([z.enum(AppointmentModeConst), z.literal("")]).optional().nullable(),
 });

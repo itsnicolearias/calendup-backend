@@ -5,7 +5,7 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import boom from "@hapi/boom";
 import { config } from "../config/environments";
 import { EmailOptions } from "../interfaces/nodemailer";
-import { sendEmailGoogle } from "./gmail";
+import { sendEmailGoogle } from "./google-apis/gmail";
 
 // Transport con timeouts y TLS
 const transport: SMTPTransport.Options = {

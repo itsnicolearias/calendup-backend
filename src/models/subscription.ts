@@ -38,7 +38,7 @@ export class Subscription extends Model {
     allowNull: false,
     field: "plan_id",
   })
-  planId!: number;
+  planId!: string;
 
   @Column({
     type: DataType.STRING,
@@ -60,6 +60,19 @@ export class Subscription extends Model {
     field: "end_date",
   })
   endDate?: Date;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  type: "monthly" | "annual";
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: "mp_subscription_id",
+  })
+  mpSubscriptionId?: string;
 
   @BelongsTo(() => Plan)
   plan!: Plan;

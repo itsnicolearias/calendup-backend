@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { AppointmentModeConst } from "../../appointments/interfaces/appointment.interface"
 
 const timeRangeSchema = z.object({
   start: z
@@ -56,7 +57,8 @@ export const createProfileSchema = z.object({
     ).optional(),
     country: z.string().optional(),
     province: z.string().optional(),
-    city: z.string().optional()
+    city: z.string().optional(),
+    appMode: z.enum(AppointmentModeConst).optional().nullable(),
 })
 
 export const updateProfileSchema = createProfileSchema
