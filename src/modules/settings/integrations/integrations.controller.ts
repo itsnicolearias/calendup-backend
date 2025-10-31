@@ -83,7 +83,7 @@ export const handleZoomCallback = async (req: Request, res: Response, next: Next
   try {
     const { code, state } = req.query as { code: string; state: string };
     await integrationsService.handleZoomCallback(code, state)
-    res.redirect(`${config.urlFront}/settings/integrations?success=google`)
+    res.redirect(`${config.urlFront}/settings/integrations?success=zoom`)
   } catch (error) {
     next(error)
   }
